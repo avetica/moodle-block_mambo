@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
+ * user wrapper
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -35,30 +35,115 @@ defined('MOODLE_INTERNAL') || die();
 class user extends mambo {
 
     /**
-     * set user object to mambo if not exist will insert a new user object
+     * set user if not exist will insert a new user
      *
      * @param bool|object $userobject
+     *
+     * @return bool
      */
     static public function set($userobject = false) {
 
         if (!$userobject) {
-            return;
+            return false;
         }
 
         // load mambo
         self::load_mambo_sdk();
 
-        $return = \MamboUsersService::getById($userobject->id);
+        // API docs
+        // http://api.mambo.io/#docs/POST__v1_site_users/top
 
-        if($return === NULL)
-        {
+        $response = \MamboUsersService::get(self::$config->site, $userobject->id);
+
+        if (!empty($response->error)) {
             // there is no user found with this id
-
+            return self::create($userobject);
+        } elseif (!empty($response->id)) {
+            return self::update($userobject);
         }
 
-        var_export($return);
-        print_r($return);
-        echo '</pre>';
-        die(__LINE__ . ' ' . __FILE__);
+        // strange we should end here
+        return false;
+    }
+
+    /**
+     * create a new user
+     *
+     * @param object $userobject
+     *
+     * @return bool
+     */
+    static private function create($userobject) {
+
+        global $CFG , $PAGE;
+
+        $data = new \UserRequestData();
+        $data->setUuid($userobject->id); // Required
+        $user_picture = new \user_picture($userobject);
+        $user_picture->size = 1;
+        $data->setPictureUrl($user_picture->get_url($PAGE)->out(false));
+        $data->setProfileUrl($CFG->wwwroot . '/user/profile.php?id=' . $userobject->id);
+        $data->setIsMember(true);
+
+        // Prepare the user details
+        $details = new \UserDetails();
+        $details->setEmail($userobject->email); // Required
+        $details->setFirstName($userobject->firstname); // Required
+        $details->setLastName($userobject->lastname); // Required
+        $details->setDisplayName(fullname($userobject));
+
+        // this doesn't exists in moodle by default
+        $details->setBirthday("1970-01-01T00:00:00.094Z"); // Required - Please use the format indicated
+        $details->setGender("U"); // Required - Valid genders: M / F / U (M = Male, F = Female, U = Unknown)
+
+        $data->setDetails($details);
+
+        $response = \MamboUsersService::create(self::$config->site, $data);
+        if (!empty($response->error)) {
+            // @todo we don't return exceptions to users we log them instead
+            // failed creating user
+            return false;
+        }
+
+        // successfully insert new user
+        return true;
+    }
+
+    /**
+     * update a existing user
+     *
+     * @param object $userobject
+     *
+     * @return bool
+     */
+    static private function update($userobject) {
+
+        global $CFG, $PAGE;
+
+        // Prepare the request data used to update the user
+        $data = new \UserRequestData();
+        $user_picture = new \user_picture($userobject);
+        $user_picture->size = 1;
+        $data->setPictureUrl($user_picture->get_url($PAGE)->out(false));
+        $data->setProfileUrl($CFG->wwwroot . '/user/profile.php?id=' . $userobject->id);
+        $data->setIsMember(true);
+
+        $details = new \UserDetails();
+        $details->setEmail($userobject->email); // Required
+        $details->setFirstName($userobject->firstname); // Required
+        $details->setLastName($userobject->lastname); // Required
+        $details->setDisplayName(fullname($userobject));
+
+        $data->setDetails($details);
+
+        // Update the user
+        $response = \MamboUsersService::update(self::$config->site, $userobject->id, $data);
+        if (!empty($response->error)) {
+            // @todo we don't return exceptions to users we log them instead
+            // failed creating user
+            return false;
+        }
+
+        return true;
     }
 }

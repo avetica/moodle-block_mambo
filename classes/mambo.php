@@ -63,7 +63,7 @@ class mambo{
         \MamboClient::setCredentials(self::$config->apikey_public, self::$config->apikey_private);
         \MamboClient::setEndPointBaseUrl(self::$config->api_url);
 
-        \MamboClient::$debug = true;
+        \MamboClient::$debug = !empty(self::$config->debug) ? true : false;
 
     }
 

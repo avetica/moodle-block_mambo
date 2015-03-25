@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * 
+ * sites wrapper
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -41,18 +41,14 @@ class sites extends mambo {
      */
     static public function get_all() {
 
-        $array = array();
-        
         // load mambo
         self::load_mambo_sdk();
 
         $response = \MamboSitesService::getSites();
-        if($response === NULL)
+        if(empty($response->error))
         {
-            // no result
-
+            return $response;
         }
-        //echo '<pre>';print_r($response);echo '</pre>';die(__LINE__.' '.__FILE__);
-        return $array;
+        return false;
     }
 }
