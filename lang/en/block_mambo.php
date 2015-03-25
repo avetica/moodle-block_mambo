@@ -23,6 +23,10 @@
 * @copyright 2015 MoodleFreak.com
 * @author    Luuk Verhoeven
 **/
-$string['mambo:addinstance'] = 'Add a Mambo Block';
-$string['mambo:myaddinstance'] = 'Add a Mambo Block to My home';
-$string['pluginname'] = 'Mambo Block';
+$string['mambo:addinstance'] = 'Add a MamboIO Gamification Block';
+$string['mambo:myaddinstance'] = 'Add a MamboIO Gamification Block to My home';
+$string['pluginname'] = 'MamboIO Gamification';
+$string['apikey_private'] = 'Private key';
+$string['apikey_public'] = 'Public key';
+$string['api_url'] = 'end point URL';
+$string['pluginname_desc'] = 'You will find your OAuth API keys on <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';

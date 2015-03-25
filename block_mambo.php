@@ -26,29 +26,54 @@
 
 class block_mambo extends block_base {
 
+    /**
+     * Init.
+     *
+     * @return void
+     */
     function init() {
         $this->title = get_string('pluginname', 'block_mambo');
     }
 
+    /**
+     * Are you going to allow multiple instances of each block?
+     * If yes, then it is assumed that the block WILL USE per-instance configuration
+     * @return boolean
+     */
     function instance_allow_multiple() {
         return false;
     }
 
+    /**
+     * Subclasses should override this and return true if the
+     * subclass block has a settings.php file.
+     *
+     * @return boolean
+     */
     function has_config() {
-        return false;
+        return true;
     }
 
-    function applicable_formats() {
-        return array(
-            'my' => true,
-            'all' => true,
-        );
+    /**
+     * Applicable formats.
+     *
+     * @return array
+     */
+    public function applicable_formats() {
+        return array('course' => true);
     }
 
     function instance_allow_config() {
         return true;
     }
 
+    /**
+     * Specialization.
+     *
+     * Happens right after the initialisation is complete.
+     *
+     * @return void
+     */
     function specialization() {
 
         if (empty($this->config->title)) {
@@ -77,16 +102,25 @@ class block_mambo extends block_base {
 
         $this->content = new stdClass();
         $this->content->text = '<div class="singlebutton">
-    <form action="' . $CFG->wwwroot . '/blocks/mambo/view.php" method="get">
-        <div>
-            <input type="hidden" name="blockid" value="' . $this->instance->id . '"/>
-            <input type="hidden" name="courseid" value="' . $COURSE->id . '"/>
-            <input class="singlebutton" type="submit" value="' . get_string('btn:setup', 'block_mambo') . '"/>
-        </div>
-    </form>
-</div>';
+                                    <form action="' . $CFG->wwwroot . '/blocks/mambo/view.php" method="get">
+                                        <div>
+                                            <input type="hidden" name="blockid" value="' . $this->instance->id . '"/>
+                                            <input type="hidden" name="courseid" value="' . $COURSE->id . '"/>
+                                            <input class="singlebutton" type="submit" value="' . get_string('btn:setup', 'block_mambo') . '"/>
+                                        </div>
+                                    </form>
+                                </div>';
         $this->content->footer = '';
 
         return $this->content;
+    }
+
+    /**
+     * Cron.
+     *
+     * @return void
+     */
+    public function cron() {
+        global $DB;
     }
 }

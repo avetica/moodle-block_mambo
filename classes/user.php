@@ -15,18 +15,50 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for mambo block
+ *
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package   block_mambo
+ * @file      : user.php
+ * @since     25-3-2015
+ * @encoding  : UTF8
+ *
+ * @package   : block_mambo
+ *
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
+namespace block_mambo;
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->release   = '1.0.0';
-$plugin->maturity = MATURITY_BETA;
-$plugin->version   = 2015032500;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2013101800;        // Requires this Moodle version
-$plugin->component = 'block_mambo'; // Full name of the plugin (used for diagnostics)
+
+class user extends mambo {
+
+    /**
+     * set user object to mambo if not exist will insert a new user object
+     *
+     * @param bool|object $userobject
+     */
+    static public function set($userobject = false) {
+
+        if (!$userobject) {
+            return;
+        }
+
+        // load mambo
+        self::load_mambo_sdk();
+
+        $return = \MamboUsersService::getById($userobject->id);
+
+        if($return === NULL)
+        {
+            // there is no user found with this id
+
+        }
+
+        var_export($return);
+        print_r($return);
+        echo '</pre>';
+        die(__LINE__ . ' ' . __FILE__);
+    }
+}

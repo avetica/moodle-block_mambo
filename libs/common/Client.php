@@ -175,7 +175,6 @@ class MamboClient
 		
 		// Execute the cURL request
 		$response = $this->execRequest( $options );
-		
 		// Return the response
 		return $response;
 	}
@@ -302,5 +301,3 @@ class MamboClient
 		return ( substr( $haystack, 0, $length ) === $needle );
 	}
 }
-
-?>

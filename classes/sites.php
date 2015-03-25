@@ -15,18 +15,44 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for mambo block
+ * 
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package   block_mambo
+ * @file: sites.php
+ * @since 25-3-2015
+ * @encoding: UTF8
+ *
+ * @package: block_mambo
+ *
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
 
+namespace block_mambo;
+
 defined('MOODLE_INTERNAL') || die();
-$plugin->release   = '1.0.0';
-$plugin->maturity = MATURITY_BETA;
-$plugin->version   = 2015032500;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2013101800;        // Requires this Moodle version
-$plugin->component = 'block_mambo'; // Full name of the plugin (used for diagnostics)
+
+class sites extends mambo {
+
+    /**
+     * Get all sites
+     * @return array
+     */
+    static public function get_all() {
+
+        $array = array();
+        
+        // load mambo
+        self::load_mambo_sdk();
+
+        $response = \MamboSitesService::getSites();
+        if($response === NULL)
+        {
+            // no result
+
+        }
+        //echo '<pre>';print_r($response);echo '</pre>';die(__LINE__.' '.__FILE__);
+        return $array;
+    }
+}

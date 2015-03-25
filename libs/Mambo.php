@@ -73,4 +73,3 @@ require_once(dirname(__FILE__) . '/services/data/attributes/MissionAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/BountyTransactionAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/GiftedTransactionAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/ManualTransactionAttrs.php');
-?>
