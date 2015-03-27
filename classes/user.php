@@ -35,15 +35,15 @@ defined('MOODLE_INTERNAL') || die();
 class user extends mambo {
 
     /**
-     * set user if not exist will insert a new user
+     * update user, if not exist will insert a new user
      *
      * @param bool|object $userobject
      *
      * @return bool
      */
-    static public function set($userobject = false) {
+    static public function set($user = false) {
 
-        if (!$userobject) {
+        if (!$user) {
             return false;
         }
 
@@ -53,13 +53,13 @@ class user extends mambo {
         // API docs
         // http://api.mambo.io/#docs/POST__v1_site_users/top
 
-        $response = \MamboUsersService::get(self::$config->site, $userobject->id);
+        $response = \MamboUsersService::get(self::$config->site, $user->id);
 
         if (!empty($response->error)) {
             // there is no user found with this id
-            return self::create($userobject);
+            return self::create($user);
         } elseif (!empty($response->id)) {
-            return self::update($userobject);
+            return self::update($user);
         }
 
         // strange we should end here
@@ -67,30 +67,55 @@ class user extends mambo {
     }
 
     /**
-     * create a new user
-     *
-     * @param object $userobject
+     * remove a user
+     * @param $user
      *
      * @return bool
      */
-    static private function create($userobject) {
+    static public function delete($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        // load mambo
+        self::load_mambo_sdk();
+
+        $response = \MamboUsersService::delete(self::$config->site, $user->id);
+
+        if (!empty($response->error)) {
+            //@todo log errors
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * create a new user
+     *
+     * @param object $user
+     *
+     * @return bool
+     */
+    static private function create($user) {
 
         global $CFG , $PAGE;
 
         $data = new \UserRequestData();
-        $data->setUuid($userobject->id); // Required
-        $user_picture = new \user_picture($userobject);
+        $data->setUuid($user->id); // Required
+        $user_picture = new \user_picture($user);
         $user_picture->size = 1;
         $data->setPictureUrl($user_picture->get_url($PAGE)->out(false));
-        $data->setProfileUrl($CFG->wwwroot . '/user/profile.php?id=' . $userobject->id);
+        $data->setProfileUrl($CFG->wwwroot . '/user/profile.php?id=' . $user->id);
         $data->setIsMember(true);
 
         // Prepare the user details
         $details = new \UserDetails();
-        $details->setEmail($userobject->email); // Required
-        $details->setFirstName($userobject->firstname); // Required
-        $details->setLastName($userobject->lastname); // Required
-        $details->setDisplayName(fullname($userobject));
+        $details->setEmail($user->email); // Required
+        $details->setFirstName($user->firstname); // Required
+        $details->setLastName($user->lastname); // Required
+        $details->setDisplayName(fullname($user));
 
         // this doesn't exists in moodle by default
         $details->setBirthday("1970-01-01T00:00:00.094Z"); // Required - Please use the format indicated
@@ -112,32 +137,32 @@ class user extends mambo {
     /**
      * update a existing user
      *
-     * @param object $userobject
+     * @param object $user
      *
      * @return bool
      */
-    static private function update($userobject) {
+    static private function update($user) {
 
         global $CFG, $PAGE;
 
         // Prepare the request data used to update the user
         $data = new \UserRequestData();
-        $user_picture = new \user_picture($userobject);
+        $user_picture = new \user_picture($user);
         $user_picture->size = 1;
         $data->setPictureUrl($user_picture->get_url($PAGE)->out(false));
-        $data->setProfileUrl($CFG->wwwroot . '/user/profile.php?id=' . $userobject->id);
+        $data->setProfileUrl($CFG->wwwroot . '/user/profile.php?id=' . $user->id);
         $data->setIsMember(true);
 
         $details = new \UserDetails();
-        $details->setEmail($userobject->email); // Required
-        $details->setFirstName($userobject->firstname); // Required
-        $details->setLastName($userobject->lastname); // Required
-        $details->setDisplayName(fullname($userobject));
+        $details->setEmail($user->email); // Required
+        $details->setFirstName($user->firstname); // Required
+        $details->setLastName($user->lastname); // Required
+        $details->setDisplayName(fullname($user));
 
         $data->setDetails($details);
 
         // Update the user
-        $response = \MamboUsersService::update(self::$config->site, $userobject->id, $data);
+        $response = \MamboUsersService::update(self::$config->site, $user->id, $data);
         if (!empty($response->error)) {
             // @todo we don't return exceptions to users we log them instead
             // failed creating user

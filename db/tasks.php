@@ -15,18 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for mambo block
+ * Tasks to run
+ *
+ * https://docs.moodle.org/dev/Task_API
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package   block_mambo
+ * @file: tasks.php
+ * @since 7-3-2015
+ * @encoding: UTF8
+ *
+ * @package: nhg-acceptatie
+ *
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
-
-defined('MOODLE_INTERNAL') || die();
-$plugin->release   = '1.0.0';
-$plugin->maturity = MATURITY_BETA;
-$plugin->version   = 2015032600;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2013101800;        // Requires this Moodle version
-$plugin->component = 'block_mambo'; // Full name of the plugin (used for diagnostics)
+$tasks = array(
+    array(
+        'classname' => 'block_mambo\task\sync_data',
+        'blocking'  => 0,
+        'minute'    => '0',
+        'hour'      => '*',
+        'day'       => '*',
+        'dayofweek' => '*',
+        'month'     => '*'
+    ),
+);

@@ -64,8 +64,8 @@ class observer {
         if (!empty($record)) {
 
             // load sdk with credentials
-            // we have a new user record, forwarding it to mambo.io
-            \block_mambo\user::set($record);
+            // we need to remove this user from mambo
+            \block_mambo\user::delete($record);
         }
     }
 
@@ -82,7 +82,7 @@ class observer {
         if (!empty($record)) {
 
             // load sdk with credentials
-            // we have a new user record, forwarding it to mambo.io
+            // we have a update for a user record, forwarding it to mambo.io
             \block_mambo\user::set($record);
         }
     }

@@ -32,4 +32,5 @@ $string['api_url'] = 'end point URL';
 $string['select_a_site'] = 'Select your site name below';
 $string['sites'] = 'List of sites available';
 $string['debug'] = 'Debug API';
+$string['task'] = 'Sync data to MamboIO';
 $string['pluginname_desc'] = 'You will find your OAuth API keys on <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';
