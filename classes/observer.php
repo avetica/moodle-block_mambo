@@ -36,9 +36,10 @@ class observer {
 
 
     /**
-     * Triggered via user_created event
+     * Triggered from user_created event
      *
      * @param \core\event\user_created $event
+     *
      * @return void
      */
     public static function user_created(\core\event\user_created $event) {
@@ -52,9 +53,10 @@ class observer {
     }
 
     /**
-     * Triggered via user_deleted event
+     * Triggered from user_deleted event
      *
      * @param \core\event\user_deleted $event
+     *
      * @return void
      */
     public static function user_deleted(\core\event\user_deleted $event) {
@@ -70,9 +72,10 @@ class observer {
     }
 
     /**
-     * Triggered via user_updated event
+     * Triggered from user_updated event
      *
      * @param \core\event\user_updated $event
+     *
      * @return void
      */
     public static function user_updated(\core\event\user_updated $event) {
@@ -84,6 +87,29 @@ class observer {
             // load sdk with credentials
             // we have a update for a user record, forwarding it to mambo.io
             \block_mambo\user::set($record);
+        }
+    }
+
+    /**
+     * Triggered from course_module_completion_updated event
+     *
+     * @param \core\event\course_module_completion_updated $event
+     *
+     * @return void
+     */
+    public static function course_module_completion_updated(\core\event\course_module_completion_updated $event) {
+        global $DB, $CFG;
+
+        $eventdata = $event->get_record_snapshot('course_modules_completion', $event->objectid);
+        $userid = $event->relateduserid;
+        $mod = $event->contextinstanceid;
+
+        $states = array(COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS, COMPLETION_COMPLETE_FAIL);
+
+        if (in_array($eventdata->completionstate, $states)) {
+
+            // we need to check if need to take a action
+            
         }
     }
 
