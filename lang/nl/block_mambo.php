@@ -23,6 +23,21 @@
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
-$string['mambo:addinstance'] = 'Mambo Block toevoegen';
-$string['mambo:myaddinstance'] = 'Voeg een Mambo Block toe aan mijn home';
-$string['pluginname'] = 'Mambo Blok';
+$string['mambo:addinstance'] = 'MamboIO Blok toevoegen';
+$string['mambo:myaddinstance'] = 'Voeg een MamboIO Blok toe aan mijn home';
+$string['pluginname'] = 'MamboIO Blok';
+$string['apikey_private'] = 'Private key';
+$string['apikey_public'] = 'Public key';
+$string['api_url'] = 'end point URL';
+$string['select_a_site'] = 'Selecteer uw site';
+$string['sites'] = 'Sites beschikbaar';
+$string['debug'] = 'Debug API';
+$string['task'] = 'Sync data naar MamboIO';
+$string['btn:setup'] = 'Activiteiten Mappen';
+$string['heading:mambo_behaviours'] = 'Mambo Behaviours';
+$string['failed:capability_view'] = 'Niet genoeg rechten';
+$string['heading:mambo_activities'] = 'Activiteiten';
+$string['activitiespage'] = 'Overzicht van activiteiten';
+$string['desc:mambo_behaviours'] = 'Je kan items van links naar rechts slepen.';
+$string['desc:mambo_activities'] = 'Alle activiteiten waar completion voor aanstaat.';
+$string['pluginname_desc'] = 'U zult uw OAuth API keys vinden op <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';
