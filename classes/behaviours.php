@@ -18,16 +18,11 @@ namespace block_mambo;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- *
+ * behaviours mambo
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file      : behaviours.php
- * @since     31-3-2015
- * @encoding  : UTF8
- *
- * @package   : block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/

@@ -19,12 +19,7 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file      : renderer.php
- * @since     30-3-2015
- * @encoding  : UTF8
- *
- * @package   : block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
@@ -88,9 +83,7 @@ class block_mambo_renderer extends plugin_renderer_base {
      * @return string
      */
     protected function mappeditems($behaviour, $activities) {
-
         $html = '<ul>';
-
         if (!empty($behaviour->items)) {
             foreach ($behaviour->items as $item) {
                 if (isset($activities[$item->coursemoduleid]->displayname)) {
@@ -99,7 +92,6 @@ class block_mambo_renderer extends plugin_renderer_base {
             }
         }
         $html .= '</ul>';
-
         return $html;
     }
 

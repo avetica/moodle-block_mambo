@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Mambo block contains link to course settings
+ * Mambo block contains link to activities mapping
+ * Can only be added inside a course page
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -115,12 +116,4 @@ class block_mambo extends block_base {
         return $this->content;
     }
 
-    /**
-     * Cron.
-     *
-     * @return void
-     */
-    public function cron() {
-        global $DB;
-    }
 }

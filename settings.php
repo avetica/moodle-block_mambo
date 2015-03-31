@@ -34,7 +34,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('block_mambo/api_url', get_string('api_url', 'block_mambo'), '', 'http://api.mambo.io', PARAM_URL));
     $settings->add(new admin_setting_configcheckbox('block_mambo/debug', get_string('debug', 'block_mambo'), '', 0));
 
-    $results = array('' => get_string('select_a_site' , 'block_mambo'));
+    $results = array('' => get_string('select_a_site', 'block_mambo'));
     try {
         $sites = \block_mambo\sites::get_all();
         if (!empty($sites)) {
@@ -42,8 +42,7 @@ if ($ADMIN->fulltree) {
                 $results[$site->url] = $site->url . ' - ' . $site->name;
             }
         }
-    }catch(Exception $exc)
-    {
+    } catch (Exception $exc) {
 
     }
     $settings->add(new admin_setting_configselect('block_mambo/site', get_string('sites', 'block_mambo'), '', '', $results));

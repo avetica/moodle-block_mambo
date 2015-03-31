@@ -19,12 +19,7 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file      : activities.php
- * @since     30-3-2015
- * @encoding  : UTF8
- *
- * @package   : block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
@@ -44,13 +39,14 @@ class activities {
      */
     public function has_completion($course) {
         global $CFG;
+
         return ($CFG->enablecompletion && !empty($course->enablecompletion)) ? true : false;
     }
 
     /**
      * get list of activities that are available
      *
-     * @param stdClass $course Moodle course object.
+     * @param stdClass $course  Moodle course object.
      * @param mixed $behaviours list all behaviours from mambo
      *
      * @return false|array
@@ -96,6 +92,7 @@ class activities {
      */
     public function get_activity_maps($coursemoduleid = 0) {
         global $DB;
+
         return $DB->get_records('mambo_behaviour', array('coursemoduleid' => $coursemoduleid));
     }
 
@@ -185,7 +182,7 @@ class activities {
             $DB->insert_record('mambo_behaviour_user', $obj);
         } else {
             $obj->id = $behaviouruser->id;
-            $DB-update_record('mambo_behaviour_user', $obj);
+            $DB - update_record('mambo_behaviour_user', $obj);
         }
     }
 }

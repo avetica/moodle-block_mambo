@@ -19,12 +19,7 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file: locallib.php
- * @since 30-3-2015
- * @encoding: UTF8
- *
- * @package: block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/

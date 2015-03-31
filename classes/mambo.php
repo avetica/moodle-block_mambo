@@ -15,27 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * 
+ * mambo loader
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file: mambo.php
- * @since 25-3-2015
- * @encoding: UTF8
- *
- * @package: block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
 
 namespace block_mambo;
 
-use Horde\Socket\Client\Exception;
-
 defined('MOODLE_INTERNAL') || die();
 
-class mambo{
+class mambo {
 
     /**
      * plugin config values
@@ -62,14 +55,12 @@ class mambo{
         self::$config = get_config('block_mambo');
 
         // check if set else triggers warnings on fresh environment
-        $settingsNeeded = array('apikey_public' , 'apikey_private' , 'api_url');
-        foreach($settingsNeeded as $setting)
-        {
-            if(empty(self::$config->$setting))
-            {
+        $settingsNeeded = array('apikey_public', 'apikey_private', 'api_url');
+        foreach ($settingsNeeded as $setting) {
+            if (empty(self::$config->$setting)) {
                 // reset
                 self::$config = array();
-                throw new Exception('Mambo missing setting:' .$setting);
+                throw new Exception('Mambo missing setting:' . $setting);
             }
         }
 

@@ -19,12 +19,9 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file: sites.php
- * @since 25-3-2015
- * @encoding: UTF8
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package: block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
@@ -37,6 +34,7 @@ class sites extends mambo {
 
     /**
      * Get all sites
+     *
      * @return array
      */
     static public function get_all() {
@@ -44,10 +42,10 @@ class sites extends mambo {
         // load mambo
         self::load_mambo_sdk();
         $response = \MamboSitesService::getSites();
-        if(empty($response->error))
-        {
+        if (empty($response->error)) {
             return $response;
         }
+
         return false;
     }
 }

@@ -19,34 +19,29 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file: events.php
- * @since 25-3-2015
- * @encoding: UTF8
- *
- * @package: block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
 $observers = array(
     array(
-        'eventname'   => '\core\event\user_created',
-        'callback'    => '\block_mambo\observer::user_created',
+        'eventname' => '\core\event\user_created',
+        'callback' => '\block_mambo\observer::user_created',
     ),
     array(
-        'eventname'   => '\core\event\user_updated',
-        'callback'    => '\block_mambo\observer::user_updated',
+        'eventname' => '\core\event\user_updated',
+        'callback' => '\block_mambo\observer::user_updated',
     ),
     array(
-        'eventname'   => '\core\event\user_deleted',
-        'callback'    => '\block_mambo\observer::user_deleted',
+        'eventname' => '\core\event\user_deleted',
+        'callback' => '\block_mambo\observer::user_deleted',
     ),
     array(
-        'eventname'   => '\core\event\course_module_completion_updated',
-        'callback'    => '\block_mambo\observer::course_module_completion_updated',
+        'eventname' => '\core\event\course_module_completion_updated',
+        'callback' => '\block_mambo\observer::course_module_completion_updated',
     ),
     array(
-        'eventname'   => '\core\event\course_module_deleted',
-        'callback'    => '\block_mambo\observer::course_module_deleted',
+        'eventname' => '\core\event\course_module_deleted',
+        'callback' => '\block_mambo\observer::course_module_deleted',
     ),
 );

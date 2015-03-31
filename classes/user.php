@@ -19,12 +19,7 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file      : user.php
- * @since     25-3-2015
- * @encoding  : UTF8
- *
- * @package   : block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
@@ -68,12 +63,12 @@ class user extends mambo {
 
     /**
      * remove a user
+     *
      * @param $user
      *
      * @return bool
      */
-    static public function delete($user)
-    {
+    static public function delete($user) {
         if (!$user) {
             return false;
         }
@@ -100,7 +95,7 @@ class user extends mambo {
      */
     static private function create($user) {
 
-        global $CFG , $PAGE;
+        global $CFG, $PAGE;
 
         $data = new \UserRequestData();
         $data->setUuid($user->id); // Required

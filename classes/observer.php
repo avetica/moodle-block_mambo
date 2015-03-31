@@ -19,12 +19,9 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file      : events.php
- * @since     25-3-2015
- * @encoding  : UTF8
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package   : block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
@@ -104,13 +101,12 @@ class observer {
         $states = array(COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS, COMPLETION_COMPLETE_FAIL);
 
         if (in_array($eventdata->completionstate, $states)) {
-    
+
             // we need to check if need to take a action
             $activities = new \block_mambo\activities();
-            if(($links = $activities->get_activity_maps($eventdata->coursemoduleid)) != false)
-            {
+            if (($links = $activities->get_activity_maps($eventdata->coursemoduleid)) != false) {
                 foreach ($links as $link) {
-                    $activities->send_event($userid , $eventdata->completionstate, $link);
+                    $activities->send_event($userid, $eventdata->completionstate, $link);
                 }
             }
         }
@@ -123,12 +119,11 @@ class observer {
      *
      * @return void
      */
-    public static function course_module_deleted(\core\event\course_module_deleted $event)
-    {
+    public static function course_module_deleted(\core\event\course_module_deleted $event) {
         global $DB;
         // remove linked items
-        $DB->delete_records('mambo_behaviour' ,array('coursemoduleid' => $event->objectid));
-        $DB->delete_records('mambo_behaviour_user' ,array('coursemoduleid' => $event->objectid));
+        $DB->delete_records('mambo_behaviour', array('coursemoduleid' => $event->objectid));
+        $DB->delete_records('mambo_behaviour_user', array('coursemoduleid' => $event->objectid));
     }
 
 }

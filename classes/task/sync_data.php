@@ -19,12 +19,7 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file      : sync_data.php
- * @since 25-3-2015
- * @encoding: UTF8
- *
- * @package: block_mambo
- *
+ * @package   block_mambo
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
@@ -60,7 +55,8 @@ class sync_data extends \core\task\scheduled_task {
 
             foreach ($users as $user) {
                 mtrace('Add User to MamboIO: ' . fullname($user));
-                \block_mambo\user::set($user);
+                $response = \block_mambo\user::set($user);
+                echo print_r($response);
             }
 
             set_config('users_synced' , time() , 'block_mambo');
