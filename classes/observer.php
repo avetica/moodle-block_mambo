@@ -98,18 +98,21 @@ class observer {
      * @return void
      */
     public static function course_module_completion_updated(\core\event\course_module_completion_updated $event) {
-        global $DB, $CFG;
 
         $eventdata = $event->get_record_snapshot('course_modules_completion', $event->objectid);
         $userid = $event->relateduserid;
-        $mod = $event->contextinstanceid;
-
         $states = array(COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS, COMPLETION_COMPLETE_FAIL);
 
         if (in_array($eventdata->completionstate, $states)) {
-
+    
             // we need to check if need to take a action
-            
+            $activities = new \block_mambo\activities();
+            if(($links = $activities->get_activity_maps($eventdata->coursemoduleid)) != false)
+            {
+                foreach ($links as $link) {
+                    $activities->send_points($userid , $eventdata->completionstate, $link);
+                }
+            }
         }
     }
 

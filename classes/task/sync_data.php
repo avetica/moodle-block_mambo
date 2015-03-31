@@ -30,7 +30,6 @@
  **/
 namespace block_mambo\task;
 use block_mambo;
-use Horde\Socket\Client\Exception;
 
 class sync_data extends \core\task\scheduled_task {
 
@@ -53,11 +52,6 @@ class sync_data extends \core\task\scheduled_task {
             throw new Exception('Mambo Not Setup correctly - Missing site');
         }
 
-        // get completion that are setup to sync to mambo.io
-
-
-
-
         // check if we need to sync user data
         if(!empty($config->users_synced))
         {
@@ -72,9 +66,14 @@ class sync_data extends \core\task\scheduled_task {
             set_config('users_synced' , time() , 'block_mambo');
         }
 
-
+        // failed adding points
+        $rs = $DB->get_recordset('mambo_point_user', array('send' => 0));
+        foreach ($rs as $record) {
+           $response =  \block_mambo\points::add_points($record->userid, $record->mamboid);
+            echo print_r($response);
+        }
+        $rs->close();
         mtrace(' ');
-        die();
         return true;
     }
 }

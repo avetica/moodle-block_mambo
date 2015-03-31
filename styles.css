@@ -27,7 +27,8 @@
     background-color: #eee;
     padding: 2px 5px;
     margin-bottom: 5px;
-    min-height: 60px;
+    padding-bottom: 60px;
+
 }
 #mambo_points ul li ul li{
     border: 1px solid black;

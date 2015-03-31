@@ -35,17 +35,18 @@ defined('MOODLE_INTERNAL') || die();
  * load the module needed to make snapshots
  */
 function block_mambo_add_javascript_module() {
-    global $PAGE, $CFG, $USER;
+    global $PAGE, $COURSE , $CFG;
 
     $jsmodule = array(
         'name' => 'block_mfavatar',
         'fullpath' => '/blocks/mambo/module.js',
-        'requires' => array('dd-delegate' , 'dd-drop-plugin')
+        'requires' => array('dd-delegate' , 'dd-drop-plugin' , 'io-base')
     );
 
     $PAGE->requires->js_init_call('M.block_mambo.init', array(
-        'param1',
-        array(
-        )
+        'courseid' => $COURSE->id,
+        'ajaxurl' => $CFG->wwwroot . '/blocks/mambo/ajax.php',
+        'sesskey' => sesskey(),
+        array()
     ), false, $jsmodule);
 }

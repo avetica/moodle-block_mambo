@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * 
+ *
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file: points.php
- * @since 30-3-2015
- * @encoding: UTF8
+ * @file      : points.php
+ * @since     30-3-2015
+ * @encoding  : UTF8
  *
- * @package: block_mambo
+ * @package   : block_mambo
  *
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
@@ -36,6 +36,7 @@ class points extends mambo {
 
     /**
      * Get all points available for current site
+     *
      * @return array
      */
     static public function get_all() {
@@ -44,10 +45,55 @@ class points extends mambo {
         self::load_mambo_sdk();
 
         $response = \MamboPointsService::getPoints(self::$config->site);
-        if(empty($response->error))
-        {
-            return $response;
+        if (empty($response->error)) {
+
+            $array = array();
+            foreach ($response as $item) {
+                $array[$item->id] = $item;
+            }
+
+            return $array;
         }
+
         return false;
     }
+
+    /**
+     * add_points to a user
+     *
+     * @param int $userid
+     * @param string $mambopointid
+     * @param int $pointsrewarded
+     *
+     * @return $response
+     */
+    static public function add_points($userid = 0, $mambopointid = '', $pointsrewarded = 1) {
+
+        global $DB;
+
+        // load mambo
+        self::load_mambo_sdk();
+
+        $data = new \TransactionRequestData();
+        $data->setUUID($userid);
+
+        $point = new \SimplePoint();
+        $point->setPointId($mambopointid);
+        $point->setPoints($pointsrewarded);
+
+        $data->setPoints($point);
+
+        $response = \MamboTransactionsService::create(self::$config->site, $data);
+
+        // retry if we didn't exists first
+        if (!empty($response->error->type) && $response->error->type == 'UserNotFoundException') {
+            $user = $DB->get_record('user', array('id' => $userid));
+            $response = \block_mambo\user::set($user);
+            if ($response) {
+                return self::add_points($userid, $mambopointid, $pointsrewarded);
+            }
+        }
+        return $response;
+    }
+
 }

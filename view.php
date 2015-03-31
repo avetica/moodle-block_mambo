@@ -36,6 +36,8 @@ $courseid = required_param('courseid', PARAM_INT); // if no courseid is given
 $parentcourse = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
 $context = context_course::instance($courseid);
+$systemcontext = context_system::instance();
+
 $PAGE->set_course($parentcourse);
 
 $PAGE->set_url('/blocks/mambo/view.php');
@@ -57,13 +59,18 @@ $renderer = $PAGE->get_renderer('block_mambo');
 //get all points available in mambo
 $points = \block_mambo\points::get_all();
 
+// sending moodle header
 echo $OUTPUT->header();
 
-if(!$activities->hasCompletion($COURSE))
+if(!$activities->has_completion($COURSE))
 {
     print_error("disablecompletion", 'block_mambo');
 }
-
+else if(!has_capability('block/mambo:view', $systemcontext))
+{
+    print_error("failed:capability_view", 'block_mambo');
+}
 echo $renderer->activities_overview($activities , $points, $COURSE);
 
+// sending moodle footer
 echo $OUTPUT->footer();
