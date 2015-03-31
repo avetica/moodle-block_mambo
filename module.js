@@ -1,5 +1,5 @@
 /**
- * Helper for drag-drop courses
+ * Helper for drag-drop activities
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -45,14 +45,11 @@ M.block_mambo = {
 
             var drops = Y.Node.all('#mambo_behaviours ul > li');
             drops.each(function(v, k) {
-                M.block_mambo.log('LI');
 
                 // Get a reference to the Node instance
                 var a = v;
                 a.plug(Y.Plugin.Drop);
                 a.drop.on('drop:hit', function(e) {
-
-                    M.block_mambo.log('Drop')
 
                     var drag = e.drag.get('node').cloneNode(true);
                     var coursemoduleid = drag.getAttribute('data-id');

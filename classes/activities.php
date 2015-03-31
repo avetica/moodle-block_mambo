@@ -142,7 +142,7 @@ class activities {
     }
 
     /**
-     * send points to a user
+     * send a event to mambo
      *
      * @param int $userid
      * @param int $completionstate
@@ -151,7 +151,7 @@ class activities {
      * @return bool false if something goes wrong or already action executed
      * @global moodle_database $DB
      */
-    public function send_points($userid = 0, $completionstate = COMPLETION_UNKNOWN, $record = false) {
+    public function send_event($userid = 0, $completionstate = COMPLETION_UNKNOWN, $record = false) {
 
         global $DB;
 
@@ -160,12 +160,12 @@ class activities {
         }
 
         // check if we already have a record
-        $pointuser = $DB->get_record('mambo_behaviour_user', array(
+        $behaviouruser = $DB->get_record('mambo_behaviour_user', array(
             'userid' => $userid,
             'coursemoduleid' => $record->coursemoduleid
         ));
-        if ($pointuser) {
-            if ($pointuser->send == 1) {
+        if ($behaviouruser) {
+            if ($behaviouruser->send == 1) {
                 return false;
             }
         }
@@ -181,10 +181,10 @@ class activities {
         $obj->sendon = time();
         $obj->send = (empty($response->error)) ? 1 : 0;
 
-        if (!$pointuser) {
+        if (!$behaviouruser) {
             $DB->insert_record('mambo_behaviour_user', $obj);
         } else {
-            $obj->id = $pointuser->id;
+            $obj->id = $behaviouruser->id;
             $DB-update_record('mambo_behaviour_user', $obj);
         }
     }

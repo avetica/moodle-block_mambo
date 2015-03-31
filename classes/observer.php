@@ -110,7 +110,7 @@ class observer {
             if(($links = $activities->get_activity_maps($eventdata->coursemoduleid)) != false)
             {
                 foreach ($links as $link) {
-                    $activities->send_points($userid , $eventdata->completionstate, $link);
+                    $activities->send_event($userid , $eventdata->completionstate, $link);
                 }
             }
         }

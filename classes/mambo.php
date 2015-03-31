@@ -64,7 +64,5 @@ class mambo{
         \MamboClient::setEndPointBaseUrl(self::$config->api_url);
 
         \MamboClient::$debug = !empty(self::$config->debug) ? true : false;
-
     }
-
 }
