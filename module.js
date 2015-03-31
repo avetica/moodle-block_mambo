@@ -58,7 +58,8 @@ M.block_mambo = {
                     M.block_mambo.log('Drop: ' + coursemoduleid + '|' + verb)
 
                     // we made a clone remove some drag-and-drop attr
-                    drag.removeAttribute('id').removeAttribute('style').addAttr('class' , 'mambobehaviour');
+                    drag.removeAttribute('id').removeAttribute('style');
+                    drag.setAttribute('class' , 'mambobehaviour');
 
                     // saving the action
                     Y.on('io:complete', M.block_mambo.add_response, Y , [e.drop.get('node').one('ul') , drag]);
