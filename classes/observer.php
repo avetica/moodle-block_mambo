@@ -116,5 +116,20 @@ class observer {
         }
     }
 
+    /**
+     * Triggered from course_module_deleted event
+     *
+     * @param \core\event\course_module_deleted $event
+     *
+     * @return void
+     */
+    public static function course_module_deleted(\core\event\course_module_deleted $event)
+    {
+        global $DB;
+        // remove linked items
+        $DB->delete_records('mambo_behaviour' ,array('coursemoduleid' => $event->objectid));
+        $DB->delete_records('mambo_behaviour_user' ,array('coursemoduleid' => $event->objectid));
+    }
+
 }
 

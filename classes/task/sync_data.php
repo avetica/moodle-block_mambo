@@ -67,9 +67,9 @@ class sync_data extends \core\task\scheduled_task {
         }
 
         // failed adding points
-        $rs = $DB->get_recordset('mambo_point_user', array('send' => 0));
+        $rs = $DB->get_recordset('mambo_behaviour', array('send' => 0));
         foreach ($rs as $record) {
-           $response =  \block_mambo\points::add_points($record->userid, $record->mamboid);
+           $response =  \block_mambo\behaviours::add_event($record->userid, $record->verb);
             echo print_r($response);
         }
         $rs->close();

@@ -56,8 +56,8 @@ $activities = new \block_mambo\activities();
 // load html render
 $renderer = $PAGE->get_renderer('block_mambo');
 
-//get all points available in mambo
-$points = \block_mambo\points::get_all();
+//get all behaviours available in mambo
+$behaviours = \block_mambo\behaviours::get_all();
 
 // sending moodle header
 echo $OUTPUT->header();
@@ -70,7 +70,7 @@ else if(!has_capability('block/mambo:view', $systemcontext))
 {
     print_error("failed:capability_view", 'block_mambo');
 }
-echo $renderer->activities_overview($activities , $points, $COURSE);
+echo $renderer->activities_overview($activities , $behaviours, $COURSE);
 
 // sending moodle footer
 echo $OUTPUT->footer();

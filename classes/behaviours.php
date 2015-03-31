@@ -13,14 +13,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+namespace block_mambo;
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  *
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @file      : points.php
- * @since     30-3-2015
+ * @file      : behaviours.php
+ * @since     31-3-2015
  * @encoding  : UTF8
  *
  * @package   : block_mambo
@@ -28,28 +31,23 @@
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
-namespace block_mambo;
-
-defined('MOODLE_INTERNAL') || die();
-
-class points extends mambo {
+class behaviours extends mambo {
 
     /**
-     * Get all points available for current site
-     *
-     * @return array
+     * getting all behaviours
+     * @return object|bool
      */
     static public function get_all() {
 
         // load mambo
         self::load_mambo_sdk();
 
-        $response = \MamboPointsService::getPoints(self::$config->site);
+        $response = \MamboBehavioursService::getBehaviours(self::$config->site);
         if (empty($response->error)) {
 
             $array = array();
             foreach ($response as $item) {
-                $array[$item->id] = $item;
+                $array[$item->verb] = $item;
             }
 
             return $array;
@@ -59,41 +57,39 @@ class points extends mambo {
     }
 
     /**
-     * add_points to a user
+     * add_event to a user
+     * using the verb that is set in mambo
      *
      * @param int $userid
-     * @param string $mambopointid
-     * @param int $pointsrewarded
+     * @param string $verb
      *
-     * @return $response
+     * @return bool|string $response
      */
-    static public function add_points($userid = 0, $mambopointid = '', $pointsrewarded = 1) {
+    static public function add_event($userid = 0, $verb = '') {
 
-        global $DB;
+        global $DB, $CFG;
 
         // load mambo
         self::load_mambo_sdk();
 
-        $data = new \TransactionRequestData();
-        $data->setUUID($userid);
+        $data = new \EventRequestData();
+        $data->setUuid($userid); // Required
+        $data->setUrl($CFG->wwwroot); // Required
+        $data->setVerb($verb); // Required
 
-        $point = new \SimplePoint();
-        $point->setPointId($mambopointid);
-        $point->setPoints($pointsrewarded);
+        // @todo implement meta
+        // $data->setMetadata( array( "brand" => "Sony", "category" => array( "Laptop", "TV" ) ) );
+        $response = \MamboEventsService::create(self::$config->site, $data);
 
-        $data->setPoints($point);
-
-        $response = \MamboTransactionsService::create(self::$config->site, $data);
-
-        // retry if we didn't exists first
+        // retry if user didn't exists first
         if (!empty($response->error->type) && $response->error->type == 'UserNotFoundException') {
             $user = $DB->get_record('user', array('id' => $userid));
             $response = \block_mambo\user::set($user);
             if ($response) {
-                return self::add_points($userid, $mambopointid, $pointsrewarded);
+                return self::add_event($userid, $verb);
             }
         }
+
         return $response;
     }
-
 }

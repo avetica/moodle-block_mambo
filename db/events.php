@@ -45,4 +45,8 @@ $observers = array(
         'eventname'   => '\core\event\course_module_completion_updated',
         'callback'    => '\block_mambo\observer::course_module_completion_updated',
     ),
+    array(
+        'eventname'   => '\core\event\course_module_deleted',
+        'callback'    => '\block_mambo\observer::course_module_deleted',
+    ),
 );

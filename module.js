@@ -9,6 +9,11 @@
  **/
 
 M.block_mambo = {
+    config : {
+        'courseid' : 0,
+        'ajaxurl' : '',
+        'sesskey' : ''
+    },
     log : function (val)
     {
         try
@@ -19,6 +24,10 @@ M.block_mambo = {
     },
     init: function (Y, courseid , ajaxurl , sesskey)
     {
+        this.config.courseid = courseid;
+        this.config.ajaxurl = ajaxurl;
+        this.config.sesskey = sesskey;
+
         this.log('INIT: M.block_mambo');
 
         YUI().use('dd-delegate', 'dd-drop-plugin' , 'io-base', function(Y) {
@@ -34,7 +43,7 @@ M.block_mambo = {
                 });
             });
 
-            var drops = Y.Node.all('#mambo_points ul > li');
+            var drops = Y.Node.all('#mambo_behaviours ul > li');
             drops.each(function(v, k) {
                 M.block_mambo.log('LI');
 
@@ -47,23 +56,23 @@ M.block_mambo = {
 
                     var drag = e.drag.get('node').cloneNode(true);
                     var coursemoduleid = drag.getAttribute('data-id');
-                    var mamboid = a.getAttribute('data-id');
+                    var verb = a.getAttribute('data-id');
 
-
-                    M.block_mambo.log('Drop: ' + coursemoduleid + '|' + mamboid)
+                    M.block_mambo.log('Drop: ' + coursemoduleid + '|' + verb)
 
                     // we made a clone remove some drag-and-drop attr
-                    drag.removeAttribute('id').removeAttribute('style');
-
+                    drag.removeAttribute('id').removeAttribute('style').addAttr('class' , 'mambobehaviour');
 
                     // saving the action
-                    Y.on('io:complete', M.block_mambo.response_request, Y , [e.drop.get('node').one('ul') , drag]);
-                    var request = Y.io(ajaxurl + '?sesskey=' + sesskey + '&courseid=' + courseid + '&action=add&coursemoduleid=' + coursemoduleid + '&mamboid=' + mamboid);
+                    Y.on('io:complete', M.block_mambo.add_response, Y , [e.drop.get('node').one('ul') , drag]);
+                    Y.io(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=add&coursemoduleid=' + coursemoduleid + '&verb=' + verb);
                 });
             })
+
+            Y.one('#mambo_behaviours').delegate('click', M.block_mambo.delete_node, 'li.mambobehaviour');
         });
     },
-    response_request : function(id, o , args)
+    add_response : function(id, o , args)
     {
         try {
             var container = args[0];
@@ -74,8 +83,7 @@ M.block_mambo = {
             {
                 alert(response.error);
             }
-
-            if(response.status == true)
+            else if(response.status == true)
             {
                 container.appendChild(dragelement);
             }
@@ -87,6 +95,39 @@ M.block_mambo = {
         catch (e) {
             M.block_mambo.log(e)
            // alert("JSON Parse failed!");
+            return;
+        }
+    },
+    delete_node : function(e)
+    {
+        var node = e.currentTarget;
+        if(node.hasClass('mambobehaviour'))
+        {
+            // delete a node on click
+            var coursemoduleid = node.getAttribute('data-id');
+            Y.on('io:complete', M.block_mambo.delete_response, Y , [node]);
+            Y.io(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=delete&coursemoduleid=' + coursemoduleid + '&verb=holder');
+        }
+    },
+    delete_response : function(id, o , args)
+    {
+        try {
+            var node = args[0];
+            var response = Y.JSON.parse(o.responseText);
+
+            if(response.error)
+            {
+                alert(response.error);
+            }
+            else if(response.status == true)
+            {
+                // remove a node on success
+                node.remove();
+            }
+        }
+        catch (e) {
+            M.block_mambo.log(e)
+            // alert("JSON Parse failed!");
             return;
         }
     }

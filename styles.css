@@ -2,15 +2,15 @@
     float:left;
     width: 50%;
 }
-#mambo_points{
+#mambo_behaviours{
     float:left;
     width: 50%;
     overflow: hidden;
 }
-#mambo_activities p, #mambo_points p{
+#mambo_activities p, #mambo_behaviours p{
     height: 60px;
 }
-#mambo_points ul , #mambo_activities ul{
+#mambo_behaviours ul , #mambo_activities ul{
     padding: 5px;
     list-style: none;
     margin: 0;
@@ -22,7 +22,7 @@
     padding: 2px 5px;
     margin-bottom: 5px;
 }
-#mambo_points ul > li{
+#mambo_behaviours ul > li{
     border: 1px solid black;
     background-color: #eee;
     padding: 2px 5px;
@@ -30,10 +30,11 @@
     padding-bottom: 60px;
 
 }
-#mambo_points ul li ul li{
+#mambo_behaviours ul li ul li{
     border: 1px solid black;
-    background-color: #8DD5E7;
     padding: 2px 5px;
     margin-bottom: 5px;
     min-height: 10px;
+    background:#8DD5E7 url(pix/remove.gif) no-repeat scroll right center;
+    cursor:pointer;
 }

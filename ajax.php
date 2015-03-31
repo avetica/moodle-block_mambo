@@ -41,7 +41,7 @@ $sesskey = required_param('sesskey', PARAM_RAW);
 
 $coursemoduleid = required_param('coursemoduleid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
-$mamboid = required_param('mamboid', PARAM_ALPHANUM);
+$verb = required_param('verb', PARAM_ALPHANUM);
 $action = required_param('action', PARAM_ALPHA);
 
 $systemcontext = context_system::instance();
@@ -65,7 +65,7 @@ if (empty($array['error'])) {
             break;
 
         case 'add':
-            $array['status'] = $activities->add_activity_map($coursemoduleid, $mamboid, $courseid);
+            $array['status'] = $activities->add_activity_map($coursemoduleid, $verb, $courseid);
             break;
 
         default:

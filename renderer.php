@@ -34,14 +34,14 @@ class block_mambo_renderer extends plugin_renderer_base {
      * get overview of mapped activities
      *
      * @param \block_mambo\activities $activities
-     * @param mixed $points    result from mambo
-     * @param stdClass $course Moodle course object.
+     * @param mixed $behaviours result from mambo
+     * @param stdClass $course  Moodle course object.
      *
      * @return string html content
      */
-    public function activities_overview(\block_mambo\activities $activities, $points, $course) {
+    public function activities_overview(\block_mambo\activities $activities, $behaviours, $course) {
         $html = '<div id="mambo_mapping_wrapper">';
-        $items = $activities->get_mapping_activities($course, $points);
+        $items = $activities->get_mapping_activities($course, $behaviours);
 
 
         // build activity list
@@ -60,16 +60,15 @@ class block_mambo_renderer extends plugin_renderer_base {
         }
 
         // build points list get by mambo
-        if (!empty($items['points'])) {
-            $html .= '<div id="mambo_points">
-                            <h3>' . get_string('heading:mambo_points', 'block_mambo') . '</h3>
-                            <p>' . get_string('desc:mambo_points', 'block_mambo') . '</p>
+        if (!empty($items['behaviours'])) {
+            $html .= '<div id="mambo_behaviours">
+                            <h3>' . get_string('heading:mambo_behaviours', 'block_mambo') . '</h3>
+                            <p>' . get_string('desc:mambo_behaviours', 'block_mambo') . '</p>
                         <ul>';
 
-            foreach ($items['points'] as $point) {
-
-                $html .= '<li data-id="' . $point->id . '"><b>' . $point->name . '</b>';
-                $html .= $this->points($point , $items['activities']);
+            foreach ($items['behaviours'] as $behaviour) {
+                $html .= '<li data-id="' . $behaviour->verb . '"><b>' . $behaviour->attrs->type . ': ' . $behaviour->name . '</b>';
+                $html .= $this->mappeditems($behaviour, $items['activities']);
                 $html .= '</li>';
             }
 
@@ -81,24 +80,21 @@ class block_mambo_renderer extends plugin_renderer_base {
     }
 
     /**
-     * format points already connected
+     * format behaviours already connected
      *
-     * @param $point
+     * @param $behaviour
      * @param $activities
      *
      * @return string
      */
-    protected function points($point , $activities) {
+    protected function mappeditems($behaviour, $activities) {
 
         $html = '<ul>';
 
-        if (!empty($point->items)) {
-
-            foreach ($point->items as $item) {
-
-                if(isset($activities[$item->coursemoduleid]->displayname))
-                {
-                    $html .= '<li data-id="' . $item->coursemoduleid . '">' . $activities[$item->coursemoduleid]->displayname . '</li>';
+        if (!empty($behaviour->items)) {
+            foreach ($behaviour->items as $item) {
+                if (isset($activities[$item->coursemoduleid]->displayname)) {
+                    $html .= '<li class="mambobehaviour" data-id="' . $item->coursemoduleid . '">' . $activities[$item->coursemoduleid]->displayname . '</li>';
                 }
             }
         }

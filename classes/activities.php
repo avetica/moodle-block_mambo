@@ -44,35 +44,35 @@ class activities {
      */
     public function has_completion($course) {
         global $CFG;
-
-        return ($CFG->enablecompletion) ? true : false;
+        return ($CFG->enablecompletion && !empty($course->enablecompletion)) ? true : false;
     }
 
     /**
      * get list of activities that are available
      *
      * @param stdClass $course Moodle course object.
-     * @param mixed $points    the points from mambo
+     * @param mixed $behaviours list all behaviours from mambo
      *
      * @return false|array
      * @throws \moodle_exception
      */
-    public function get_mapping_activities($course, $points) {
+    public function get_mapping_activities($course, $behaviours) {
         global $DB;
 
         // get already linked items
-        $rs = $DB->get_recordset('mambo_point', array('courseid' => $course->id));
+        $rs = $DB->get_recordset('mambo_behaviour', array('courseid' => $course->id));
         foreach ($rs as $record) {
-            if (isset($points[$record->mamboid])) {
-                if (empty($points[$record->mamboid]->items)) {
-                    $points[$record->mamboid]->items = array();
+
+            if (isset($behaviours[$record->verb])) {
+                if (empty($behaviours[$record->verb]->items)) {
+                    $behaviours[$record->verb]->items = array();
                 }
-                $points[$record->mamboid]->items[$record->id] = $record;
+                $behaviours[$record->verb]->items[$record->id] = $record;
             }
         }
         $rs->close();
 
-        $array = array('points' => $points, 'activities' => array());
+        $array = array('behaviours' => $behaviours, 'activities' => array());
         $completioninfo = new \completion_info($course);
         $activities = $completioninfo->get_activities();
 
@@ -96,32 +96,31 @@ class activities {
      */
     public function get_activity_maps($coursemoduleid = 0) {
         global $DB;
-
-        return $DB->get_records('mambo_point', array('coursemoduleid' => $coursemoduleid));
+        return $DB->get_records('mambo_behaviour', array('coursemoduleid' => $coursemoduleid));
     }
 
     /**
      * add activity mapping to the db
      *
      * @param int $coursemoduleid
-     * @param string $mamboid
+     * @param string $verb
      *
      * @global moodle_database $DB
      * @return bool
      */
-    public function add_activity_map($coursemoduleid = 0, $mamboid = '', $courseid = 0) {
+    public function add_activity_map($coursemoduleid = 0, $verb = '', $courseid = 0) {
         global $DB;
 
         $obj = new \stdClass();
         $obj->coursemoduleid = $coursemoduleid;
-        $obj->mamboid = $mamboid;
+        $obj->verb = $verb;
         $obj->courseid = $courseid;
 
         // make sure not already exists
-        $row = $DB->get_record('mambo_point', (array)$obj);
+        $row = $DB->get_record('mambo_behaviour', (array)$obj);
         if (!$row) {
             $obj->addedon = time();
-            $DB->insert_record('mambo_point', $obj);
+            $DB->insert_record('mambo_behaviour', $obj);
 
             return true;
         }
@@ -139,7 +138,7 @@ class activities {
      */
     public function delete_activity_map($coursemoduleid = 0) {
         global $DB;
-        $DB->delete_records('mambo_point', array('coursemoduleid' => $coursemoduleid));
+        $DB->delete_records('mambo_behaviour', array('coursemoduleid' => $coursemoduleid));
     }
 
     /**
@@ -161,7 +160,7 @@ class activities {
         }
 
         // check if we already have a record
-        $pointuser = $DB->get_record('mambo_point_user', array(
+        $pointuser = $DB->get_record('mambo_behaviour_user', array(
             'userid' => $userid,
             'coursemoduleid' => $record->coursemoduleid
         ));
@@ -172,22 +171,21 @@ class activities {
         }
 
         // sending this to mambo
-        $response = \block_mambo\points::add_points($userid, $record->mamboid);
+        $response = \block_mambo\behaviours::add_event($userid, $record->verb);
 
         $obj = new \stdClass();
         $obj->userid = $userid;
-        $obj->mamboid = $record->mamboid;
+        $obj->verb = $record->verb;
         $obj->coursemoduleid = $record->coursemoduleid;
         $obj->completionstate = $completionstate;
         $obj->sendon = time();
         $obj->send = (empty($response->error)) ? 1 : 0;
 
         if (!$pointuser) {
-            $DB->insert_record('mambo_point_user', $obj);
+            $DB->insert_record('mambo_behaviour_user', $obj);
         } else {
             $obj->id = $pointuser->id;
-            $DB-update_record('mambo_point_user', $obj);
+            $DB-update_record('mambo_behaviour_user', $obj);
         }
-        echo '<pre>';print_r($response);echo '</pre>';die(__LINE__.' '.__FILE__);
     }
 }
