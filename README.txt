@@ -1,7 +1,9 @@
 # MamboIO Gamification Block
 
 Author: Luuk Verhoeven, MoodleFreak.com
+
 Requires at least: Moodle 2.6+
+
 License: www.avetica.nl
 
 This block allows you to map activities to simple and flexible behaviours. You can setup them in mambo.io

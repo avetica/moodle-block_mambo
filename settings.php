@@ -35,15 +35,17 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('block_mambo/debug', get_string('debug', 'block_mambo'), '', 0));
 
     $results = array('' => get_string('select_a_site' , 'block_mambo'));
-    $sites = \block_mambo\sites::get_all();
-    if(!empty($sites))
-    {
-        foreach($sites as $site)
-        {
-            $results[$site->url] = $site->url . ' - ' . $site->name;
+    try {
+        $sites = \block_mambo\sites::get_all();
+        if (!empty($sites)) {
+            foreach ($sites as $site) {
+                $results[$site->url] = $site->url . ' - ' . $site->name;
+            }
         }
+    }catch(Exception $exc)
+    {
+
     }
-    
     $settings->add(new admin_setting_configselect('block_mambo/site', get_string('sites', 'block_mambo'), '', '', $results));
     $settings->add(new admin_setting_heading('block_mambo_check', '', \block_mambo\helper::compatibillitycheck()));
 }

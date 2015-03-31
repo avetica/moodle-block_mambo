@@ -43,7 +43,6 @@ class sites extends mambo {
 
         // load mambo
         self::load_mambo_sdk();
-
         $response = \MamboSitesService::getSites();
         if(empty($response->error))
         {
