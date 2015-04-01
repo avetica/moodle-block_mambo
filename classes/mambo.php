@@ -60,7 +60,7 @@ class mambo {
             if (empty(self::$config->$setting)) {
                 // reset
                 self::$config = array();
-                throw new Exception('Mambo missing setting:' . $setting);
+                throw new \Exception('Mambo missing setting:' . $setting);
             }
         }
 
