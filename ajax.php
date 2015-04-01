@@ -37,7 +37,7 @@ $sesskey = required_param('sesskey', PARAM_RAW);
 
 $coursemoduleid = required_param('coursemoduleid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
-$verb = required_param('verb', PARAM_ALPHANUM);
+$verb = required_param('verb', PARAM_TEXT);
 $action = required_param('action', PARAM_ALPHA);
 
 $systemcontext = context_system::instance();

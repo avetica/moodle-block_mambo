@@ -45,6 +45,15 @@ $PAGE->requires->css('/blocks/mambo/styles.css');
 // load drag-and-drop js module
 block_mambo_add_javascript_module();
 
+$config = get_config('block_mambo');
+
+echo $OUTPUT->header();
+
+if(empty($config->site))
+{
+    print_error("site_missing", 'block_mambo');
+}
+
 // load activities class
 $activities = new \block_mambo\activities();
 
@@ -55,7 +64,7 @@ $renderer = $PAGE->get_renderer('block_mambo');
 $behaviours = \block_mambo\behaviours::get_all();
 
 // sending moodle header
-echo $OUTPUT->header();
+
 
 if(!$activities->has_completion($COURSE))
 {

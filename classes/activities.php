@@ -118,7 +118,6 @@ class activities {
         if (!$row) {
             $obj->addedon = time();
             $DB->insert_record('mambo_behaviour', $obj);
-
             return true;
         }
 

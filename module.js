@@ -30,7 +30,7 @@ M.block_mambo = {
 
         this.log('INIT: M.block_mambo');
 
-        YUI().use('dd-delegate', 'dd-drop-plugin' , 'io-base', function(Y) {
+        YUI().use('dd-delegate', 'dd-drop-plugin' , 'io-base','json-parse', 'json-stringify', function(Y) {
             var del = new Y.DD.Delegate({
                 container: '#mambo_activities',
                 nodes: 'li'
@@ -51,38 +51,42 @@ M.block_mambo = {
                 a.plug(Y.Plugin.Drop);
                 a.drop.on('drop:hit', function(e) {
 
-                    var drag = e.drag.get('node').cloneNode(true);
+                    var drag = e.drag.get('node');
                     var coursemoduleid = drag.getAttribute('data-id');
                     var verb = a.getAttribute('data-id');
 
                     M.block_mambo.log('Drop: ' + coursemoduleid + '|' + verb)
 
-                    // we made a clone remove some drag-and-drop attr
-                    drag.removeAttribute('id').removeAttribute('style');
-                    drag.setAttribute('class' , 'mambobehaviour');
+                    var io = new Y.IO();
 
                     // saving the action
-                    Y.on('io:complete', M.block_mambo.add_response, Y , [e.drop.get('node').one('ul') , drag]);
-                    Y.io(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=add&coursemoduleid=' + coursemoduleid + '&verb=' + verb);
+                    io.on('io:complete', M.block_mambo.add_response , Y , e.drop.get('node').one('ul') , drag);
+                    io.send(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=add&coursemoduleid=' + coursemoduleid + '&verb=' + verb);
                 });
             })
 
             Y.one('#mambo_behaviours').delegate('click', M.block_mambo.delete_node, 'li.mambobehaviour');
         });
     },
-    add_response : function(id, o , args)
+    add_response : function(id, o , container , dragelement)
     {
+        M.block_mambo.log(id)
         try {
-            var container = args[0];
-            var dragelement = args[1];
-            var response = Y.JSON.parse(o.responseText);
 
+            var response = Y.JSON.parse(o.responseText);
             if(response.error)
             {
                 alert(response.error);
             }
             else if(response.status == true)
             {
+                M.block_mambo.log('add node')
+
+                var dragelement = dragelement.cloneNode(true);
+                // we made a clone remove some drag-and-drop attr
+                dragelement.removeAttribute('id').removeAttribute('style');
+                dragelement.setAttribute('class' , 'mambobehaviour');
+
                 container.appendChild(dragelement);
             }
             else
@@ -92,9 +96,8 @@ M.block_mambo = {
         }
         catch (e) {
             M.block_mambo.log(e)
-           // alert("JSON Parse failed!");
-            return;
         }
+        return true;
     },
     delete_node : function(e)
     {
@@ -119,14 +122,13 @@ M.block_mambo = {
             }
             else if(response.status == true)
             {
+                M.block_mambo.log('delete node')
                 // remove a node on success
                 node.remove();
             }
         }
         catch (e) {
             M.block_mambo.log(e)
-            // alert("JSON Parse failed!");
-            return;
         }
     }
 }

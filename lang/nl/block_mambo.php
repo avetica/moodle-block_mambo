@@ -39,5 +39,6 @@ $string['failed:capability_view'] = 'Niet genoeg rechten';
 $string['heading:mambo_activities'] = 'Activiteiten';
 $string['activitiespage'] = 'Overzicht van activiteiten';
 $string['desc:mambo_behaviours'] = 'Je kan items van links naar rechts slepen.';
+$string['site_missing'] = 'Selecteer een mamboIO site in uw instellingen.';
 $string['desc:mambo_activities'] = 'Alle activiteiten waar completion voor aanstaat.';
 $string['pluginname_desc'] = 'U zult uw OAuth API keys vinden op <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';

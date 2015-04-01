@@ -38,6 +38,7 @@ $string['heading:mambo_behaviours'] = 'Mambo Behaviours';
 $string['failed:capability_view'] = 'Mambo Points';
 $string['heading:mambo_activities'] = 'Activities';
 $string['activitiespage'] = 'List of activities';
+$string['site_missing'] = 'Please select your MamboIO site from the dropdown in the block settings.';
 $string['desc:mambo_behaviours'] = 'You can drag-and-drop activities from the left and place them on a mambo behaviour';
 $string['desc:mambo_activities'] = 'All available activities that has completion enabled.';
 $string['pluginname_desc'] = 'You will find your OAuth API keys on <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';
