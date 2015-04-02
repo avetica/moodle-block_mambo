@@ -34,6 +34,7 @@ $string['sites'] = 'List of sites available';
 $string['debug'] = 'Debug API';
 $string['task'] = 'Sync data to MamboIO';
 $string['btn:setup'] = 'Activity Mapping';
+$string['mambo:view'] = 'View MamboIO Block';
 $string['heading:mambo_behaviours'] = 'Mambo Behaviours';
 $string['failed:capability_view'] = 'Mambo Points';
 $string['heading:mambo_activities'] = 'Activities';

@@ -34,6 +34,7 @@ $string['sites'] = 'Sites beschikbaar';
 $string['debug'] = 'Debug API';
 $string['task'] = 'Sync data naar MamboIO';
 $string['btn:setup'] = 'Activiteiten Mappen';
+$string['mambo:view'] = 'Bekijken van MamboIO Blok';
 $string['heading:mambo_behaviours'] = 'Mambo Behaviours';
 $string['failed:capability_view'] = 'Niet genoeg rechten';
 $string['heading:mambo_activities'] = 'Activiteiten';
