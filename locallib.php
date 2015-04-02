@@ -35,7 +35,7 @@ function block_mambo_add_javascript_module() {
     $jsmodule = array(
         'name' => 'block_mfavatar',
         'fullpath' => '/blocks/mambo/module.js',
-        'requires' => array('dd-delegate' , 'dd-drop-plugin' , 'io-base')
+        'requires' => array('dd-delegate' , 'dd-drop-plugin' , 'io-base' , 'dd-scroll')
     );
 
     $PAGE->requires->js_init_call('M.block_mambo.init', array(

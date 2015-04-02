@@ -30,11 +30,12 @@ M.block_mambo = {
 
         this.log('INIT: M.block_mambo');
 
-        YUI().use('dd-delegate', 'dd-drop-plugin' , 'io-base','json-parse', 'json-stringify', function(Y) {
+        YUI().use('dd-delegate', 'dd-scroll', 'dd-drop-plugin' , 'io-base','json-parse', 'json-stringify', function(Y) {
             var del = new Y.DD.Delegate({
                 container: '#mambo_activities',
                 nodes: 'li'
             });
+            del.dd.plug(Y.Plugin.DDWinScroll);
 
             del.on('drag:end', function(e) {
                 del.get('currentNode').setStyles({
