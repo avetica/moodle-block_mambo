@@ -28,10 +28,11 @@ require_once(dirname(__FILE__) . '/locallib.php');
 require_login();
 
 $courseid = required_param('courseid', PARAM_INT); // if no courseid is given
+$blockid = required_param('blockid', PARAM_INT); // if no courseid is given
 $parentcourse = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
 $context = context_course::instance($courseid);
-$systemcontext = context_system::instance();
+$blockcontext = context_block::instance($blockid , MUST_EXIST);
 
 $PAGE->set_course($parentcourse);
 
@@ -47,6 +48,7 @@ block_mambo_add_javascript_module();
 
 $config = get_config('block_mambo');
 
+// sending moodle header
 echo $OUTPUT->header();
 
 if(empty($config->site))
@@ -63,14 +65,11 @@ $renderer = $PAGE->get_renderer('block_mambo');
 //get all behaviours available in mambo
 $behaviours = \block_mambo\behaviours::get_all();
 
-// sending moodle header
-
-
 if(!$activities->has_completion($COURSE))
 {
     print_error("disablecompletion", 'block_mambo');
 }
-else if(!has_capability('block/mambo:view', $systemcontext))
+else if(!has_capability('block/mambo:view', $blockcontext))
 {
     print_error("failed:capability_view", 'block_mambo');
 }

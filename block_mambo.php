@@ -93,8 +93,8 @@ class block_mambo extends block_base {
             return $this->content;
         }
 
-        $systemcontext = context_system::instance();
-        if ((!isloggedin() || isguestuser() || !has_capability('block/mambo:view', $systemcontext))) {
+        $blockcontext = context_block::instance($this->instance->id , MUST_EXIST);
+        if ((!isloggedin() || isguestuser() || !has_capability('block/mambo:view', $blockcontext))) {
             $this->content = new stdClass();
             $this->content->text = '';
 
