@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function block_mambo_add_javascript_module() {
     global $PAGE, $COURSE , $CFG;
-
+    $blockid = required_param('blockid', PARAM_INT);
     $jsmodule = array(
         'name' => 'block_mfavatar',
         'fullpath' => '/blocks/mambo/module.js',
@@ -42,6 +42,7 @@ function block_mambo_add_javascript_module() {
         'courseid' => $COURSE->id,
         'ajaxurl' => $CFG->wwwroot . '/blocks/mambo/ajax.php',
         'sesskey' => sesskey(),
+        'blockid' => $blockid,
         array()
     ), false, $jsmodule);
 }

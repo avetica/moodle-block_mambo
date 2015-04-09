@@ -12,7 +12,8 @@ M.block_mambo = {
     config : {
         'courseid' : 0,
         'ajaxurl' : '',
-        'sesskey' : ''
+        'sesskey' : '',
+        'blockid' : 0
     },
     log : function (val)
     {
@@ -22,11 +23,12 @@ M.block_mambo = {
         } catch (e){
         }
     },
-    init: function (Y, courseid , ajaxurl , sesskey)
+    init: function (Y, courseid , ajaxurl , sesskey , blockid)
     {
         this.config.courseid = courseid;
         this.config.ajaxurl = ajaxurl;
         this.config.sesskey = sesskey;
+        this.config.blockid = blockid;
 
         this.log('INIT: M.block_mambo');
 
@@ -62,7 +64,7 @@ M.block_mambo = {
 
                     // saving the action
                     io.on('io:complete', M.block_mambo.add_response , Y , e.drop.get('node').one('ul') , drag);
-                    io.send(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=add&coursemoduleid=' + coursemoduleid + '&verb=' + verb);
+                    io.send(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=add&coursemoduleid=' + coursemoduleid + '&verb=' + verb + '&blockid=' + M.block_mambo.config.blockid);
                 });
             })
 
@@ -108,7 +110,7 @@ M.block_mambo = {
             // delete a node on click
             var coursemoduleid = node.getAttribute('data-id');
             Y.on('io:complete', M.block_mambo.delete_response, Y , [node]);
-            Y.io(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=delete&coursemoduleid=' + coursemoduleid + '&verb=holder');
+            Y.io(M.block_mambo.config.ajaxurl + '?sesskey=' + M.block_mambo.config.sesskey + '&courseid=' + M.block_mambo.config.courseid + '&action=delete&coursemoduleid=' + coursemoduleid + '&verb=holder' + '&blockid=' + M.block_mambo.config.blockid);
         }
     },
     delete_response : function(id, o , args)

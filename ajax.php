@@ -36,14 +36,15 @@ require_login(get_site(), true, null, true, true);
 $sesskey = required_param('sesskey', PARAM_RAW);
 
 $coursemoduleid = required_param('coursemoduleid', PARAM_INT);
+$blockid = required_param('blockid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $verb = required_param('verb', PARAM_TEXT);
 $action = required_param('action', PARAM_ALPHA);
 
-$systemcontext = context_system::instance();
+$blockcontext = context_block::instance($blockid , MUST_EXIST);
 $array = array('error' => '', 'status' => false);
 
-if (!has_capability('block/mambo:view', $systemcontext)) {
+if (!has_capability('block/mambo:view', $blockcontext)) {
     $array['error'] = get_string('failed:capability_view', 'block_mambo');
 } elseif (!confirm_sesskey($sesskey)) {
     $array['error'] = get_string('failed:sesskey', 'block_mambo');
