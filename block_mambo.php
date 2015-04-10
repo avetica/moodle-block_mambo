@@ -113,7 +113,7 @@ class block_mambo extends block_base {
             $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/view.php' , array('blockid'=> $this->instance->id , 'courseid' =>  $COURSE->id)), get_string('btn:setup', 'block_mambo'));
         }
         // check if this block has a widget
-        if(($widget = block_mambo_load_widget($this->config->widget , $this->instance->id)) !== '')
+        if(!empty($this->config->widget) && ($widget = block_mambo_load_widget($this->config->widget , $this->instance->id)) !== '')
         {
             block_mambo_add_widget_init();
             $this->content->text .= $widget;
