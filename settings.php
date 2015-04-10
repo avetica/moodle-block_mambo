@@ -31,8 +31,10 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('block_mambo_settings', '', get_string('pluginname_desc', 'block_mambo')));
     $settings->add(new admin_setting_configtext('block_mambo/apikey_public', get_string('apikey_public', 'block_mambo'), '', '', PARAM_ALPHANUM));
     $settings->add(new admin_setting_configtext('block_mambo/apikey_private', get_string('apikey_private', 'block_mambo'), '', '', PARAM_ALPHANUM));
+    $settings->add(new admin_setting_configtext('block_mambo/apikey_javascript', get_string('apikey_javascript', 'block_mambo'), '', '', PARAM_ALPHANUM));
     $settings->add(new admin_setting_configtext('block_mambo/api_url', get_string('api_url', 'block_mambo'), '', 'http://api.mambo.io', PARAM_URL));
     $settings->add(new admin_setting_configcheckbox('block_mambo/debug', get_string('debug', 'block_mambo'), '', 0));
+    $settings->add(new admin_setting_configcheckbox('block_mambo/debug_javascript', get_string('debug_javascript', 'block_mambo'), '', 0));
 
     $results = array('' => get_string('select_a_site', 'block_mambo'));
     try {

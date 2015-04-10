@@ -30,12 +30,12 @@ defined('MOODLE_INTERNAL') || die();
  * load the module needed to make snapshots
  */
 function block_mambo_add_javascript_module() {
-    global $PAGE, $COURSE , $CFG;
+    global $PAGE, $COURSE, $CFG;
     $blockid = required_param('blockid', PARAM_INT);
     $jsmodule = array(
-        'name' => 'block_mfavatar',
+        'name' => 'block_mambo',
         'fullpath' => '/blocks/mambo/module.js',
-        'requires' => array('dd-delegate' , 'dd-drop-plugin' , 'io-base' , 'dd-scroll')
+        'requires' => array('dd-delegate', 'dd-drop-plugin', 'io-base', 'dd-scroll')
     );
 
     $PAGE->requires->js_init_call('M.block_mambo.init', array(
@@ -45,4 +45,61 @@ function block_mambo_add_javascript_module() {
         'blockid' => $blockid,
         array()
     ), false, $jsmodule);
+}
+
+/**
+ * load JavaScript SDK for the widget with the needed parameters
+ */
+function block_mambo_add_widget_init() {
+    global $PAGE, $USER, $CFG;
+    static $mambowidgetinit;
+
+    if ($mambowidgetinit) {
+        return;
+    }
+
+    $config = get_config('block_mambo');
+    $jsmodule = array(
+        'name' => 'block_mambo_widget',
+        'fullpath' => '/blocks/mambo/widget.js',
+        'requires' => array()
+    );
+
+    $PAGE->requires->js_init_call('M.block_mambo_widget.init', array(
+        'apikey_javascript' => $config->apikey_javascript,
+        'api_url' => str_replace(array('http://', 'https://'), '', $config->api_url),
+        'site' => $config->site,
+        'userid' => (int)$USER->id,
+        'apiRoot' => $config->api_url,
+        'debug' => (int)$config->debug_javascript,
+        array()
+    ), false, $jsmodule);
+
+    //set to true this will prevent from loading multipull times when there are more blocks on the same page
+    $mambowidgetinit = true;
+}
+
+/**
+ * load a widget linked to this block
+ *
+ * @param string $content
+ * @param int $blockid
+ *
+ * @return string
+ */
+function block_mambo_load_widget($content = '', $blockid = 0) {
+
+    if (!empty($content)) {
+        $return = '<script>var mamboCallbacks = window.mamboCallbacks || []; '. PHP_EOL;
+        $return .= 'mamboCallbacks.push(function() {'. PHP_EOL;
+        $return .= $content. PHP_EOL;
+        $return .= '});//close push'. PHP_EOL;
+        $return .= '</script>' . PHP_EOL;
+        $return .= '<div id="mambo_widget_' . $blockid . '" style="min-height:50px"></div>'. PHP_EOL;
+
+        return $return;
+    }
+
+    //else no widget found
+    return '';
 }

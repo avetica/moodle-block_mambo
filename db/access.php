@@ -35,7 +35,7 @@ $capabilities = array(
         'clonepermissionsfrom' => 'moodle/my:manageblocks'
     ),
     'block/mambo:addinstance' => array(
-        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'riskbitmask' => RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(
@@ -45,7 +45,17 @@ $capabilities = array(
         'clonepermissionsfrom' => 'moodle/site:manageblocks'
     ),
     'block/mambo:view' => array(
-        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'riskbitmask' => RISK_SPAM  | RISK_CONFIG ,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ),
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ),
+    'block/mambo:addwidget' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS | RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(

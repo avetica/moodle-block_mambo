@@ -42,7 +42,7 @@ class block_mambo extends block_base {
      * @return boolean
      */
     function instance_allow_multiple() {
-        return false;
+        return true;
     }
 
     /**
@@ -61,7 +61,7 @@ class block_mambo extends block_base {
      * @return array
      */
     public function applicable_formats() {
-        return array('course' => true);
+        return array('all' => true, 'mod' => true, 'tag' => true);
     }
 
     function instance_allow_config() {
@@ -88,30 +88,36 @@ class block_mambo extends block_base {
         global $CFG, $COURSE;
 
         require_once $CFG->libdir . '/formslib.php';
+        require_once  'locallib.php';
 
         if ($this->content !== null) {
             return $this->content;
         }
 
-        $blockcontext = context_block::instance($this->instance->id , MUST_EXIST);
-        if ((!isloggedin() || isguestuser() || !has_capability('block/mambo:view', $blockcontext))) {
+        if ((!isloggedin() || isguestuser())) {
             $this->content = new stdClass();
             $this->content->text = '';
 
             return $this->content;
         }
 
+        $blockcontext = context_block::instance($this->instance->id , MUST_EXIST);
+
         $this->content = new stdClass();
-        $this->content->text = '<div class="singlebutton">
-                                    <form action="' . $CFG->wwwroot . '/blocks/mambo/view.php" method="get">
-                                        <div>
-                                            <input type="hidden" name="blockid" value="' . $this->instance->id . '"/>
-                                            <input type="hidden" name="courseid" value="' . $COURSE->id . '"/>
-                                            <input class="singlebutton" type="submit" value="' . get_string('btn:setup', 'block_mambo') . '"/>
-                                        </div>
-                                    </form>
-                                </div>';
+        $this->content->text = '';
         $this->content->footer = '';
+
+
+        // show mapping button for manager usage
+        if( has_capability('block/mambo:view', $blockcontext)){
+            $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/view.php' , array('blockid'=> $this->instance->id , 'courseid' =>  $COURSE->id)), get_string('btn:setup', 'block_mambo'));
+        }
+        // check if this block has a widget
+        if(($widget = block_mambo_load_widget($this->config->widget , $this->instance->id)) !== '')
+        {
+            block_mambo_add_widget_init();
+            $this->content->text .= $widget;
+        }
 
         return $this->content;
     }

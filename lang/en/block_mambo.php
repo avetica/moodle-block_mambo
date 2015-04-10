@@ -28,18 +28,39 @@ $string['mambo:myaddinstance'] = 'Add a MamboIO Gamification Block to My home';
 $string['pluginname'] = 'MamboIO Gamification';
 $string['apikey_private'] = 'Private key';
 $string['apikey_public'] = 'Public key';
+$string['apikey_javascript'] = 'JavaScript API key';
 $string['api_url'] = 'end point URL';
 $string['select_a_site'] = 'Select your site name below';
 $string['sites'] = 'List of sites available';
 $string['debug'] = 'Debug API';
+$string['debug_javascript'] = 'Debug Javascript to console';
 $string['task'] = 'Sync data to MamboIO';
-$string['btn:setup'] = 'Activity Mapping';
+$string['btn:setup'] = 'Configure mambo mapping';
+$string['btn:addwidget'] = 'Widget config';
 $string['mambo:view'] = 'View MamboIO Block';
 $string['heading:mambo_behaviours'] = 'Mambo Behaviours';
 $string['failed:capability_view'] = 'Mambo Points';
 $string['heading:mambo_activities'] = 'Activities';
 $string['activitiespage'] = 'List of activities';
+$string['widgetpage'] = 'Widget configuration';
 $string['site_missing'] = 'Please select your MamboIO site from the dropdown in the block settings.';
 $string['desc:mambo_behaviours'] = 'You can drag-and-drop activities from the left and place them on a mambo behaviour';
 $string['desc:mambo_activities'] = 'All available activities that has completion enabled.';
 $string['pluginname_desc'] = 'You will find your OAuth API keys on <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';
+
+
+$string['template'] = 'Template';
+$string['select'] = 'You can select a template below';
+$string['widget_content'] = 'Widget Content';
+$string['template_helper'] = '<pre>
+&lt;script&gt;
+var <strong>mamboCallbacks</strong> = window.<strong>mamboCallbacks</strong> || [];
+
+mamboCallbacks.push(function() {
+
+<span style="background: yellow"><strong>## your content above will be added here. Keep in mind it includes the correct id of div bellow ##</strong></span>
+
+});
+
+&lt;/script&gt;
+&lt;div id=&quot;<span style="background: yellow">mambo_widget_{$a->id}</span>&quot; style=&quot;position:absolute;&quot;&gt;&lt;/div&gt;</pre>';
