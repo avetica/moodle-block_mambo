@@ -47,9 +47,10 @@ $string['site_missing'] = 'Please select your MamboIO site from the dropdown in 
 $string['desc:mambo_behaviours'] = 'You can drag-and-drop activities from the left and place them on a mambo behaviour';
 $string['desc:mambo_activities'] = 'All available activities that has completion enabled.';
 $string['pluginname_desc'] = 'You will find your OAuth API keys on <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';
-
+$string['initoverride'] = 'Extra Initialisation Options for Mambo.init()';
 
 $string['template'] = 'Template';
+
 $string['select'] = 'You can select a template below';
 $string['widget_content'] = 'Widget Content';
 $string['template_helper'] = '<pre>

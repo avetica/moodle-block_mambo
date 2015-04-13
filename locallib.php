@@ -71,6 +71,7 @@ function block_mambo_add_widget_init() {
         'site' => $config->site,
         'userid' => (int)$USER->id,
         'apiRoot' => $config->api_url,
+        'initoverride' => $config->initoverride,
         'debug' => (int)$config->debug_javascript,
         array()
     ), false, $jsmodule);

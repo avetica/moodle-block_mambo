@@ -13,23 +13,26 @@ var mamboCallbacks = window.mamboCallbacks || [];
 
 M.block_mambo_widget = {
     config: {
-        'apikey_javascript': '',
-        'api_url'          : '',
-        'site'         : '',
-        'userid'         : 0,
-        'wwwroot'          : '',
-        'debug'            : false
+        'apikey_javascript'  : '',
+        'api_url'            : '',
+        'site'               : '',
+        'userid'             : 0,
+        'wwwroot'            : '',
+        'overide_init_object': '',
+        'debug'              : false
     },
     log   : function (val)
     {
         try
         {
-            console.log(val);
+            if (M.block_mambo_widget.config.debug){
+                console.log(val);
+            }
         } catch (e)
         {
         }
     },
-    init  : function (Y, apikey_javascript, api_url, site, userid, apiRoot, debug)
+    init  : function (Y, apikey_javascript, api_url, site, userid, apiRoot, overide_init_object, debug)
     {
         //init params
         this.config.apikey_javascript = apikey_javascript;
@@ -38,6 +41,15 @@ M.block_mambo_widget = {
         this.config.userid = userid;
         this.config.apiRoot = apiRoot;
         this.config.debug = (debug == 1) ? true : false;
+
+        try
+        {
+            this.config.overide_init_object = JSON.parse(overide_init_object);
+        } catch (e)
+        {
+            M.block_mambo_widget.log(e);
+            M.block_mambo_widget.log(overide_init_object);
+        }
 
         mamboCallbacks.push(function ()
         {
@@ -50,12 +62,18 @@ M.block_mambo_widget = {
                 debug   : M.block_mambo_widget.config.debug
             };
 
-
-            if(debug)
+            // merge override
+            if (typeof M.block_mambo_widget.config.overide_init_object === "object")
             {
-                M.block_mambo_widget.log('Mambo: Initialise the Mambo JavaScript SDK');
-                M.block_mambo_widget.log(obj);
+                M.block_mambo_widget.log('Mambo: merge init');
+                for (var attrname in  M.block_mambo_widget.config.overide_init_object)
+                {
+                    obj[attrname] = M.block_mambo_widget.config.overide_init_object[attrname];
+                }
             }
+
+            M.block_mambo_widget.log('Mambo: Initialise the Mambo JavaScript SDK');
+            M.block_mambo_widget.log(obj);
 
             Mambo.init(obj);
         });
@@ -70,11 +88,9 @@ M.block_mambo_widget = {
             script.async = true;
             script.src = '//' + M.block_mambo_widget.config.api_url + '/static/widgets/v1/mambo.jquery.min.js';
 
-            if(debug)
-            {
-                M.block_mambo_widget.log('Mambo:  Load JavaScript SDK');
-                M.block_mambo_widget.log(script.src);
-            }
+            M.block_mambo_widget.log('Mambo:  Load JavaScript SDK');
+            M.block_mambo_widget.log(script.src);
+
             entry.parentNode.insertBefore(script, entry);
         }(true));
     }

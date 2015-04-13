@@ -36,6 +36,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('block_mambo/debug', get_string('debug', 'block_mambo'), '', 0));
     $settings->add(new admin_setting_configcheckbox('block_mambo/debug_javascript', get_string('debug_javascript', 'block_mambo'), '', 0));
 
+    $settings->add(new admin_setting_configtextarea('block_mambo/initoverride', get_string('initoverride', 'block_mambo'), '', '{"theme": "blue"}', PARAM_TEXT));
     $results = array('' => get_string('select_a_site', 'block_mambo'));
     try {
         $sites = \block_mambo\sites::get_all();
