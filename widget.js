@@ -46,8 +46,10 @@ M.block_mambo_widget = {
                 key     : M.block_mambo_widget.config.apikey_javascript,	// Insert here your JavaScript API key
                 site    : M.block_mambo_widget.config.site,		// Insert here the Site URL to use
                 userUuid: M.block_mambo_widget.config.userid,			// This is the Unique Identifier for the current user
-                lang    : 'en'					// Localisation settings. Currently supported: pt (Portuguese) and en (English)
+                lang    : 'en',// Localisation settings. Currently supported: pt (Portuguese) and en (English)
+                debug   : M.block_mambo_widget.config.debug
             };
+
 
             if(debug)
             {
