@@ -92,8 +92,34 @@ class block_mambo_renderer extends plugin_renderer_base {
             }
         }
         $html .= '</ul>';
+
         return $html;
     }
 
+    /**
+     * get overview of all widget and there codes
+     * @return string
+     */
+    public function list_all_widgets() {
+        global $DB, $PAGE;
+
+        $table = new html_table();
+        $table->align = array('left', 'left');
+        $table->attributes['class'] = 'generaltable titlesleft';
+        $table->data = array();
+        $table->head = array(get_string('widget:code' , 'block_mambo') , get_string('widget:name' , 'block_mambo') ,  get_string('widget:actions' , 'block_mambo') );
+
+        $results = $DB->get_records('mambo_widget');
+        foreach ($results as $result) {
+            $linkedit = new moodle_url($PAGE->url);
+            $linkedit->param('widgetid' , $result->id);
+
+            $linkedelete = clone $linkedit;
+            $linkedelete->param('action' , 'delete');
+            $table->data[] = array('[mambo-widget-' . $result->id . ']', $result->name, html_writer::link($linkedit , get_string('edit' , 'block_mambo')) . ' &nbsp; ' . html_writer::link($linkedelete , get_string('delete' , 'block_mambo')));
+        }
+
+        return html_writer::table($table);
+    }
 
 }

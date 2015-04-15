@@ -42,7 +42,7 @@ class block_mambo extends block_base {
      * @return boolean
      */
     function instance_allow_multiple() {
-        return true;
+        return false;
     }
 
     /**
@@ -61,11 +61,11 @@ class block_mambo extends block_base {
      * @return array
      */
     public function applicable_formats() {
-        return array('all' => true, 'mod' => true, 'tag' => true);
+        return array('all' => true, 'mod' => false, 'tag' => false);
     }
 
     function instance_allow_config() {
-        return true;
+        return false;
     }
 
     /**
@@ -111,6 +111,12 @@ class block_mambo extends block_base {
         // show mapping button for manager usage
         if( has_capability('block/mambo:view', $blockcontext)){
             $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/view.php' , array('blockid'=> $this->instance->id , 'courseid' =>  $COURSE->id)), get_string('btn:setup', 'block_mambo'));
+            $this->content->footer .= '<hr/>';
+        }
+
+        // adding widgets
+        if( has_capability('block/mambo:addwidget', $blockcontext)){
+            $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/addwidget.php' , array('blockid'=> $this->instance->id , 'courseid' =>  $COURSE->id)), get_string('btn:addwidget', 'block_mambo'));
         }
         // check if this block has a widget
         if(!empty($this->config->widget) && ($widget = block_mambo_load_widget($this->config->widget , $this->instance->id)) !== '')

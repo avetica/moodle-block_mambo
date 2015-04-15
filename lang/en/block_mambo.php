@@ -36,7 +36,7 @@ $string['debug'] = 'Debug API';
 $string['debug_javascript'] = 'Debug Javascript to console';
 $string['task'] = 'Sync data to MamboIO';
 $string['btn:setup'] = 'Configure mambo mapping';
-$string['btn:addwidget'] = 'Widget config';
+$string['btn:addwidget'] = 'Widget creator';
 $string['mambo:view'] = 'View MamboIO Block';
 $string['heading:mambo_behaviours'] = 'Mambo Behaviours';
 $string['failed:capability_view'] = 'Mambo Points';
@@ -47,21 +47,18 @@ $string['site_missing'] = 'Please select your MamboIO site from the dropdown in 
 $string['desc:mambo_behaviours'] = 'You can drag-and-drop activities from the left and place them on a mambo behaviour';
 $string['desc:mambo_activities'] = 'All available activities that has completion enabled.';
 $string['pluginname_desc'] = 'You will find your OAuth API keys on <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';
-$string['initoverride'] = 'Extra Initialisation Options for Mambo.init()';
 
 $string['template'] = 'Template';
-
+$string['initoverride'] = 'INIT override';
 $string['select'] = 'You can select a template below';
 $string['widget_content'] = 'Widget Content';
-$string['template_helper'] = '<pre>
-&lt;script&gt;
-var <strong>mamboCallbacks</strong> = window.<strong>mamboCallbacks</strong> || [];
-
-mamboCallbacks.push(function() {
-
-<span style="background: yellow"><strong>## your content above will be added here. Keep in mind it includes the correct id of div bellow ##</strong></span>
-
-});
-
-&lt;/script&gt;
-&lt;div id=&quot;<span style="background: yellow">mambo_widget_{$a->id}</span>&quot; style=&quot;position:absolute;&quot;&gt;&lt;/div&gt;</pre>';
+$string['addwidget'] = 'Add/Edit a widget';
+$string['save'] = 'Save';
+$string['widget:edit'] = 'Edit this widget';
+$string['widget:new'] = 'Create a new widget';
+$string['widget:name'] = 'Name';
+$string['widget:code'] = 'Filter Widget code';
+$string['widget:actions'] = 'Actions';
+$string['edit'] = 'Edit';
+$string['new'] = 'New widget';
+$string['delete'] = 'Delete';

@@ -46,3 +46,17 @@ $string['desc:mambo_behaviours'] = 'Je kan items van links naar rechts slepen.';
 $string['site_missing'] = 'Selecteer een mamboIO site in uw instellingen.';
 $string['desc:mambo_activities'] = 'Alle activiteiten waar completion voor aanstaat.';
 $string['pluginname_desc'] = 'U zult uw OAuth API keys vinden op <a href="http://api.mambo.io/#dev">http://api.mambo.io/#dev</a>';
+
+$string['template'] = 'Template';
+$string['select'] = 'You can select a template below';
+$string['widget_content'] = 'Widget Content';
+$string['addwidget'] = 'Add/Edit a widget';
+$string['save'] = 'Save';
+$string['widget:edit'] = 'Edit this widget';
+$string['widget:new'] = 'Create a new widget';
+$string['widget:name'] = 'Name';
+$string['widget:code'] = 'Filter Widget code';
+$string['widget:actions'] = 'Actions';
+$string['edit'] = 'Edit';
+$string['new'] = 'New widget';
+$string['delete'] = 'Delete';

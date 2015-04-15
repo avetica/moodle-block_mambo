@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/mambo/db" VERSION="20150331" COMMENT="XMLDB file for Moodle blocks/mambo"
+<XMLDB PATH="blocks/mambo/db" VERSION="20150415" COMMENT="XMLDB file for Moodle blocks/mambo"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
         >
@@ -25,6 +25,16 @@
                 <FIELD NAME="completionstate" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="-1" SEQUENCE="false"/>
                 <FIELD NAME="send" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
                 <FIELD NAME="sendon" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="mambo_widget" COMMENT="mambo_widget table retrofitted from MySQL">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
+                <FIELD NAME="widget" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
