@@ -51,7 +51,7 @@ M.block_mambo_widget = {
             M.block_mambo_widget.log(overide_init_object);
         }
 
-        mamboCallbacks.push(function ()
+        mamboCallbacks.unshift(function ()
         {
             var obj = {
                 apiRoot : M.block_mambo_widget.config.apiRoot,	// Insert here your Domain URL
