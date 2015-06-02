@@ -41,4 +41,4 @@ List of features:
 
 ## Changelog
 
-See github for the complete history, major changes in versions we will list below
+See Git for the complete history, major changes in versions we will list below

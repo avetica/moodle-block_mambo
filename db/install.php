@@ -134,4 +134,6 @@ show: true,
 }
 		});';
     $DB->insert_record('mambo_widget', $obj);
+
+    return true;
 }
