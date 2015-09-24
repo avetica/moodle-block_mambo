@@ -60,7 +60,7 @@ class behaviours extends mambo {
      *
      * @return bool|string $response
      */
-    static public function add_event($userid = 0, $verb = '') {
+    static public function add_event($userid = 0, $verb = '', $metadata = array()) {
 
         global $DB, $CFG;
 
@@ -73,7 +73,9 @@ class behaviours extends mambo {
         $data->setVerb($verb); // Required
 
         // @todo implement meta
+        // @todo virgil implemented meta?
         // $data->setMetadata( array( "brand" => "Sony", "category" => array( "Laptop", "TV" ) ) );
+        $data->setMetadata($metadata);
         $response = \MamboEventsService::create(self::$config->site, $data);
 
         // retry if user didn't exists first

@@ -101,12 +101,13 @@ class observer {
         $states = array(COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS, COMPLETION_COMPLETE_FAIL);
 
         if (in_array($eventdata->completionstate, $states)) {
-
             // we need to check if need to take a action
             $activities = new \block_mambo\activities();
             if (($links = $activities->get_activity_maps($eventdata->coursemoduleid)) != false) {
+                // get metadata for activity
+                $metadata = $activities->get_activity_metadata($eventdata->coursemoduleid, $userid);
                 foreach ($links as $link) {
-                    $activities->send_event($userid, $eventdata->completionstate, $link);
+                    $activities->send_event($userid, $eventdata->completionstate, $link, $metadata);
                 }
             }
         }

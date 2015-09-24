@@ -136,6 +136,46 @@ class activities {
         global $DB;
         $DB->delete_records('mambo_behaviour', array('coursemoduleid' => $coursemoduleid));
     }
+    
+    /**
+     * get activity metadata
+     * 
+     * @param int $coursemoduleid
+     * @param int $userid
+     * 
+     * @global moodle_database $DB
+     * @return array $metadata
+     */
+     public function get_activity_metadata($coursemoduleid = 0, $userid) {
+         global $DB;
+
+         $metadata = array();
+         $metadata['grade'] = $this->get_activity_grade($coursemoduleid, $userid);
+         $metadata['sign'] = 'positive';
+
+         return $metadata;
+     }
+
+    /**
+     * get activity grade for metadata
+     * 
+     * @param int $coursemoduleid
+     * @param int $userid
+     * 
+     * @global $DB
+     * @return int $grade
+     */
+     public function get_activity_grade($coursemoduleid = 0, $userid = 0) {
+         global $DB;
+         
+         $coursemodule = $DB->get_record('course_modules', array('coursemoduleid' => $coursemoduleid));
+         $module = $DB->get_record('modules', array('id' => $coursemodule->module));
+         $gradeitem = $DB->get_record('grade_items', array('module' => $module->name, 
+                                                           'instance', $coursemodule->instance));
+         $grade = $DB->get_record('grade_grades', array('itemid' => $gradeitem->id,
+                                                        'userid' => $userid));
+         return $grade->finalgrade;
+     }
 
     /**
      * send a event to mambo
@@ -147,7 +187,7 @@ class activities {
      * @return bool false if something goes wrong or already action executed
      * @global moodle_database $DB
      */
-    public function send_event($userid = 0, $completionstate = COMPLETION_UNKNOWN, $record = false) {
+    public function send_event($userid = 0, $completionstate = COMPLETION_UNKNOWN, $record = false, $metadata = array()) {
 
         global $DB;
 
@@ -162,12 +202,20 @@ class activities {
         ));
         if ($behaviouruser) {
             if ($behaviouruser->send == 1) {
-                return false;
+                if ($behaviouruser->completionstate != $completionstate) {
+                    // put the negative sign in the metadata
+                    // make the call
+                    // put back the positive sign in the metadata
+                } else {
+                    // the event was sent, and the completionstate is the same
+                    return false;
+                }
             }
         }
 
         // sending this to mambo
-        $response = \block_mambo\behaviours::add_event($userid, $record->verb);
+        // virgil: we need to add metadata to this
+        $response = \block_mambo\behaviours::add_event($userid, $record->verb, $metadata);
 
         $obj = new \stdClass();
         $obj->userid = $userid;
