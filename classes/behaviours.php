@@ -38,11 +38,14 @@ class behaviours extends mambo {
         self::load_mambo_sdk();
 
         $response = \MamboBehavioursService::getBehaviours(self::$config->site);
+
         if (empty($response->error)) {
 
             $array = array();
             foreach ($response as $item) {
-                $array[$item->verb] = $item;
+                if($item->attrs->type == 'simple') {
+                    $array[$item->verb] = $item;
+                }
             }
 
             return $array;

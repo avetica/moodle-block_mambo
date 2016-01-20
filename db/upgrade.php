@@ -47,6 +47,20 @@ function xmldb_block_mambo_upgrade($oldversion) {
         // Mambo savepoint reached.
         upgrade_block_savepoint(true, 2015041500, 'mambo');
     }
-
+    if($oldversion < 2015092912) {
+        // Define field name to be added to mambo_behaviour_user
+        $table = new xmldb_table('mambo_behaviour_user');
+        
+        // Adding fields to table
+        $field = new xmldb_field('metadata', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        
+        // Conditionally launch create table for mambo_widget.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        
+        // Mambo savepoint reached.
+        upgrade_block_savepoint(true, 2015092912, 'mambo');
+    }
     return true;
 }

@@ -166,4 +166,33 @@ class user extends mambo {
 
         return true;
     }
+
+    /**
+     * get user details
+     * 
+     * @param object $user
+     * 
+     * @return object|bool
+     */
+     static public function get($user) {
+        if (!$user) {
+            return false;
+        }
+        
+        // load mambo
+        self::load_mambo_sdk();
+        
+        $response = \MamboUsersService::get(self::$config->site, $user->id);
+        
+        if(empty($response->error)) {
+            foreach ($response->points as $key => $value) {
+                $response->points[$value->point->id] = $value;
+                unset($response->points[$key]);
+            }
+            return $response;
+        }
+        
+        return false;
+        
+     }
 }

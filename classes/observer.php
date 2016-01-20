@@ -105,7 +105,8 @@ class observer {
             $activities = new \block_mambo\activities();
             if (($links = $activities->get_activity_maps($eventdata->coursemoduleid)) != false) {
                 // get metadata for activity
-                $metadata = $activities->get_activity_metadata($eventdata->coursemoduleid, $userid);
+                $metadata = array();
+                $metadata = $activities->get_activity_metadata($eventdata->coursemoduleid, $userid, $eventdata->completionstate);
                 foreach ($links as $link) {
                     $activities->send_event($userid, $eventdata->completionstate, $link, $metadata);
                 }

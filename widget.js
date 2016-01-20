@@ -19,7 +19,8 @@ M.block_mambo_widget = {
         'userid'             : 0,
         'wwwroot'            : '',
         'overide_init_object': '',
-        'debug'              : false
+        'debug'              : false,
+        'levelGroups'        : ''
     },
     log   : function (val)
     {
@@ -32,7 +33,7 @@ M.block_mambo_widget = {
         {
         }
     },
-    init  : function (Y, apikey_javascript, api_url, site, userid, apiRoot, overide_init_object, debug)
+    init  : function (Y, apikey_javascript, api_url, site, userid, apiRoot, overide_init_object, debug, levelGroups)
     {
         //init params
         this.config.apikey_javascript = apikey_javascript;
@@ -41,6 +42,13 @@ M.block_mambo_widget = {
         this.config.userid = userid;
         this.config.apiRoot = apiRoot;
         this.config.debug = (debug == 1) ? true : false;
+        this.config.levelGroups = [{
+            label       : "Overall Experience",
+            tags        : ["primary_level"],
+            isDefault   : true, 
+            isPrimary   : true, 
+            noLabels    : false,
+        }];
 
         try
         {
@@ -54,17 +62,28 @@ M.block_mambo_widget = {
         mamboCallbacks.unshift(function ()
         {
             var obj = {
-                apiRoot : M.block_mambo_widget.config.apiRoot,	// Insert here your Domain URL
-                key     : M.block_mambo_widget.config.apikey_javascript,	// Insert here your JavaScript API key
-                site    : M.block_mambo_widget.config.site,		// Insert here the Site URL to use
-                userUuid: M.block_mambo_widget.config.userid,			// This is the Unique Identifier for the current user
+                apiRoot : M.block_mambo_widget.config.apiRoot,  // Insert here your Domain URL
+                key     : M.block_mambo_widget.config.apikey_javascript,    // Insert here your JavaScript API key
+                site    : M.block_mambo_widget.config.site,     // Insert here the Site URL to use
+                userUuid: M.block_mambo_widget.config.userid,           // This is the Unique Identifier for the current user
                 lang    : 'en',// Localisation settings. Currently supported: pt (Portuguese) and en (English)
-                debug   : M.block_mambo_widget.config.debug
+                debug   : M.block_mambo_widget.config.debug,
+                levelGroups : M.block_mambo_widget.config.levelGroups
+/*                levelGroups: [{
+                    label: 'Overall Experience',
+                    tags: ['primary_level'],
+                    isPrimary: true,
+                    noLabels: false
+                },{
+                    label: 'Wiki Mastery',
+                    tags: ['wiki_level']
+                }]*/
             };
 
             // merge override
             if (typeof M.block_mambo_widget.config.overide_init_object === "object")
             {
+                console.log(M.block_mambo_widget.config.overide_init_object);
                 M.block_mambo_widget.log('Mambo: merge init');
                 for (var attrname in  M.block_mambo_widget.config.overide_init_object)
                 {
@@ -76,6 +95,10 @@ M.block_mambo_widget = {
             M.block_mambo_widget.log(obj);
 
             Mambo.init(obj);
+            // hack, will be fixed in next release.
+            Mambo.Static.userUuid = Mambo.Config.userUuid;
+
+            // add a html element so that we can .ready this in theme
         });
 
         // Load the Mambo JavaScript SDK Asynchronously
@@ -92,6 +115,7 @@ M.block_mambo_widget = {
             M.block_mambo_widget.log(script.src);
 
             entry.parentNode.insertBefore(script, entry);
+            $('#page').append('<div class="mamboinit">');
         }(true));
     }
 }

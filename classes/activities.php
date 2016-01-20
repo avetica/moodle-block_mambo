@@ -142,15 +142,16 @@ class activities {
      * 
      * @param int $coursemoduleid
      * @param int $userid
+     * @param int $completionstate
      * 
      * @global moodle_database $DB
      * @return array $metadata
      */
-     public function get_activity_metadata($coursemoduleid = 0, $userid) {
+     public function get_activity_metadata($coursemoduleid = 0, $userid, $completionstate) {
          global $DB;
 
          $metadata = array();
-         $metadata['grade'] = $this->get_activity_grade($coursemoduleid, $userid);
+         $metadata['grade'] = (string)$this->get_activity_grade($coursemoduleid, $userid);
          $metadata['sign'] = 'positive';
 
          return $metadata;
@@ -166,15 +167,24 @@ class activities {
      * @return int $grade
      */
      public function get_activity_grade($coursemoduleid = 0, $userid = 0) {
-         global $DB;
-         
-         $coursemodule = $DB->get_record('course_modules', array('coursemoduleid' => $coursemoduleid));
-         $module = $DB->get_record('modules', array('id' => $coursemodule->module));
-         $gradeitem = $DB->get_record('grade_items', array('module' => $module->name, 
-                                                           'instance', $coursemodule->instance));
-         $grade = $DB->get_record('grade_grades', array('itemid' => $gradeitem->id,
-                                                        'userid' => $userid));
-         return $grade->finalgrade;
+        global $DB;
+        
+        $coursemodule = $DB->get_record('course_modules', array('id' => $coursemoduleid));
+        $module = $DB->get_record('modules', array('id' => $coursemodule->module));
+        $gradeitem = $DB->get_record('grade_items', array('itemmodule' => $module->name,
+                                                          'iteminstance' => $coursemodule->instance));
+        if($gradeitem) {
+            $grade = $DB->get_record('grade_grades', array('itemid' => $gradeitem->id,
+                                                           'userid' => $userid));
+            if($grade) {
+                $finalgrade = round($grade->finalgrade);
+                return (string)$finalgrade;
+            } else {
+                return 'nograde';
+            }
+        } else {
+            return 'ungradable';
+        }
      }
 
     /**
@@ -203,9 +213,13 @@ class activities {
         if ($behaviouruser) {
             if ($behaviouruser->send == 1) {
                 if ($behaviouruser->completionstate != $completionstate) {
-                    // put the negative sign in the metadata
-                    // make the call
-                    // put back the positive sign in the metadata
+                    // the completionstate is different from before 
+                    // so we need to call with the same verb and old metadata
+                    // but put the negative sign in the metadata
+                    // therefore the flexible behaviour will be able to remove points
+                    $oldmetadata = json_decode($behaviouruser->metadata, true);
+                    $oldmetadata['sign'] = 'negative';
+                    $response = \block_mambo\behaviours::add_event($userid, $record->verb, $oldmetadata);
                 } else {
                     // the event was sent, and the completionstate is the same
                     return false;
@@ -224,12 +238,13 @@ class activities {
         $obj->completionstate = $completionstate;
         $obj->sendon = time();
         $obj->send = (empty($response->error)) ? 1 : 0;
+        $obj->metadata = json_encode($metadata);
 
         if (!$behaviouruser) {
             $DB->insert_record('mambo_behaviour_user', $obj);
         } else {
             $obj->id = $behaviouruser->id;
-            $DB - update_record('mambo_behaviour_user', $obj);
+            $DB->update_record('mambo_behaviour_user', $obj);
         }
     }
 }

@@ -73,6 +73,7 @@ function block_mambo_add_widget_init() {
         'apiRoot' => $config->api_url,
         'initoverride' => $config->initoverride,
         'debug' => (int)$config->debug_javascript,
+        'levelGroups' => '[{label: "Overall Experience",tags: ["primary_level"],isPrimary: true,noLabels: false}]',
         array()
     ), false, $jsmodule);
 
