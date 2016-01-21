@@ -15,28 +15,29 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the Notification API in
- * order to clear multiple notifications simultaneously.
+ * Represents an object which has no expiration data
  */
-class ClearNotificationsRequestData
+class NeverExpiration
 {
-	private $ids = array();
+	private $data = array();
+
+
+	/**
+	 * The type of expiration: never
+	 * This field cannot be null.
+	 * @return
+	 */
+	public function getType() { return 'never'; }
 
 	
 	/**
-	 * The ID of the models that are to be cleared.
-	 * The ID corresponds to the $model->id property
+	 * Returns the current model as an array ready to
+	 * be json_encoded
 	 */
-	public function setIds( array $ids ) { $this->ids = $ids; }
-	public function addId( $id ) { array_push( $this->ids, (string) $id ); }
-	
-	
-	/**
-	 * Return the JSON string equivalent of this object
-	 */
-	public function getJsonString()
+	public function getJsonArray()
 	{
-		return json_encode( array( 'ids' => $this->ids ) );
+		$this->data['type'] = $this->getType();
+		return $this->data;
 	}
 }
 ?>

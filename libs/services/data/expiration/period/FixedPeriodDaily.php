@@ -15,30 +15,33 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the different
- * data request objects which are associated to points.
+ * Represents an object which expires on a fixed daily interval.
+ * For example:
+ * - Daily at 10:00AM
  */
-class SimplePoint
+class FixedPeriodDaily
 {
 	private $data = array();
 
 
 	/**
-	 * The ID of the points to use with this object.
+	 * The type of fixed period: daily
 	 * This field cannot be null.
 	 * @return
 	 */
-	public function getPointId() { return $this->data['pointId']; }
-	public function setPointId( $pointId ) { $this->data['pointId'] = (string) $pointId; }
+	public function getType() { return 'daily'; }
 
 
 	/**
-	 * The number of points, of the type specified by pointId, associated with the object.
+	 * The hour indicates the hour on which the object should expire.
+	 * Valid values range from 0 to 23 where 0 indicates midnight.
 	 * This field cannot be null.
+	 * See the points page in administration panel for more information.
 	 * @return
 	 */
-	public function getPoints() { return $this->data['points']; }
-	public function setPoints( $points ) { $this->data['points'] = $points; }
+	public function getHour() { return $this->data['hour']; }
+	public function setHour( $hour ) { $this->data['hour'] = $hour; }
+	
 	
 	/**
 	 * Returns the current model as an array ready to
@@ -46,6 +49,7 @@ class SimplePoint
 	 */
 	public function getJsonArray()
 	{
+		$this->data['type'] = $this->getType();
 		return $this->data;
 	}
 }

@@ -20,7 +20,7 @@
  */
 class EventRequestData
 {
-	private $uuid, $url, $verb, $metadata;
+	private $data = array();
 	
 	/**
 	 * The Unique User ID of the Player who triggered the event.
@@ -28,8 +28,8 @@ class EventRequestData
 	 * related APIs.
 	 * @return string uuid
 	 */
-	public function getUUID() { return $this->uuid; }
-	public function setUUID( $uuid ) { $this->uuid = $uuid; }
+	public function getUUID() { return $this->data['uuid']; }
+	public function setUUID( $uuid ) { $this->data['uuid'] = $uuid; }
 
 	
 	/**
@@ -37,8 +37,8 @@ class EventRequestData
 	 * be a fully qualified URL. For example: http://www.acme.com/the/page.html
 	 * @return string url
 	 */
-	public function getUrl() { return $this->url; }
-	public function setUrl( $url ) { $this->url = $url; }
+	public function getUrl() { return $this->data['url']; }
+	public function setUrl( $url ) { $this->data['url'] = $url; }
 	
 	
 	/**
@@ -47,8 +47,8 @@ class EventRequestData
 	 * "Read an Article" would have an verb of "read an article".
 	 * @return string verb
 	 */
-	public function getVerb() { return $this->verb; }
-	public function setVerb( $verb ) { $this->verb = $verb; }
+	public function getVerb() { return $this->data['verb']; }
+	public function setVerb( $verb ) { $this->data['verb'] = $verb; }
 	
 	
 	/**
@@ -59,8 +59,45 @@ class EventRequestData
 	 * To find out more please visit the Flexible Behaviours page in the administration panel.
 	 * @return string metadata
 	 */
-	public function getMetadata() { return $this->metadata; }
-	public function setMetadata( array $metadata ) { $this->metadata = $metadata; }
+	public function getMetadata() { return $this->data['metadata']; }
+	public function setMetadata( array $metadata ) { $this->data['metadata'] = $metadata; }
+
+	/**
+	 * This {@link ContentData} represents the piece of content on which the
+	 * behaviour took place, if any. For example, if the user shares a blog
+	 * post, the content could represent the blog post. The content is then
+	 * used when generating the activity streams to create rich messages for
+	 * the users. Using the blog example we could display:
+	 * Bob Dylan has shared [A Guide to Copy Writing]
+	 * Where the [] represent a link to the blog post.
+	 * @return
+	 */
+	public function getContent() { return $this->data['content']; }
+	public function setContent( Content $content ) {
+		if( !is_null( $content ) )
+			$this->data['content'] = $content->getJsonArray();
+		else
+			$this->data['content'] = $content;
+	}
+
+	/**
+	 * This {@link ContentData} represents the target of the content. Using the
+	 * Content field example, the user might share the blog to Facebook, the
+	 * target object can be used to capture this:
+	 * Bob Dylan has shared [A Guide to Copy Writing] to [Facebook]
+	 * Where the [] represent a link to the blog post and Facebook.
+	 * Another example could be uploading an image to a specific photo album,
+	 * that might look something like this:
+	 * Bob Dylan has uploaded [Relaxing on a beach] to [Epic Journey]
+	 * @return
+	 */
+	public function getTarget() { return $this->data['target']; }
+	public function setTarget( Content $target ) {
+		if( !is_null( $target ) )
+			$this->data['target'] = $target->getJsonArray();
+		else
+			$this->data['target'] = $target;
+	}
 	
 	
 	/**
@@ -68,12 +105,7 @@ class EventRequestData
 	 */
 	public function getJsonString()
 	{
-		$arr = array( 'uuid' => $this->uuid, 'url' => $this->url, 'verb' => $this->verb );
-		if( is_array( $this->metadata ) && !empty( $this->metadata ) )
-		{
-			$arr['metadata'] = $this->metadata;
-		}
-		return json_encode( $arr );
+		return json_encode( $this->data );
 	}
 }
 ?>

@@ -54,6 +54,22 @@ class behaviours extends mambo {
         return false;
     }
 
+    static public function get($tag = null) {
+        // load mambo
+        self::load_mambo_sdk();
+
+        if($tag === null) {
+            $response = $this->get_all();
+        } else {
+            $response = \MamboBehavioursService::getBehaviours(self::$config->site, $tag);
+        }
+        if(empty($response->error)) {
+            return $response;
+        }
+
+        return false;
+    }
+
     /**
      * add_event to a user
      * using the verb that is set in mambo

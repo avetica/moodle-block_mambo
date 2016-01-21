@@ -162,15 +162,25 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * Get the list of behaviours for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of behaviours
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getBehaviours( $siteUrl )
+	public static function getBehaviours( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::BEHAVIOURS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::BEHAVIOURS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -178,15 +188,25 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * Get the list of simple behaviours for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of simple behaviours
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getSimpleBehaviours( $siteUrl )
+	public static function getSimpleBehaviours( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::SIMPLE_BEHAVIOURS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::SIMPLE_BEHAVIOURS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -194,15 +214,25 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * Get the list of flexible behaviours for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of flexible behaviours
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getFlexibleBehaviours( $siteUrl )
+	public static function getFlexibleBehaviours( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::FLEXIBLE_BEHAVIOURS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::FLEXIBLE_BEHAVIOURS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 }
 

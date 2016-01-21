@@ -18,10 +18,9 @@
  * This object captures the data required by the Behaviour API in
  * order to create / update behaviours.
  */
-class BehaviourRequestData
+class BehaviourRequestData extends AbstractHasTagRequestData
 {
-	private $data = array();
-	
+
 	/**
 	 * Whether the image associated to the Behaviour should be removed
 	 * @return boolean removeImage
@@ -104,6 +103,17 @@ class BehaviourRequestData
 	public function setJsTrackable( $jsTrackable ) { $this->data['jsTrackable'] = $jsTrackable; }
 
 	/**
+	 * Indicates that this behaviour should be awarded to a user only if one of the
+	 * following criteria is matched: 
+	 * 1) User and Behaviour have at least one personalization tag that matches
+	 * 2) Behaviour has no personalization tags
+	 * 3) User has no personalization tags
+	 * @return
+	 */
+	public function getTagFilter() { return $this->data['tagFilter']; }
+	public function setTagFilter( $tagFilter ) { $this->data['tagFilter'] = $tagFilter; }
+
+	/**
 	 * The attributes of the behaviour. There are currently two types of
 	 * attributes: SimpleAttrs and FlexibleAttrs.
 	 * @return
@@ -115,14 +125,18 @@ class BehaviourRequestData
 		else
 			$this->data['attrs'] = $attrs;
 	}
-	
-	
+
 	/**
-	 * Return the JSON string equivalent of this object
+	 * The activity object is used to define the text to be used
+	 * in the activity stream.
+	 * @return
 	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
+	public function getActivity() { return $this->data['activity']; }
+	public function setActivity( Activity $activity ) {
+		if( !is_null( $activity ) )
+			$this->data['activity'] = $activity->getJsonArray();
+		else
+			$this->data['activity'] = $activity;
 	}
 }
 ?>

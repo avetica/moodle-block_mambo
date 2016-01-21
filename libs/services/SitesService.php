@@ -167,3 +167,5 @@ class MamboSitesService extends MamboBaseAbstract
 		return self::$client->request( self::SITES_URI, MamboClient::GET );
 	}
 }
+
+?>

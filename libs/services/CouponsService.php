@@ -234,15 +234,25 @@ class MamboCouponsService extends MamboBaseAbstract
 	 * Get the list of coupons for the specified site
 	 * 
 	 * @param string siteUrl	The site for which to retrieve the list of coupons
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getCoupons( $siteUrl )
+	public static function getCoupons( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::COUPONS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::COUPONS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -250,15 +260,25 @@ class MamboCouponsService extends MamboBaseAbstract
 	 * Get the list of buyable coupons for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of buyable coupons
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getBuyableCoupons( $siteUrl )
+	public static function getBuyableCoupons( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::COUPONS_BUYABLE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::COUPONS_BUYABLE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -266,15 +286,25 @@ class MamboCouponsService extends MamboBaseAbstract
 	 * Get the list of regular (non-buyable) coupons for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of regular (non-buyable) coupons
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getRegularCoupons( $siteUrl )
+	public static function getRegularCoupons( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::COUPONS_REGULAR_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::COUPONS_REGULAR_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 }
 

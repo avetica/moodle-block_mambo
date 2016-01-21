@@ -163,15 +163,25 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * Get the list of rewards for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of rewards
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getRewards( $siteUrl )
+	public static function getRewards( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::REWARDS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::REWARDS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -179,15 +189,25 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * Get the list of achievements for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of achievements
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getAchievements( $siteUrl )
+	public static function getAchievements( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::ACHIEVEMENTS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::ACHIEVEMENTS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -195,15 +215,25 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * Get the list of levels for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of levels
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getLevels( $siteUrl )
+	public static function getLevels( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::LEVELS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::LEVELS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -211,15 +241,25 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * Get the list of missions for the specified site
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of missions
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getMissions( $siteUrl )
+	public static function getMissions( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::MISSIONS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::MISSIONS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 }
 

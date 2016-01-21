@@ -15,28 +15,26 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the Notification API in
- * order to clear multiple notifications simultaneously.
+ * Defines leaderboard attributes specific to point leaderboards.
  */
-class ClearNotificationsRequestData
+class LeaderboardPointAttrs
 {
-	private $ids = array();
-
+	private $data = array();
 	
 	/**
-	 * The ID of the models that are to be cleared.
-	 * The ID corresponds to the $model->id property
+	 * The type of attribute
+	 * @return
 	 */
-	public function setIds( array $ids ) { $this->ids = $ids; }
-	public function addId( $id ) { array_push( $this->ids, (string) $id ); }
+	public function getType() { return 'point'; }
 	
 	
 	/**
 	 * Return the JSON string equivalent of this object
 	 */
-	public function getJsonString()
+	public function getJsonArray()
 	{
-		return json_encode( array( 'ids' => $this->ids ) );
+		$this->data['type'] = 'point';
+		return $this->data;
 	}
 }
 ?>

@@ -15,20 +15,21 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the Notification API in
- * order to clear multiple notifications simultaneously.
+ * Abstract RequestData used by objects which can have
+ * tags associated to them
  */
-class ClearNotificationsRequestData
+abstract class AbstractHasTagRequestData
 {
-	private $ids = array();
+	protected $data = array();
 
-	
+
 	/**
-	 * The ID of the models that are to be cleared.
-	 * The ID corresponds to the $model->id property
+	 * This should contain the list of the IDs of the tags which
+	 * must be added to the object.
+	 * @return
 	 */
-	public function setIds( array $ids ) { $this->ids = $ids; }
-	public function addId( $id ) { array_push( $this->ids, (string) $id ); }
+	public function getTagIds() { return $this->data['tagIds']; }
+	public function setTagIds( array $tagIds ) { $this->data['tagIds'] = $tagIds; }
 	
 	
 	/**
@@ -36,7 +37,7 @@ class ClearNotificationsRequestData
 	 */
 	public function getJsonString()
 	{
-		return json_encode( array( 'ids' => $this->ids ) );
+		return json_encode( $this->data );
 	}
 }
 ?>

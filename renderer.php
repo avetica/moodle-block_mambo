@@ -97,7 +97,7 @@ class block_mambo_renderer extends plugin_renderer_base {
     }
 
     /**
-     * get overview of all widget and there codes
+     * get overview of all widget and their codes
      * @return string
      */
     public function list_all_widgets() {

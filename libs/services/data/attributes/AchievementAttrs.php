@@ -45,6 +45,31 @@ class AchievementAttrs
 	 */
 	public function getTimes() { return $this->data['times']; }
 	public function setTimes( $times ) { $this->data['times'] = $times; }
+
+	/**
+	 * If the achievement is expirable then this field should contain the general
+	 * expiration information. See the {@link ExpirationData} object for more information.
+	 * Achievements support the following types of reset: never, fixed_period and variable_period
+	 * @return
+	 */
+	public function getExpiration() { return $this->data['expiration']; }
+	public function setExpiration( $expiration ) {
+		if( !is_null( $expiration ) && 
+			( $expiration instanceof NeverExpiration ||
+			  $expiration instanceof FixedPeriodExpiration ||
+			  $expiration instanceof VariablePeriodExpiration ) )
+			$this->data['expiration'] = $expiration->getJsonArray();
+		else
+			$this->data['expiration'] = $expiration;
+	}
+
+	/**
+	 * Get the count limit which is used to limit the number of times the user
+	 * can unlock this particular achievement
+	 * @return
+	 */
+	public function getCountLimit() { return $this->data['countLimit']; }
+	public function setCountLimit( $countLimit ) { $this->data['countLimit'] = $countLimit; }
 	
 	
 	/**

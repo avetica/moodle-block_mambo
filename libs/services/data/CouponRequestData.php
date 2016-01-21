@@ -18,10 +18,9 @@
  * This object captures the data required by the Coupon API in
  * order to create / update coupons.
  */
-class CouponRequestData
+class CouponRequestData extends AbstractHasTagRequestData
 {
-	private $data = array();
-	
+
 	/**
 	 * Whether the image associated to the Coupon should be removed
 	 * @return boolean removeImage
@@ -113,24 +112,20 @@ class CouponRequestData
 
 	/**
 	 * Defines whether this coupon expires or not. If it does, then the relevant time
-	 * frame needs to be set. See the Expire model.
+	 * frame needs to be set.
+	 * See the {@link NeverExpiration}, {@link FixedDateExpiration} or 
+	 * {@link VariablePeriodExpiration} objects for more information.
 	 * @return
 	 */
 	public function getExpiration() { return $this->data['expiration']; }
-	public function setExpiration( SimpleExpiration $expiration ) {
-		if( !is_null( $expiration ) )
+	public function setExpiration( $expiration ) {
+		if( !is_null( $expiration ) && 
+			( $expiration instanceof NeverExpiration ||
+			  $expiration instanceof FixedDateExpiration ||
+			  $expiration instanceof VariablePeriodExpiration ) )
 			$this->data['expiration'] = $expiration->getJsonArray();
 		else
 			$this->data['expiration'] = $expiration;
-	}
-	
-	
-	/**
-	 * Return the JSON string equivalent of this object
-	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
 	}
 }
 ?>

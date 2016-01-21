@@ -15,30 +15,41 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the different
- * data request objects which are associated to points.
+ * Represents an object which expires on a variable time interval
+ * which begins from the date the object was created.
+ * For example:
+ * - 2 hours after creation
+ * - 3 days after creation
+ * - 4 weeks after creation
+ * - 5 months after creation
+ * - 6 years after creation
  */
-class SimplePoint
+class VariablePeriodExpiration
 {
 	private $data = array();
 
 
 	/**
-	 * The ID of the points to use with this object.
+	 * The type of expiration: variable_period
 	 * This field cannot be null.
 	 * @return
 	 */
-	public function getPointId() { return $this->data['pointId']; }
-	public function setPointId( $pointId ) { $this->data['pointId'] = (string) $pointId; }
+	public function getType() { return 'variable_period'; }
 
 
 	/**
-	 * The number of points, of the type specified by pointId, associated with the object.
-	 * This field cannot be null.
+	 * Defines a period of time after which an object should expire.
+	 * See the {@link VariablePeriod} object for more information.
 	 * @return
 	 */
-	public function getPoints() { return $this->data['points']; }
-	public function setPoints( $points ) { $this->data['points'] = $points; }
+	public function getPeriod() { return $this->data['period']; }
+	public function setPeriod( $period ) {
+		if( !is_null( $period ) && ( $period instanceof VariablePeriod ) )
+			$this->data['period'] = $period->getJsonArray();
+		else
+			$this->data['period'] = $period;
+	}
+	
 	
 	/**
 	 * Returns the current model as an array ready to
@@ -46,6 +57,7 @@ class SimplePoint
 	 */
 	public function getJsonArray()
 	{
+		$this->data['type'] = $this->getType();
 		return $this->data;
 	}
 }

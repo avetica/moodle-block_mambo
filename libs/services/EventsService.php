@@ -25,6 +25,7 @@ class MamboEventsService extends MamboBaseAbstract
 	 * @var string
 	 */
 	const EVENTS_SITE_URI = "/v1/{site}/events";
+	const EVENTS_USER_URI = "/v1/{site}/events/{uuid}";
 	const EVENTS_ID_URI = "/v1/events/{id}";
 	
 	/**
@@ -71,20 +72,64 @@ class MamboEventsService extends MamboBaseAbstract
 	 * Get the list of events for the specified site
 	 * 
 	 * @param string siteUrl	The site for which to retrieve the list of events
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @param integer page		Specifies the page of results to retrieve
 	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
+	 * @param boolean withRewardsOnly	Specifies whether only events which unlocked one or more rewards should be returned.
 	 * @return
 	 */
-	public static function getEvents( $siteUrl, $page = null, $count = null )
+	public static function getEvents( $siteUrl, $tags = null, $tagUuid = null, $page = null, $count = null, $withRewardsOnly = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
-		// Prepare the URL with page and count
-		$urlAppendix = ( !is_null( $page ) && !is_null( $count ) ) ? '?page=' . $page . '&count=' . $count : '';
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::EVENTS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->withRewardsOnly( $withRewardsOnly )
+						  ->page( $page )
+						  ->count( $count )
+						  ->build();
 		
 		// Make the request
-		return self::$client->request( self::getUrl( self::EVENTS_SITE_URI, $siteUrl ) . $urlAppendix, MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
+	}
+	
+	
+	/**
+	 * Get the list of events for the specified user and site
+	 * 
+	 * @param string siteUrl	The site for which to retrieve the list of events
+	 * @param string uuid		The user for which to retrieve the list of events
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param integer page		Specifies the page of results to retrieve
+	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
+	 * @param boolean withRewardsOnly	Specifies whether only events which unlocked one or more rewards should be returned.
+	 * @return
+	 */
+	public static function getEventsByUser( $siteUrl, $uuid, $tags = null, $tagUuid = null, $page = null, $count = null, $withRewardsOnly = null )
+	{
+		// Initialise the client if necessary
+		self::initClient();
+		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::EVENTS_USER_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->withRewardsOnly( $withRewardsOnly )
+						  ->page( $page )
+						  ->count( $count )
+						  ->build();
+		
+		// Make the request
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 }
 

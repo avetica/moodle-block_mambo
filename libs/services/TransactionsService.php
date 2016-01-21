@@ -29,6 +29,7 @@ class MamboTransactionsService extends MamboBaseAbstract
 	const TRANSACTIONS_REJECT_URI = "/v1/transactions/{id}/reject";
 	const TRANSACTIONS_BOUNTY_CANCEL_URI = "/v1/transactions/{id}/bounty/cancel";
 	const TRANSACTIONS_BOUNTY_AWARD_URI = "/v1/transactions/{id}/bounty/award/{uuid}";
+	const TRANSACTIONS_EVENT_ID_URI = "/v1/transactions/event/{id}";
 
 	const TRANSACTIONS_SITE_URI = "/v1/{site}/transactions";
 	
@@ -115,21 +116,46 @@ class MamboTransactionsService extends MamboBaseAbstract
 	 * Get the list of transactions for the specified site
 	 * 
 	 * @param string siteUrl	The site for which to retrieve the list of transactions
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @param integer page		Specifies the page of results to retrieve
 	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
 	 * @return
 	 */
-	public static function getTransactions( $siteUrl, $page = null, $count = null )
+	public static function getTransactions( $siteUrl, $tags = null, $tagUuid = null, $page = null, $count = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
-		// Prepare the URL with page and count
-		$urlAppendix = ( !is_null( $page ) && !is_null( $count ) ) ? '?page=' . $page . '&count=' . $count : '';
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::TRANSACTIONS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->page( $page )
+						  ->count( $count )
+						  ->build();
 		
 		// Make the request
-		return self::$client->request( self::getUrl( self::TRANSACTIONS_SITE_URI, $siteUrl ) . $urlAppendix, MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
+	
+	
+	/**
+	 * Get transactions by Event ID
+	 *
+	 * @param string eventId	The ID of the event for which to retrieve transactions
+	 * @return
+	 */
+	public static function getByEventId( $eventId )
+	{
+		// Initialise the client if necessary
+		self::initClient();
+		
+		// Make the request
+		return self::$client->request( self::getWithId( self::TRANSACTIONS_EVENT_ID_URI, $eventId ), MamboClient::GET );
+	}	
 	
 	
 	/**

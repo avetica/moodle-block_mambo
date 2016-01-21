@@ -18,10 +18,9 @@
  * This object captures the data required by the Point API in
  * order to create / update points.
  */
-class PointRequestData
+class PointRequestData extends AbstractHasTagRequestData
 {
-	private $data = array();
-	
+
 	/**
 	 * Whether the image associated to the Point should be removed
 	 * @return boolean removeImage
@@ -88,12 +87,16 @@ class PointRequestData
 
 	/**
 	 * If the points are expiration then this field should contain the general
-	 * expiration information. See the {@link PeriodicExpiration} object for more
-	 * information.
+	 * expiration information.
+	 * See the {@link NeverExpiration}, {@link FixedPeriodExpiration} or 
+	 * {@link VariablePeriodExpiration} objects for more information.
 	 */
 	public function getExpiration() { return $this->data['expiration']; }
-	public function setExpiration( PeriodicExpiration $expiration ) {
-		if( !is_null( $expiration ) )
+	public function setExpiration( $expiration ) {
+		if( !is_null( $expiration ) && 
+			( $expiration instanceof NeverExpiration ||
+			  $expiration instanceof FixedPeriodExpiration ||
+			  $expiration instanceof VariablePeriodExpiration ) )
 			$this->data['expiration'] = $expiration->getJsonArray();
 		else
 			$this->data['expiration'] = $expiration;
@@ -117,15 +120,6 @@ class PointRequestData
 			$this->data['units'] = $units->getJsonArray();
 		else
 			$this->data['units'] = $units;
-	}
-	
-	
-	/**
-	 * Return the JSON string equivalent of this object
-	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
 	}
 }
 ?>

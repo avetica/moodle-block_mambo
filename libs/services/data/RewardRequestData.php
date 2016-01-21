@@ -18,11 +18,9 @@
  * This object captures the data required by the Reward API in
  * order to create / update rewards.
  */
-class RewardRequestData
+class RewardRequestData extends AbstractHasTagRequestData
 {
-	private $data = array();
-	
-	
+
 	/**
 	 * Whether the image associated to the Behaviour should be removed
 	 * @return boolean removeImage
@@ -71,8 +69,57 @@ class RewardRequestData
 	public function setHideHint( $hideHint ) { $this->data['hideHint'] = $hideHint; }
 
 	/**
-	 * The attributes of the reward. There are currently two types of
-	 * attributes: AchievementAttrs and LevelAttrs.
+	 * The Reward's points. The points will assigned to a
+	 * user who unlocks this reward.
+	 * @return
+	 */
+	public function getPoints() { return $this->data['points']; }
+	public function setPoints( array $points ) {
+		if( is_null( $points ) ) {
+			$this->data['points'] = $points;
+			return;
+		}
+		
+		$this->data['points'] = array();
+		foreach( $points as $point ) {
+			array_push( $this->data['points'], $point->getJsonArray() );
+		}
+	}
+	public function addPoints( ExpiringPoint $point ) {
+		if( !isset( $this->data['points'] ) )
+			$this->data['points'] = array();
+		
+		if( !is_null( $point ) )
+			array_push( $this->data['points'], $point->getJsonArray() );
+		else
+			array_push( $this->data['points'], $point );
+	}
+
+	/**
+	 * This represents the date from which this reward can be unlocked by users.
+	 * If no date is specified, the reward can always be unlocked.
+	 * This must be a UTC timestamp in ISO 8601 format with
+	 * millisecond precision: YYYY-MM-DDTHH:MM:SS.MMMZ.
+	 * See the achievement or level pages in administration panel for more information.
+	 * @return
+	 */
+	public function getStartDate() { return $this->data['startDate']; }
+	public function setStartDate( $startDate ) { $this->data['startDate'] = $startDate; }
+
+	/**
+	 * This represents the date from which this reward can no longer be unlocked by users
+	 * If no date is specified, the reward can always be unlocked.
+	 * This must be a UTC timestamp in ISO 8601 format with
+	 * millisecond precision: YYYY-MM-DDTHH:MM:SS.MMMZ.
+	 * See the achievement or level pages in administration panel for more information.
+	 * @return
+	 */
+	public function getEndDate() { return $this->data['endDate']; }
+	public function setEndDate( $endDate ) { $this->data['endDate'] = $endDate; }
+
+	/**
+	 * The attributes of the reward. There are currently three types of
+	 * attributes: AchievementAttrs, LevelAttrs and MissionAttrs.
 	 * @return
 	 */
 	public function getAttrs() { return $this->data['attrs']; }
@@ -99,14 +146,5 @@ class RewardRequestData
 	 */
 	public function getHideCoupon() { return $this->data['hideCoupon']; }
 	public function setHideCoupon( $hideCoupon ) { $this->data['hideCoupon'] = $hideCoupon; }
-	
-	
-	/**
-	 * Return the JSON string equivalent of this object
-	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
-	}
 }
 ?>

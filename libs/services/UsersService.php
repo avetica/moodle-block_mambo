@@ -52,11 +52,12 @@ class MamboUsersService extends MamboBaseAbstract
 	/**
 	 * Create a new user
 	 * 
-	 * @param string siteUrl							The site in which you want to create the user
-	 * @param UserRequestData data		The data used to create the user
+	 * @param string siteUrl		The site in which you want to create the user
+	 * @param UserRequestData data	The data used to create the user
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function create( $siteUrl, $data )
+	public static function create( $siteUrl, $data, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -67,21 +68,28 @@ class MamboUsersService extends MamboBaseAbstract
 			trigger_error( "The data should be of type UserRequestData", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::USER_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( 
-				self::USER_SITE_URI, $siteUrl ), MamboClient::POST, $data->getJsonString() );
+		return self::$client->request( $fullUrl, MamboClient::POST, $data->getJsonString() );
 	}
 	
 	
 	/**
 	 * Update an existing user
 	 * 
-	 * @param string siteUrl							The site to which the user belongs
-	 * @param string uuid								The unique user ID of the user to update
-	 * @param UserRequestData data		The data with which to update the specified user object
+	 * @param string siteUrl		The site to which the user belongs
+	 * @param string uuid			The unique user ID of the user to update
+	 * @param UserRequestData data	The data with which to update the specified user object
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function update( $siteUrl, $uuid, $data )
+	public static function update( $siteUrl, $uuid, $data, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -92,9 +100,15 @@ class MamboUsersService extends MamboBaseAbstract
 			trigger_error( "The data should be of type UserRequestData", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_UUID_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_UUID_URI, $siteUrl, $uuid ), 
+		return self::$client->request( $fullUrl, 
 				MamboClient::PUT, $data->getJsonString() );
 	}
 	
@@ -102,18 +116,25 @@ class MamboUsersService extends MamboBaseAbstract
 	/**
 	 * Get a user
 	 * 
-	 * @param string siteUrl	The site from which you want to retrieve the user
-	 * @param string uuid		The unique user ID of the user to retrieve
+	 * @param string siteUrl		The site from which you want to retrieve the user
+	 * @param string uuid			The unique user ID of the user to retrieve
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function get( $siteUrl, $uuid )
+	public static function get( $siteUrl, $uuid, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_UUID_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_UUID_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -192,20 +213,26 @@ class MamboUsersService extends MamboBaseAbstract
 	 * Get the list of blacklisted users for the specified site
 	 *
 	 * @param string siteUrl	The site for which to retrieve the list blacklisted of users
+	 * @param array tags		The list of tags to filter by (if any)
 	 * @param integer page		Specifies the page of results to retrieve
 	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
 	 * @return
 	 */
-	public static function getBlacklistedUsers( $siteUrl, $page = null, $count = null )
+	public static function getBlacklistedUsers( $siteUrl, $tags = null, $page = null, $count = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
-		// Prepare the URL with page and count
-		$urlAppendix = ( !is_null( $page ) && !is_null( $count ) ) ? '?page=' . $page . '&count=' . $count : '';
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::USER_BLACKLIST_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->page( $page )
+						  ->count( $count )
+						  ->build();
 		
-		return self::$client->request( self::getUrl( self::USER_BLACKLIST_URI, $siteUrl ) . 
-				$urlAppendix, MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -215,16 +242,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's rewards information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getRewards( $siteUrl, $uuid )
+	public static function getRewards( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_REWARDS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_REWARDS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -234,16 +270,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's level information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getLevels( $siteUrl, $uuid )
+	public static function getLevels( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_LEVELS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_LEVELS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -256,16 +301,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's level information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getAllLevels( $siteUrl, $uuid )
+	public static function getAllLevels( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_ALL_LEVELS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_ALL_LEVELS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -275,16 +329,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's achievements information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getAchievements( $siteUrl, $uuid )
+	public static function getAchievements( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_ACHIEVEMENTS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_ACHIEVEMENTS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -297,16 +360,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's achievement information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getAllAchievements( $siteUrl, $uuid )
+	public static function getAllAchievements( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_ALL_ACHIEVEMENTS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_ALL_ACHIEVEMENTS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -316,16 +388,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's missions information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getMissions( $siteUrl, $uuid )
+	public static function getMissions( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_MISSIONS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_MISSIONS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -338,16 +419,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's mission information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getAllMissions( $siteUrl, $uuid )
+	public static function getAllMissions( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_ALL_MISSIONS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_ALL_MISSIONS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -357,16 +447,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's coupons information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getCoupons( $siteUrl, $uuid )
+	public static function getCoupons( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_COUPONS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_COUPONS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -375,16 +474,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's coupons information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getAllCoupons( $siteUrl, $uuid )
+	public static function getAllCoupons( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_ALL_COUPONS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_ALL_COUPONS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -393,16 +501,25 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's notifications information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @return
 	 */
-	public static function getNotifications( $siteUrl, $uuid )
+	public static function getNotifications( $siteUrl, $uuid, $tags = null, $withPersonalization = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_NOTIFICATIONS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_NOTIFICATIONS_URI, $siteUrl, $uuid ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -455,22 +572,32 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's events information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
+	 * @param boolean withRewardsOnly		Specifies whether only events which unlocked one or more rewards should be returned.
 	 * @param integer page		Specifies the page of results to retrieve
 	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
 	 * @return
 	 */
-	public static function getEvents( $siteUrl, $uuid, $page = null, $count = null )
+	public static function getEvents( $siteUrl, $uuid, $tags = null, $withPersonalization = null, 
+									  $withRewardsOnly = null, $page = null, $count = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
-		// Prepare the URL with page and count
-		$urlAppendix = ( !is_null( $page ) && !is_null( $count ) ) ? '?page=' . $page . '&count=' . $count : '';
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_EVENTS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->withRewardsOnly( $withRewardsOnly )
+						  ->page( $page )
+						  ->count( $count )
+						  ->build();
 		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_EVENTS_URI, $siteUrl, $uuid ) . 
-				$urlAppendix, MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -480,22 +607,29 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site to which the user belongs
 	 * @param string uuid		The unique user ID of the user who's transactions information is to be retrieved
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param boolean withPersonalization	Flag used to indicate whether the response should be filtered by the user's personalization tags.
 	 * @param integer page		Specifies the page of results to retrieve
 	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
 	 * @return
 	 */
-	public static function getTransactions( $siteUrl, $uuid, $page = null, $count = null )
+	public static function getTransactions( $siteUrl, $uuid, $tags = null, $withPersonalization = null, $page = null, $count = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
-		// Prepare the URL with page and count
-		$urlAppendix = ( !is_null( $page ) && !is_null( $count ) ) ? '?page=' . $page . '&count=' . $count : '';
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrlWithUuid( self::USER_TRANSACTIONS_URI, $siteUrl, $uuid );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->withPersonalization( $withPersonalization )
+						  ->page( $page )
+						  ->count( $count )
+						  ->build();
 		
 		// Make the request
-		return self::$client->request( self::getUrlWithUuid( 
-				self::USER_TRANSACTIONS_URI, $siteUrl, $uuid ) . 
-				$urlAppendix, MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -503,6 +637,7 @@ class MamboUsersService extends MamboBaseAbstract
 	 * Get the list of users for the specified site
 	 * 
 	 * @param string siteUrl	The site for which to retrieve the list of users
+	 * @param array tags		The list of tags to filter by (if any)
 	 * @param integer page		Specifies the page of results to retrieve
 	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
 	 * @param string orderBy	Specifies the field on which to sort the results. Allowed values: uuid, email, createdOn, 
@@ -511,15 +646,24 @@ class MamboUsersService extends MamboBaseAbstract
 	 * @param string order		Specifies the order in which to sort the results. Allowed values: asc, desc
 	 * @return
 	 */
-	public static function getUsers( $siteUrl, $page = null, $count = null, $orderBy = null, $order = null )
+	public static function getUsers( $siteUrl, $tags = null, $page = null, $count = null, $orderBy = null, $order = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
-		
-		$urlAppendix = self::getAppendix( $page, $count, $orderBy, $order );
+
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::USER_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->page( $page )
+						  ->count( $count )
+						  ->orderBy( $orderBy )
+						  ->order( $order )
+						  ->build();
 		
 		// Make the request
-		return self::$client->request( self::getUrl( self::USER_SITE_URI, $siteUrl ) . $urlAppendix, MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 
@@ -530,6 +674,7 @@ class MamboUsersService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl	The site for which to retrieve the list of users
 	 * @param string query		The search query to be used
+	 * @param array tags		The list of tags to filter by (if any)
 	 * @param integer page		Specifies the page of results to retrieve
 	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
 	 * @param string orderBy	Specifies the field on which to sort the results. Allowed values: uuid, email, createdOn, 
@@ -538,7 +683,7 @@ class MamboUsersService extends MamboBaseAbstract
 	 * @param string order		Specifies the order in which to sort the results. Allowed values: asc, desc
 	 * @return
 	 */
-	public static function searchUsers( $siteUrl, $query, $page = null, $count = null, $orderBy = null, $order = null )
+	public static function searchUsers( $siteUrl, $query, $tags = null, $page = null, $count = null, $orderBy = null, $order = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -549,60 +694,20 @@ class MamboUsersService extends MamboBaseAbstract
 			trigger_error( "The query string must not be null", E_USER_ERROR );
 		}
 
-		$urlAppendix = self::getAppendix( $page, $count, $orderBy, $order );
-		$urlAppendix = ( empty( $urlAppendix ) ) ? "?query=" . $query : $urlAppendix . "&query=" . $query;
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::USER_SEARCH_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->page( $page )
+						  ->count( $count )
+						  ->orderBy( $orderBy )
+						  ->order( $order )
+						  ->query( $query )
+						  ->build();
 		
 		// Make the request
-		return self::$client->request( self::getUrl( self::USER_SEARCH_URI, $siteUrl ) . $urlAppendix, MamboClient::GET );
-	}
-	
-	
-	/**
-	 * Get the URL appendix required for getting users or searching users
-	 * 
-	 * @param integer page		Specifies the page of results to retrieve
-	 * @param integer count		Specifies the number of results to retrieve, up to a maximum of 100
-	 * @param string orderBy	Specifies the field on which to sort the results. Allowed values: uuid, email, createdOn, 
-	 * 							totalPoints, pointsSpent, pointsBalance, totalSpend, totalCouponSpend, avgSpend, avgCouponSpend, 
-	 * 							rewards, purchases, couponPurchases, coupons, isMember, lastSeenOn, memberSince
-	 * @param string order		Specifies the order in which to sort the results. Allowed values: asc, desc
-	 * @return
-	 */
-	private static function getAppendix( $page = null, $count = null, $orderBy = null, $order = null )
-	{
-		// Prepare the URL with page and count
-		$urlAppendix = ( !is_null( $page ) && !is_null( $count ) ) ? '?page=' . $page . '&count=' . $count : '';
-		
-		// Add the orderBy and order fields if available. Also check they are valid values.
-		// This could look a little better...
-		if( !is_null( $orderBy ) && !is_null( $order ) &&
-				( strcmp( $order, 'asc') == 0 || strcmp( $order, 'desc') == 0 ) )
-		{
-			// Check the orderBy variable
-			if( strcmp( $orderBy, 'uuid') != 0 && strcmp( $orderBy, 'email') != 0 &&
-					strcmp( $orderBy, 'createdOn') != 0 && strcmp( $orderBy, 'totalPoints') != 0 &&
-					strcmp( $orderBy, 'totalSpend') != 0 && strcmp( $orderBy, 'totalCouponSpend') != 0 &&
-					strcmp( $orderBy, 'avgSpend') != 0 && strcmp( $orderBy, 'avgCouponSpend') != 0 &&
-					strcmp( $orderBy, 'achievements') != 0 && strcmp( $orderBy, 'levels') != 0 &&
-					strcmp( $orderBy, 'missions') != 0 && strcmp( $orderBy, 'rewards') != 0 &&
-					strcmp( $orderBy, 'purchases') != 0 && strcmp( $orderBy, 'couponPurchases') != 0 &&
-					strcmp( $orderBy, 'coupons') != 0 && strcmp( $orderBy, 'isMember') != 0 &&
-					strcmp( $orderBy, 'lastSeenOn') != 0 && strcmp( $orderBy, 'memberSince') != 0 &&
-					strcmp( $orderBy, 'pointsSpent') != 0 && strcmp( $orderBy, 'pointsBalance') != 0 )
-			{
-				trigger_error( "The value specified for orderBy is invalid. Allowed values: uuid, email,
-						createdOn, totalPoints, pointsSpent, pointsBalance, totalSpend, totalCouponSpend,
-						avgSpend, avgCouponSpend, achievements, levels, missions, rewards, purchases,
-						couponPurchases, coupons, isMember, lastSeenOn, memberSince", E_USER_ERROR );
-			}
-			else
-			{
-				$urlAppendix .= ( empty( $urlAppendix ) ) ? '?' : '&';
-				$urlAppendix .= 'orderBy=' . $orderBy . '&order=' . $order;
-			}
-		}
-		
-		return $urlAppendix;
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 }
 

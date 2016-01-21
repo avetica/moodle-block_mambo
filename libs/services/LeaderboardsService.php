@@ -25,7 +25,7 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 	 * @var string
 	 */
 	const LEADERBOARDS_SITE_URI = "/v1/{site}/leaderboards";
-	const LEADERBOARDS_GENERAL_URI = "/v1/{site}/leaderboards/general";
+	const LEADERBOARDS_SYSTEM_URI = "/v1/{site}/leaderboards/system";
 
 	const LEADERBOARDS_URI = "/v1/leaderboards";
 	const LEADERBOARDS_ID_URI = "/v1/leaderboards/{id}";
@@ -125,37 +125,55 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 	 * you should call one of the other methods.
 	 * 
 	 * @param string $siteUrl	The site for which to retrieve the list of leaderboards
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */
-	public static function getLeaderboards( $siteUrl )
+	public static function getLeaderboards( $siteUrl, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::LEADERBOARDS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( 
-				self::LEADERBOARDS_SITE_URI, $siteUrl ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
 	/**
-	 * Get the general leaderboard for the specified site. The general leaderboard
+	 * Get the system leaderboard for the specified site. The system leaderboard
 	 * is the overall ranking for the site. This is based on the total number of
 	 * points that the users acquire.
 	 *
-	 * @param string $siteUrl	The site for which to retrieve the general leaderboard
+	 * @param string $siteUrl	The site for which to retrieve the system leaderboard
 	 * @param string $period	The period for which to retrieve the leaderboard. Allowed values: day, week, month, all
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */	
-	public static function getGeneralLeaderboard( $siteUrl, $period = null )
+	public static function getSystemLeaderboard( $siteUrl, $period = null, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::LEADERBOARDS_SYSTEM_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->period( $period )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( 
-				self::getUrl( self::LEADERBOARDS_GENERAL_URI, $siteUrl ) . 
-				self::getUrlAppendage( $period ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -163,20 +181,28 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 	 * Get the leaderboard specified by site and it's ID. To see a list of the leaderboard
 	 * IDs, use the getLeaderboards() method.
 	 *
-	 * @param string $siteUrl	The site for which to retrieve the leaderboard
 	 * @param string $id		The ID of the leaderboard to retrieve
 	 * @param string $period	The period for which to retrieve the leaderboard. Allowed values: day, week, month, all
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */	
-	public static function getLeaderboard( $siteUrl, $id, $period = null )
+	public static function getLeaderboard( $id, $period = null, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::LEADERBOARDS_ID_URI, $id );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->period( $period )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithId( 
-				self::LEADERBOARDS_ID_URI, $siteUrl, $id ) . 
-				self::getUrlAppendage( $period ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -184,46 +210,28 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 	 * Get the leaderboard specified by site and it's associated behaviour ID. To see a list of the leaderboard
 	 * behaviour IDs, use the getLeaderboards() method.
 	 *
-	 * @param string $siteUrl			The site for which to retrieve the leaderboard
 	 * @param string $behaviourId		The ID of the behaviour which has an associated leaderboard
 	 * @param string $period			The period for which to retrieve the leaderboard. Allowed values: day, week, month, all
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
 	 * @return
 	 */	
-	public static function getBehaviourLeaderboard( $siteUrl, $behaviourId, $period = null )
+	public static function getBehaviourLeaderboard( $behaviourId, $period = null, $tags = null, $tagUuid = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::BEHAVIOUR_LEADERBOARDS_URI, $behaviourId );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->period( $period )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrlWithId( 
-				self::BEHAVIOUR_LEADERBOARDS_URI, $siteUrl, $behaviourId ) . 
-				self::getUrlAppendage( $period ), MamboClient::GET );
-	}
-	
-	
-	/**
-	 * Takes the period parameter and validates it's content. If the content is valid, then it will
-	 * format the query string to be used with the Leaderboard API end points.
-	 * 
-	 * @param string $period	The period for which to retrieve the leaderboard. Allowed values: day, week, month, all
-	 */
-	private static function getUrlAppendage( $period )
-	{
-		// Make sure the period is not null
-		if( !is_null( $period ) )
-		{
-			// Check the period variable
-			if( strcmp( $period, 'day') != 0 && strcmp( $period, 'week') != 0 && 
-				strcmp( $period, 'month') != 0 && strcmp( $period, 'all') != 0 )
-			{
-				trigger_error( "The value specified for period is invalid. Allowed values: day, week, month, all", E_USER_ERROR );
-			}
-			else
-			{
-				return "?period=" . $period;
-			}
-		}
-		return "";
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 }
 

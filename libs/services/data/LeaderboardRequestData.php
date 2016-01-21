@@ -18,9 +18,8 @@
  * This object captures the data required by the Event API in
  * order to track a behaviour performed by a specific user.
  */
-class LeaderboardRequestData
+class LeaderboardRequestData extends AbstractHasTagRequestData
 {
-	private $data = array();
 
 	/**
 	 * The name of the leaderboard. See the leaderboard page in
@@ -31,30 +30,33 @@ class LeaderboardRequestData
 	public function setName( $name ) { $this->data['name'] = $name; }
 
 	/**
-	 * The ID of the behaviour associated to this leaderboard.
-	 * See the leaderboard page in administration panel for more information.
+	 * This must contain the list of the IDs of the points which must
+	 * be added together for this leaderboard score.
 	 * @return
 	 */
-	public function getBehaviourId() { return $this->data['behaviourId']; }
-	public function setBehaviourId( $behaviourId ) { $this->data['behaviourId'] = (string )$behaviourId; }
+	public function getPointIds() { return $this->data['pointIds']; }
+	public function setPointIds( array $pointIds ) { $this->data['pointIds'] = $pointIds; }
+	public function addPoints( SimplePoint $point ) {
+		if( !isset( $this->data['pointIds'] ) )
+			$this->data['pointIds'] = array();
+		
+		if( !is_null( $point ) )
+			array_push( $this->data['pointIds'], $point->getJsonArray()['pointId'] );
+		else
+			array_push( $this->data['pointIds'], $point );
+	}
 
 	/**
-	 * For leaderboards based on simple behaviours, this flag indicates whether the flexible
-	 * behaviours associated to the simple one should also be counted in the points for this
-	 * leaderboard.
-	 * See the leaderboard page in administration panel for more information.
+	 * The attributes of the leaderboard. There are currently two types of
+	 * attributes: LeaderboardBehaviourAttrs and LeaderboardPointAttrs.
 	 * @return
 	 */
-	public function getCountFlex() { return $this->data['countFlex']; }
-	public function setCountFlex( $countFlex ) { $this->data['countFlex'] = $countFlex; }
-	
-	
-	/**
-	 * Return the JSON string equivalent of this object
-	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
+	public function getAttrs() { return $this->data['attrs']; }
+	public function setAttrs( $attrs ) {
+		if( !is_null( $attrs ) )
+			$this->data['attrs'] = $attrs->getJsonArray();
+		else
+			$this->data['attrs'] = $attrs;
 	}
 }
 ?>

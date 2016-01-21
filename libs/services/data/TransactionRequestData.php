@@ -18,10 +18,8 @@
  * This object captures the data required by the Transaction API in
  * order to reject the specified transaction.
  */
-class TransactionRequestData
+class TransactionRequestData extends AbstractHasTagRequestData
 {
-	private $data = array();
-	
 	/**
 	 * The Unique User ID of the user who triggered this transaction
 	 */
@@ -52,15 +50,6 @@ class TransactionRequestData
 			$this->data['attrs'] = $attrs->getJsonArray();
 		else
 			$this->data['attrs'] = $attrs;
-	}
-	
-	
-	/**
-	 * Return the JSON string equivalent of this object
-	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
 	}
 }
 ?>

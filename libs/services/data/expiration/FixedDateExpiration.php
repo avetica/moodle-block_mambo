@@ -15,30 +15,33 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the different
- * data request objects which are associated to points.
+ * Represents an object which expires on a fixed date.
+ * For example: 24/01/2015
  */
-class SimplePoint
+class FixedDateExpiration
 {
 	private $data = array();
 
 
 	/**
-	 * The ID of the points to use with this object.
+	 * The type of expiration: fixed_date
 	 * This field cannot be null.
 	 * @return
 	 */
-	public function getPointId() { return $this->data['pointId']; }
-	public function setPointId( $pointId ) { $this->data['pointId'] = (string) $pointId; }
+	public function getType() { return 'fixed_date'; }
 
 
 	/**
-	 * The number of points, of the type specified by pointId, associated with the object.
+	 * This field contains the exact expiration date of the object.
+	 * This will be a UTC timestamp in ISO 8601 format with
+	 * millisecond precision: YYYY-MM-DDTHH:MM:SS.MMMZ<br>
+	 * For example: 2013-01-20T20:43:24.094Z.MMMZ<br>
 	 * This field cannot be null.
 	 * @return
 	 */
-	public function getPoints() { return $this->data['points']; }
-	public function setPoints( $points ) { $this->data['points'] = $points; }
+	public function getDate() { return $this->data['date']; }
+	public function setDate( $date ) { $this->data['date'] = $date; }
+	
 	
 	/**
 	 * Returns the current model as an array ready to
@@ -46,6 +49,7 @@ class SimplePoint
 	 */
 	public function getJsonArray()
 	{
+		$this->data['type'] = $this->getType();
 		return $this->data;
 	}
 }

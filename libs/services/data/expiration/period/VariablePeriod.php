@@ -15,30 +15,37 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the different
- * data request objects which are associated to points.
+ * The VariablePeriod is used in order to define the
+ * period of time after which an objects expiration needs
+ * to be processed.
  */
-class SimplePoint
+class VariablePeriod
 {
 	private $data = array();
 
 
 	/**
-	 * The ID of the points to use with this object.
+	 * The type indicates the period's units of measure.
+	 * Valid types include: days, weeks, months and years.
 	 * This field cannot be null.
+	 * See the points page in administration panel for more information.
 	 * @return
 	 */
-	public function getPointId() { return $this->data['pointId']; }
-	public function setPointId( $pointId ) { $this->data['pointId'] = (string) $pointId; }
+	public function getType() { return $this->data['type']; }
+	public function setType( $type ) { $this->data['type'] = $type; }
 
 
 	/**
-	 * The number of points, of the type specified by pointId, associated with the object.
-	 * This field cannot be null.
+	 * The value is the number of units of measure after which
+	 * the expiration should take place. For example: if the type
+	 * is months and the value is 12, then the expiration will take
+	 * place after 12 months.
+	 * See the points page in administration panel for more information.
 	 * @return
 	 */
-	public function getPoints() { return $this->data['points']; }
-	public function setPoints( $points ) { $this->data['points'] = $points; }
+	public function getValue() { return $this->data['value']; }
+	public function setValue( $value ) { $this->data['value'] = $value; }
+	
 	
 	/**
 	 * Returns the current model as an array ready to

@@ -45,12 +45,16 @@ class ExpiringPoint
 	/**
 	 * If the points are expirable then this field can be used to override
 	 * the points default expiration settings.
-	 * See the {@link PeriodicExpiration} object for more information.
+	 * See the {@link NeverExpiration}, {@link FixedPeriodExpiration} or 
+	 * {@link VariablePeriodExpiration} objects for more information.
 	 * @return
 	 */
 	public function getExpiration() { return $this->data['expiration']; }
 	public function setExpiration( $expiration ) {
-		if( !is_null( $expiration ) && ( $expiration instanceof PeriodicExpiration ) )
+		if( !is_null( $expiration ) && 
+			( $expiration instanceof NeverExpiration ||
+			  $expiration instanceof FixedPeriodExpiration ||
+			  $expiration instanceof VariablePeriodExpiration ) )
 			$this->data['expiration'] = $expiration->getJsonArray();
 		else
 			$this->data['expiration'] = $expiration;

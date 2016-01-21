@@ -18,10 +18,8 @@
  * This object captures the data required by the User API in
  * order to create or update a User.
  */
-class UserRequestData
+class UserRequestData extends AbstractHasTagRequestData
 {
-	private $data = array();
-	
 	/**
 	 * The Unique User ID of the User. This parameter uniquely identifies this 
 	 * user in the system and is used in a number of user related API calls. 
@@ -94,14 +92,6 @@ class UserRequestData
 			$this->data['twitter'] = $twitterDetails->getJsonArray();
 		else
 			$this->data['twitter'] = $twitterDetails;
-	}
-	
-	/**
-	 * Return the JSON string equivalent of this object
-	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
 	}
 }
 ?>
