@@ -53,15 +53,7 @@ class AchievementAttrs
 	 * @return
 	 */
 	public function getExpiration() { return $this->data['expiration']; }
-	public function setExpiration( $expiration ) {
-		if( !is_null( $expiration ) && 
-			( $expiration instanceof NeverExpiration ||
-			  $expiration instanceof FixedPeriodExpiration ||
-			  $expiration instanceof VariablePeriodExpiration ) )
-			$this->data['expiration'] = $expiration->getJsonArray();
-		else
-			$this->data['expiration'] = $expiration;
-	}
+	public function setExpiration( $expiration ) { $this->data['expiration'] = $expiration; }
 
 	/**
 	 * Get the count limit which is used to limit the number of times the user
@@ -77,8 +69,14 @@ class AchievementAttrs
 	 */
 	public function getJsonArray()
 	{
-		$this->data['type'] = 'achievement';
-		return $this->data;
+		$json = $this->data;
+		$json['type'] = $this->getType();
+		
+		if( isset( $json['expiration'] ) && !is_null( $json['expiration'] ) ) {
+			$json['expiration'] = $json['expiration']->getJsonArray();
+		}
+		
+		return $json;
 	}
 }
 ?>

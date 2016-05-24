@@ -44,7 +44,7 @@ class transactions extends mambo {
         self::load_mambo_sdk();
 
         // Prepare the request data used to register the transaction
-        $data = new \TransactionRequestData();
+        $data = new \ActivityRequestData();
         $data->setUuid( $userid ); // Required
 
         // Prepare the point
@@ -55,13 +55,13 @@ class transactions extends mambo {
         $data->setPoints( $point ); // Required
         
         // Create a new Manual transaction
-        $attrs = new \ManualTransactionAttrs();
+        $attrs = new \ActivityPointAttrs();
         $attrs->setAction( "increment" ); // Required
         $attrs->setReason( $reason );
         $data->setAttrs( $attrs ); // Required
         
         // Register a new transaction
-        $transaction = \MamboTransactionsService::create( self::$config->site, $data );
+        $transaction = \MamboActivitiesService::create( self::$config->site, $data );
         
         // Check if there are any errors
         if( !is_null( $transaction->error ) )

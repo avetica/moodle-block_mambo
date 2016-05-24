@@ -29,6 +29,8 @@ class MamboPointsService extends MamboBaseAbstract
 	const POINTS_IMAGE_URI = "/v1/points/{id}/image";
 
 	const POINTS_SITE_URI = "/v1/{site}/points";
+	const INTERNAL_POINTS_SITE_URI = "/v1/{site}/points/internal";
+	const EXTERNAL_POINTS_SITE_URI = "/v1/{site}/points/external";
 	
 	
 	/**
@@ -172,6 +174,58 @@ class MamboPointsService extends MamboBaseAbstract
 		// Prepare the URL
 		$builder = new APIUrlBuilder();
 		$url = self::getUrl( self::POINTS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
+		// Make the request
+		return self::$client->request( $fullUrl, MamboClient::GET );
+	}
+	
+	
+	/**
+	 * Get the list of external points (i.e. points which are not marked as internalOnly) for the specified site
+	 * 
+	 * @param string $siteUrl	The site for which to retrieve the list of points
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @return
+	 */
+	public static function getExternalPoints( $siteUrl, $tags = null, $tagUuid = null )
+	{
+		// Initialise the client if necessary
+		self::initClient();
+		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::EXTERNAL_POINTS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->tags( $tags )
+						  ->tagUuid( $tagUuid )
+						  ->build();
+		
+		// Make the request
+		return self::$client->request( $fullUrl, MamboClient::GET );
+	}
+	
+	
+	/**
+	 * Get the list of points marked as internalOnly for the specified site
+	 * 
+	 * @param string $siteUrl	The site for which to retrieve the list of points
+	 * @param array tags		The list of tags to filter by (if any)
+	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @return
+	 */
+	public static function getInternalPoints( $siteUrl, $tags = null, $tagUuid = null )
+	{
+		// Initialise the client if necessary
+		self::initClient();
+		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::INTERNAL_POINTS_SITE_URI, $siteUrl );
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )

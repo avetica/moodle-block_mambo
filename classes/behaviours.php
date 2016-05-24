@@ -103,7 +103,7 @@ class behaviours extends mambo {
         // load mambo
         self::load_mambo_sdk();
 
-        $data = new \EventRequestData();
+        $data = new \ActivityRequestData();
         $data->setUuid($userid); // Required
         $data->setUrl($CFG->wwwroot); // Required
         $data->setVerb($verb); // Required
@@ -113,7 +113,7 @@ class behaviours extends mambo {
             $data->setContent($content);
         }
 
-        $response = \MamboEventsService::create(self::$config->site, $data);
+        $response = \MamboActivitiesService::create(self::$config->site, $data);
 
         // retry if user didn't exists first
         if (!empty($response->error->type) && $response->error->type == 'UserNotFoundException') {

@@ -33,8 +33,9 @@ class LeaderboardPointAttrs
 	 */
 	public function getJsonArray()
 	{
-		$this->data['type'] = 'point';
-		return $this->data;
+		$json = $this->data;
+		$json['type'] = $this->getType();
+		return $json;
 	}
 }
 ?>

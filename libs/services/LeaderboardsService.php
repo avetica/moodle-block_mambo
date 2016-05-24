@@ -156,9 +156,13 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 	 * @param string $period	The period for which to retrieve the leaderboard. Allowed values: day, week, month, all
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
+	 * @param integer page		Specifies the page of users to retrieve
+	 * @param integer count		Specifies the number of users to retrieve, up to a maximum of 100
 	 * @return
 	 */	
-	public static function getSystemLeaderboard( $siteUrl, $period = null, $tags = null, $tagUuid = null )
+	public static function getSystemLeaderboard( $siteUrl, $period = null, $tags = null, $tagUuid = null, 
+												 $withInternalPoints = null, $page = null, $count = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -170,6 +174,9 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
 						  ->period( $period )
+						  ->page( $page )
+						  ->count( $count )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request
@@ -185,9 +192,13 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 	 * @param string $period	The period for which to retrieve the leaderboard. Allowed values: day, week, month, all
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
+	 * @param integer page		Specifies the page of users to retrieve
+	 * @param integer count		Specifies the number of users to retrieve, up to a maximum of 100
 	 * @return
 	 */	
-	public static function getLeaderboard( $id, $period = null, $tags = null, $tagUuid = null )
+	public static function getLeaderboard( $id, $period = null, $tags = null, $tagUuid = null, 
+										   $withInternalPoints = null, $page = null, $count = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -199,6 +210,9 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
 						  ->period( $period )
+						  ->page( $page )
+						  ->count( $count )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request
@@ -214,9 +228,13 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 	 * @param string $period			The period for which to retrieve the leaderboard. Allowed values: day, week, month, all
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
+	 * @param integer page		Specifies the page of users to retrieve
+	 * @param integer count		Specifies the number of users to retrieve, up to a maximum of 100
 	 * @return
 	 */	
-	public static function getBehaviourLeaderboard( $behaviourId, $period = null, $tags = null, $tagUuid = null )
+	public static function getBehaviourLeaderboard( $behaviourId, $period = null, $tags = null, $tagUuid = null, 
+													$withInternalPoints = null, $page = null, $count = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -228,6 +246,9 @@ class MamboLeaderboardsService extends MamboBaseAbstract
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
 						  ->period( $period )
+						  ->page( $page )
+						  ->count( $count )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request

@@ -37,6 +37,8 @@ class UserRequestData extends AbstractHasTagRequestData
 	 * Whether the user is taking part in the rewards program. By default
 	 * all user's are active members of the rewards program. However, this can be set
 	 * to false and the users can be explicitly asked to take part in the rewards program.
+	 * If the user is not a part of the rewards program, then events and
+	 * transactions will return an exception when being tracked.
 	 * @return
 	 */
 	public function getIsMember() { return $this->data['isMember']; }
@@ -63,35 +65,43 @@ class UserRequestData extends AbstractHasTagRequestData
 	 * @return
 	 */
 	public function getDetails() { return $this->data['details']; }
-	public function setDetails( UserDetails $userDetails ) { 
-		if( !is_null( $userDetails ) )
-			$this->data['details'] = $userDetails->getJsonArray();
-		else
-			$this->data['details'] = $userDetails;
-	}
+	public function setDetails( UserDetails $userDetails ) { $this->data['details'] = $userDetails; }
 
 	/**
 	 * The user's Facebook details.
 	 * @return
 	 */
 	public function getFacebook() { return $this->data['facebook']; }
-	public function setFacebook( FacebookDetails $facebookDetails ) {
-		if( !is_null( $facebookDetails ) )
-			$this->data['facebook'] = $facebookDetails->getJsonArray();
-		else
-			$this->data['facebook'] = $facebookDetails;
-	}
+	public function setFacebook( FacebookDetails $facebookDetails ) { $this->data['facebook'] = $facebookDetails; }
 
 	/**
 	 * The user's Twitter details.
 	 * @return
 	 */
 	public function getTwitter() { return $this->data['twitter']; }
-	public function setTwitter( TwitterDetails $twitterDetails ) {
-		if( !is_null( $twitterDetails ) )
-			$this->data['twitter'] = $twitterDetails->getJsonArray();
-		else
-			$this->data['twitter'] = $twitterDetails;
+	public function setTwitter( TwitterDetails $twitterDetails ) { $this->data['twitter'] = $twitterDetails; }
+	
+	
+	/**
+	 * Return the JSON string equivalent of this object
+	 */
+	public function getJsonString()
+	{
+		$json = $this->data;
+		
+		if( isset( $json['details'] ) && !is_null( $json['details'] ) ) {
+			$json['details'] = $json['details']->getJsonArray();
+		}
+		
+		if( isset( $json['facebook'] ) && !is_null( $json['facebook'] ) ) {
+			$json['facebook'] = $json['facebook']->getJsonArray();
+		}
+		
+		if( isset( $json['twitter'] ) && !is_null( $json['twitter'] ) ) {
+			$json['twitter'] = $json['twitter']->getJsonArray();
+		}
+		
+		return json_encode( $json );
 	}
 }
 ?>

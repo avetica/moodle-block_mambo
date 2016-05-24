@@ -32,7 +32,9 @@ class SimpleAttrs
 	 */
 	public function getJsonArray()
 	{
-		return array( 'type' => 'simple' );
+		$json = array();
+		$json['type'] = $this->getType();
+		return $json;
 	}
 }
 ?>

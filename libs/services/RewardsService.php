@@ -39,9 +39,10 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl				The site to which the reward belongs to
 	 * @param RewardRequestData data		The data sent to the API in order to create a reward
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function create( $siteUrl, $data )
+	public static function create( $siteUrl, $data, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -52,9 +53,15 @@ class MamboRewardsService extends MamboBaseAbstract
 			trigger_error( "The data should be of type RewardRequestData", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::REWARDS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::REWARDS_SITE_URI, $siteUrl ), 
-				MamboClient::POST, $data->getJsonString() );
+		return self::$client->request( $fullUrl, MamboClient::POST, $data->getJsonString() );
 	}
 	
 	
@@ -63,9 +70,10 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * 
 	 * @param string id					The ID of the reward to update
 	 * @param RewardRequestData data	The data with which to update the specified reward object
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function update( $id, $data )
+	public static function update( $id, $data, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -76,9 +84,15 @@ class MamboRewardsService extends MamboBaseAbstract
 			trigger_error( "The data should be of type RewardRequestData", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::REWARDS_ID_URI, $id );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getWithId( self::REWARDS_ID_URI, $id ), 
-				MamboClient::PUT, $data->getJsonString() );
+		return self::$client->request( $fullUrl, MamboClient::PUT, $data->getJsonString() );
 	}
 	
 	
@@ -87,9 +101,10 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * 
 	 * @param string id		The reward for which to upload the image
 	 * @param data image 	The image to upload for the reward
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function uploadImage( $id, $image )
+	public static function uploadImage( $id, $image, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -100,8 +115,15 @@ class MamboRewardsService extends MamboBaseAbstract
 			trigger_error( "The image must not be empty", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::REWARDS_IMAGE_URI, $id );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->upload( self::getWithId( self::REWARDS_IMAGE_URI, $id ), $image );
+		return self::$client->upload( $fullUrl, $image );
 	}
 	
 	
@@ -147,15 +169,23 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * Get a reward by it's ID
 	 * 
 	 * @param string id			The ID of the reward to retrieve
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function get( $id )
+	public static function get( $id, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::REWARDS_ID_URI, $id );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getWithId( self::REWARDS_ID_URI, $id ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -165,9 +195,10 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * @param string $siteUrl	The site for which to retrieve the list of rewards
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function getRewards( $siteUrl, $tags = null, $tagUuid = null )
+	public static function getRewards( $siteUrl, $tags = null, $tagUuid = null, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -178,6 +209,7 @@ class MamboRewardsService extends MamboBaseAbstract
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request
@@ -191,9 +223,10 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * @param string $siteUrl	The site for which to retrieve the list of achievements
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function getAchievements( $siteUrl, $tags = null, $tagUuid = null )
+	public static function getAchievements( $siteUrl, $tags = null, $tagUuid = null, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -204,6 +237,7 @@ class MamboRewardsService extends MamboBaseAbstract
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request
@@ -217,9 +251,10 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * @param string $siteUrl	The site for which to retrieve the list of levels
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function getLevels( $siteUrl, $tags = null, $tagUuid = null )
+	public static function getLevels( $siteUrl, $tags = null, $tagUuid = null, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -230,6 +265,7 @@ class MamboRewardsService extends MamboBaseAbstract
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request
@@ -243,9 +279,10 @@ class MamboRewardsService extends MamboBaseAbstract
 	 * @param string $siteUrl	The site for which to retrieve the list of missions
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function getMissions( $siteUrl, $tags = null, $tagUuid = null )
+	public static function getMissions( $siteUrl, $tags = null, $tagUuid = null, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -256,6 +293,7 @@ class MamboRewardsService extends MamboBaseAbstract
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request

@@ -50,15 +50,7 @@ class ExpiringPoint
 	 * @return
 	 */
 	public function getExpiration() { return $this->data['expiration']; }
-	public function setExpiration( $expiration ) {
-		if( !is_null( $expiration ) && 
-			( $expiration instanceof NeverExpiration ||
-			  $expiration instanceof FixedPeriodExpiration ||
-			  $expiration instanceof VariablePeriodExpiration ) )
-			$this->data['expiration'] = $expiration->getJsonArray();
-		else
-			$this->data['expiration'] = $expiration;
-	}
+	public function setExpiration( $expiration ) { $this->data['expiration'] = $expiration; }
 	
 	/**
 	 * Returns the current model as an array ready to
@@ -66,7 +58,13 @@ class ExpiringPoint
 	 */
 	public function getJsonArray()
 	{
-		return $this->data;
+		$json = $this->data;
+		
+		if( isset( $json['expiration'] ) && !is_null( $json['expiration'] ) ) {
+			$json['expiration'] = $json['expiration']->getJsonArray();
+		}
+		
+		return $json;
 	}
 }
 ?>

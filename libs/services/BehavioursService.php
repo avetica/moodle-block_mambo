@@ -38,9 +38,10 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * 
 	 * @param string siteUrl				The site to which the behaviour belongs to
 	 * @param BehaviourRequestData data		The data sent to the API in order to create a behaviour
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function create( $siteUrl, $data )
+	public static function create( $siteUrl, $data, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -51,9 +52,15 @@ class MamboBehavioursService extends MamboBaseAbstract
 			trigger_error( "The data should be of type BehaviourRequestData", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getUrl( self::BEHAVIOURS_SITE_URI, $siteUrl );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getUrl( self::BEHAVIOURS_SITE_URI, $siteUrl ), 
-				MamboClient::POST, $data->getJsonString() );
+		return self::$client->request( $fullUrl, MamboClient::POST, $data->getJsonString() );
 	}
 	
 	
@@ -62,9 +69,10 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * 
 	 * @param string id					The ID of the behaviour to update
 	 * @param BehaviourRequestData data	The data with which to update the specified behaviour object
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function update( $id, $data )
+	public static function update( $id, $data, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -75,9 +83,15 @@ class MamboBehavioursService extends MamboBaseAbstract
 			trigger_error( "The data should be of type BehaviourRequestData", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::BEHAVIOURS_ID_URI, $id );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getWithId( self::BEHAVIOURS_ID_URI, $id ), 
-				MamboClient::PUT, $data->getJsonString() );
+		return self::$client->request( $fullUrl, MamboClient::PUT, $data->getJsonString() );
 	}
 	
 	
@@ -86,9 +100,10 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * 
 	 * @param string id		The behaviour for which to upload the image
 	 * @param data image 	The image to upload for the behaviour
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function uploadImage( $id, $image )
+	public static function uploadImage( $id, $image, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -99,8 +114,15 @@ class MamboBehavioursService extends MamboBaseAbstract
 			trigger_error( "The image must not be empty", E_USER_ERROR );
 		}
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::BEHAVIOURS_IMAGE_URI, $id );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->upload( self::getWithId( self::BEHAVIOURS_IMAGE_URI, $id ), $image );
+		return self::$client->upload( $fullUrl, $image );
 	}
 	
 	
@@ -146,15 +168,23 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * Get a behaviour by it's ID
 	 * 
 	 * @param string id			The ID of the behaviour to retrieve
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function get( $id )
+	public static function get( $id, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
 		
+		// Prepare the URL
+		$builder = new APIUrlBuilder();
+		$url = self::getWithId( self::BEHAVIOURS_ID_URI, $id );
+		$fullUrl = $builder->url( $url )
+						  ->withInternalPoints( $withInternalPoints )
+						  ->build();
+		
 		// Make the request
-		return self::$client->request( self::getWithId( self::BEHAVIOURS_ID_URI, $id ), MamboClient::GET );
+		return self::$client->request( $fullUrl, MamboClient::GET );
 	}
 	
 	
@@ -164,9 +194,10 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * @param string $siteUrl	The site for which to retrieve the list of behaviours
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function getBehaviours( $siteUrl, $tags = null, $tagUuid = null )
+	public static function getBehaviours( $siteUrl, $tags = null, $tagUuid = null, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -177,6 +208,7 @@ class MamboBehavioursService extends MamboBaseAbstract
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request
@@ -190,9 +222,10 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * @param string $siteUrl	The site for which to retrieve the list of simple behaviours
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function getSimpleBehaviours( $siteUrl, $tags = null, $tagUuid = null )
+	public static function getSimpleBehaviours( $siteUrl, $tags = null, $tagUuid = null, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -203,6 +236,7 @@ class MamboBehavioursService extends MamboBaseAbstract
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request
@@ -216,9 +250,10 @@ class MamboBehavioursService extends MamboBaseAbstract
 	 * @param string $siteUrl	The site for which to retrieve the list of flexible behaviours
 	 * @param array tags		The list of tags to filter by (if any)
 	 * @param string tagUuid	The tagUuid to use to filter the list by personalization tags
+	 * @param boolean withInternalPoints	Whether internalOnly points should be returned in the response
 	 * @return
 	 */
-	public static function getFlexibleBehaviours( $siteUrl, $tags = null, $tagUuid = null )
+	public static function getFlexibleBehaviours( $siteUrl, $tags = null, $tagUuid = null, $withInternalPoints = null )
 	{
 		// Initialise the client if necessary
 		self::initClient();
@@ -229,6 +264,7 @@ class MamboBehavioursService extends MamboBaseAbstract
 		$fullUrl = $builder->url( $url )
 						  ->tags( $tags )
 						  ->tagUuid( $tagUuid )
+						  ->withInternalPoints( $withInternalPoints )
 						  ->build();
 		
 		// Make the request

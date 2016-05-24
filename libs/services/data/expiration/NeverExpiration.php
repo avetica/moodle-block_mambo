@@ -36,8 +36,9 @@ class NeverExpiration
 	 */
 	public function getJsonArray()
 	{
-		$this->data['type'] = $this->getType();
-		return $this->data;
+		$json = $this->data;
+		$json['type'] = $this->getType();
+		return $json;
 	}
 }
 ?>

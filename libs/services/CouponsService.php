@@ -32,8 +32,6 @@ class MamboCouponsService extends MamboBaseAbstract
 	const COUPONS_BUYABLE_URI = "/v1/{site}/coupons/buyable";
 	const COUPONS_REGULAR_URI = "/v1/{site}/coupons/regular";
 	const VALIDATE_COUPON_URI = "/v1/{site}/coupons/validate";
-	const REDEEM_COUPON_URI = "/v1/{site}/coupons/redeem";
-	const REFUND_COUPON_URI = "/v1/{site}/coupons/refund";
 	
 	
 	/**
@@ -181,52 +179,6 @@ class MamboCouponsService extends MamboBaseAbstract
 		
 		// Make the request
 		return self::$client->request( self::getUrl( self::VALIDATE_COUPON_URI, $siteUrl ), MamboClient::POST, $data->getJsonString() );
-	}
-	
-	
-	/**
-	 * This method is used to redeem a coupon for the specified user.
-	 * 
-	 * @param string siteUrl		The site to which the user and coupon belong to
-	 * @param string uuid			The Unique User ID of the user for which we will redeem the coupon code
-	 * @param string couponCode		The code of the coupon we should redeem for the specified user
-	 * @return
-	 */
-	public static function redeem( $siteUrl, $uuid, $couponCode )
-	{
-		// Initialise the client if necessary
-		self::initClient();
-		
-		// Prepare the request
-		$data = new CouponUserRequestData();
-		$data->setUuid( $uuid );
-		$data->setCouponCode( $couponCode );
-		
-		// Make the request
-		return self::$client->request( self::getUrl( self::REDEEM_COUPON_URI, $siteUrl ), MamboClient::POST, $data->getJsonString() );
-	}
-	
-	
-	/**
-	 * This method is used to refund a coupon to the specified user.
-	 * 
-	 * @param string siteUrl		The site to which the user and coupon belong to
-	 * @param string uuid			The Unique User ID of the user to which we will refund the coupon code
-	 * @param string couponCode		The code of the coupon we should refund to the specified user
-	 * @return
-	 */
-	public static function refund( $siteUrl, $uuid, $couponCode )
-	{
-		// Initialise the client if necessary
-		self::initClient();
-		
-		// Prepare the request
-		$data = new CouponUserRequestData();
-		$data->setUuid( $uuid );
-		$data->setCouponCode( $couponCode );
-		
-		// Make the request
-		return self::$client->request( self::getUrl( self::REFUND_COUPON_URI, $siteUrl ), MamboClient::POST, $data->getJsonString() );
 	}
 	
 	

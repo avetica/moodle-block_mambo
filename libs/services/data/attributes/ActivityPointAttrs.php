@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the Reward API in
- * order to create / update levels
+ * Defines activity attributes specific to point.
  */
-class LevelAttrs
+class ActivityPointAttrs
 {
 	private $data = array();
 	
@@ -26,14 +25,29 @@ class LevelAttrs
 	 * The type of attribute
 	 * @return
 	 */
-	public function getType() { return 'level'; }
+	public function getType() { return 'point'; }
 
 	/**
-	 * The total number of points a user must have to unlock the level.
-	 * Note: points attached to a level will never be filtered by tags
-	 * only by the internalOnlyPoints.
-	 * See the level page in administration panel for more information.
+	 * The action associated to the point activity. The actions currently
+	 * available are:
+	 * Increment: increments the user's total points and point balance
+	 * Redeem: decrements the user's points balance and increments the user's spent points
+	 * Refund: decrements the user's spent points and increments the user's point balance
 	 * @return
+	 */
+	public function getAction() { return $this->data['action']; }
+	public function setAction( $action ) { $this->data['action'] = (string) $action; }
+
+	/**
+	 * The reason associated to the point activity. This is used to provide more
+	 * details to the user as to why they are earning / losing the points.
+	 * @return
+	 */
+	public function getReason() { return $this->data['reason']; }
+	public function setReason( $reason ) { $this->data['reason'] = (string) $reason; }
+
+	/**
+	 * The points associated with this point activity.
 	 */
 	public function getPoints() { return $this->data['points']; }
 	public function setPoints( array $points ) { $this->data['points'] = $points; }

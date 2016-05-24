@@ -131,12 +131,7 @@ class PurchaseRequestData
 	 * @return
 	 */
 	public function getMonetaryValues() { return $this->data['monetaryValues']; }
-	public function setMonetaryValues( MonetaryValues $monetaryValues ) {
-		if( !is_null( $monetaryValues ) )
-			$this->data['monetaryValues'] = $monetaryValues->getJsonArray();
-		else
-			$this->data['monetaryValues'] = $monetaryValues;
-	}
+	public function setMonetaryValues( MonetaryValues $monetaryValues ) { $this->data['monetaryValues'] = $monetaryValues; }
 	
 	/**
 	 * This is the list of products associated to this purchase. Providing this
@@ -146,33 +141,35 @@ class PurchaseRequestData
 	 * @return
 	 */
 	public function getProducts() { return $this->data['products']; }
-	public function setProducts( array $products ) {
-		if( is_null( $products ) ) {
-			$this->data['products'] = $products;
-			return;
-		}
-		
-		$this->data['products'] = array();
-		foreach( $products as $product ) {
-			array_push( $this->data['products'], $product->getJsonArray() );
-		}
-	}
+	public function setProducts( array $products ) { $this->data['products'] = $products; }
 	public function addProduct( Product $product ) {
-		if( !isset( $this->data['products'] ) )
+		if( !isset( $this->data['products'] ) ) {
 			$this->data['products'] = array();
-		
-		if( !is_null( $product ) )
-			array_push( $this->data['products'], $product->getJsonArray() );
-		else
-			array_push( $this->data['products'], $product );
+		}
+		array_push( $this->data['products'], $product );
 	}
+	
 	
 	/**
 	 * Return the JSON string equivalent of this object
 	 */
 	public function getJsonString()
 	{
-		return json_encode( $this->data );
+		$json = $this->data;
+		
+		if( isset( $json['products'] ) && !is_null( $json['products'] ) ) {
+			$productsArr = array();
+			foreach( $json['products'] as $product ) {
+				array_push( $productsArr, $product->getJsonArray() );
+			}
+			$json['products'] = $productsArr;
+		}
+		
+		if( isset( $json['monetaryValues'] ) && !is_null( $json['monetaryValues'] ) ) {
+			$json['monetaryValues'] = $json['monetaryValues']->getJsonArray();
+		}
+		
+		return json_encode( $json );
 	}
 }
 ?>

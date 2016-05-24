@@ -51,8 +51,9 @@ class LeaderboardBehaviourAttrs
 	 */
 	public function getJsonArray()
 	{
-		$this->data['type'] = 'behaviour';
-		return $this->data;
+		$json = $this->data;
+		$json['type'] = $this->getType();
+		return $json;
 	}
 }
 ?>
