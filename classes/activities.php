@@ -147,7 +147,7 @@ class activities {
      * @global moodle_database $DB
      * @return array $metadata
      */
-     public function get_activity_metadata($coursemoduleid = 0, $userid, $completionstate) {
+    public function get_activity_metadata($coursemoduleid = 0, $userid, $completionstate) {
          global $DB;
 
          $metadata = array();
@@ -156,6 +156,26 @@ class activities {
 
          return $metadata;
      }
+
+    public function get_activity_title($coursemoduleid) {
+        global $DB;
+
+        $module = $DB->get_record('course_modules', array('id' => $coursemoduleid));
+        $plugin = $DB->get_record('modules', array('id' => $module->module));
+        $title = $DB->get_record($plugin->name, array('id' => $module->instance));
+
+        return $title->name;
+    }
+
+    public function get_activity_url($coursemoduleid) {
+        global $CFG, $DB;
+
+        $module = $DB->get_record('course_modules', array('id' => $coursemoduleid));
+        $plugin = $DB->get_record('modules', array('id' => $module->module));
+        $url = $CFG->wwwroot . '/mod/' . $plugin->name . '/view.php?id=' . $coursemoduleid;
+
+        return $url;
+    }
 
     /**
      * get activity grade for metadata
@@ -166,7 +186,7 @@ class activities {
      * @global $DB
      * @return int $grade
      */
-     public function get_activity_grade($coursemoduleid = 0, $userid = 0) {
+    public function get_activity_grade($coursemoduleid = 0, $userid = 0) {
         global $DB;
         
         $coursemodule = $DB->get_record('course_modules', array('id' => $coursemoduleid));
@@ -197,7 +217,7 @@ class activities {
      * @return bool false if something goes wrong or already action executed
      * @global moodle_database $DB
      */
-    public function send_event($userid = 0, $completionstate = COMPLETION_UNKNOWN, $record = false, $metadata = array()) {
+    public function send_event($userid = 0, $completionstate = COMPLETION_UNKNOWN, $record = false, $metadata = array(), $content = '') {
 
         global $DB;
 
@@ -219,7 +239,7 @@ class activities {
                     // therefore the flexible behaviour will be able to remove points
                     $oldmetadata = json_decode($behaviouruser->metadata, true);
                     $oldmetadata['sign'] = 'negative';
-                    $response = \block_mambo\behaviours::add_event($userid, $record->verb, $oldmetadata);
+                    $response = \block_mambo\behaviours::add_event($userid, $record->verb, $oldmetadata, $content);
                 } else {
                     // the event was sent, and the completionstate is the same
                     return false;
@@ -229,7 +249,7 @@ class activities {
 
         // sending this to mambo
         // virgil: we need to add metadata to this
-        $response = \block_mambo\behaviours::add_event($userid, $record->verb, $metadata);
+        $response = \block_mambo\behaviours::add_event($userid, $record->verb, $metadata, $content);
 
         $obj = new \stdClass();
         $obj->userid = $userid;

@@ -49,6 +49,12 @@ M.block_mambo_widget = {
             isPrimary   : true, 
             noLabels    : false,
         }];
+        this.config.toasters = {
+            bottom: 0,
+            limit: 10,
+            autoCloseTimeout: 5000,
+            withEvents: true
+        };
 
         try
         {
@@ -68,16 +74,10 @@ M.block_mambo_widget = {
                 userUuid: M.block_mambo_widget.config.userid,           // This is the Unique Identifier for the current user
                 lang    : 'en',// Localisation settings. Currently supported: pt (Portuguese) and en (English)
                 debug   : M.block_mambo_widget.config.debug,
-                levelGroups : M.block_mambo_widget.config.levelGroups
-/*                levelGroups: [{
-                    label: 'Overall Experience',
-                    tags: ['primary_level'],
-                    isPrimary: true,
-                    noLabels: false
-                },{
-                    label: 'Wiki Mastery',
-                    tags: ['wiki_level']
-                }]*/
+                levelGroups : M.block_mambo_widget.config.levelGroups,
+                notifications : {
+                    withEvents: true
+                }
             };
 
             // merge override

@@ -107,8 +107,12 @@ class observer {
                 // get metadata for activity
                 $metadata = array();
                 $metadata = $activities->get_activity_metadata($eventdata->coursemoduleid, $userid, $eventdata->completionstate);
+                \block_mambo\mambo::load_mambo_sdk();
+                $content = new \Content();
+                $content->setTitle($activities->get_activity_title($eventdata->coursemoduleid));
+                $content->setUrl($activities->get_activity_url($eventdata->coursemoduleid));
                 foreach ($links as $link) {
-                    $activities->send_event($userid, $eventdata->completionstate, $link, $metadata);
+                    $activities->send_event($userid, $eventdata->completionstate, $link, $metadata, $content);
                 }
             }
         }

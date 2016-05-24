@@ -195,4 +195,21 @@ class user extends mambo {
         return false;
         
      }
+
+    /** get all users
+     *
+     * @return array
+     */
+    static public function get_all_users() {
+        //load mambo
+        self::load_mambo_sdk();
+
+        $response = \MamboUsersService::getUsers(self::$config->site);
+
+        if(empty($response->error)) {
+            return $response;
+        }
+
+        return false;
+    }
 }

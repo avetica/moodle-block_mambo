@@ -70,6 +70,23 @@ class behaviours extends mambo {
         return false;
     }
 
+    static public function get_by_id($id = null) {
+        // load mambo
+        self::load_mambo_sdk();
+
+        if($id === null) {
+            $response = $this->get_all();
+        } else {
+            $response = \MamboBehavioursService::get($id);
+        }
+
+        if(empty($response->error)) {
+            return $response;
+        }
+
+        return false;
+    }
+
     /**
      * add_event to a user
      * using the verb that is set in mambo
@@ -79,7 +96,7 @@ class behaviours extends mambo {
      *
      * @return bool|string $response
      */
-    static public function add_event($userid = 0, $verb = '', $metadata = array()) {
+    static public function add_event($userid = 0, $verb = '', $metadata = array(), $content = '') {
 
         global $DB, $CFG;
 
@@ -90,11 +107,12 @@ class behaviours extends mambo {
         $data->setUuid($userid); // Required
         $data->setUrl($CFG->wwwroot); // Required
         $data->setVerb($verb); // Required
-
-        // @todo implement meta
-        // @todo virgil implemented meta?
-        // $data->setMetadata( array( "brand" => "Sony", "category" => array( "Laptop", "TV" ) ) );
         $data->setMetadata($metadata);
+
+        if(is_a($content, 'Content')) {
+            $data->setContent($content);
+        }
+
         $response = \MamboEventsService::create(self::$config->site, $data);
 
         // retry if user didn't exists first
@@ -102,7 +120,7 @@ class behaviours extends mambo {
             $user = $DB->get_record('user', array('id' => $userid));
             $response = \block_mambo\user::set($user);
             if ($response) {
-                return self::add_event($userid, $verb);
+                return self::add_event($userid, $verb, $metadata);
             }
         }
 
