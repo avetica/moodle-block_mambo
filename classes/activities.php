@@ -257,6 +257,7 @@ class activities {
         $obj->coursemoduleid = $record->coursemoduleid;
         $obj->completionstate = $completionstate;
         $obj->sendon = time();
+
         $obj->send = (empty($response->error)) ? 1 : 0;
         $obj->metadata = json_encode($metadata);
 

@@ -52,22 +52,17 @@ class transactions extends mambo {
         $point->setPointId( $pointId ); // Required
         $point->setPoints( $points ); // Required
         
-        $data->setPoints( $point ); // Required
         
         // Create a new Manual transaction
         $attrs = new \ActivityPointAttrs();
         $attrs->setAction( "increment" ); // Required
         $attrs->setReason( $reason );
+        $attrs->addPoints( $point ); // Required
+
         $data->setAttrs( $attrs ); // Required
         
         // Register a new transaction
         $transaction = \MamboActivitiesService::create( self::$config->site, $data );
-        
-        // Check if there are any errors
-        if( !is_null( $transaction->error ) )
-        {
-            // Oops, handle stuff that goes wrong
-        }
 
         return true;
     }

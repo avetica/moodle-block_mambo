@@ -106,8 +106,13 @@ class behaviours extends mambo {
         $data = new \ActivityRequestData();
         $data->setUuid($userid); // Required
         $data->setUrl($CFG->wwwroot); // Required
-        $data->setVerb($verb); // Required
-        $data->setMetadata($metadata);
+
+        // this needs to be in a ActivityBehaviourAttrsData
+        $attributes = new \ActivityBehaviourAttrs();
+        $attributes->setVerb($verb); // Required
+        $attributes->setMetadata($metadata);
+
+        $data->setAttrs($attributes);
 
         if(is_a($content, 'Content')) {
             $data->setContent($content);
