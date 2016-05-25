@@ -79,12 +79,7 @@ class CouponRequestData extends AbstractHasTagRequestData
 	 * set to null.
 	 */
 	public function getPointsToBuy() { return $this->data['pointsToBuy']; }
-	public function setPointsToBuy( $pointsToBuy ) {
-		if( !is_null( $pointsToBuy ) && ( $pointsToBuy instanceof SimplePoint ) )
-			$this->data['pointsToBuy'] = $pointsToBuy->getJsonArray();
-		else
-			$this->data['pointsToBuy'] = $pointsToBuy;
-	}
+	public function setPointsToBuy( $pointsToBuy ) { $this->data['pointsToBuy'] = $pointsToBuy; }
 
 	/**
 	 * The message to be displayed in the coupon purchasing screen. This can provide
@@ -118,14 +113,25 @@ class CouponRequestData extends AbstractHasTagRequestData
 	 * @return
 	 */
 	public function getExpiration() { return $this->data['expiration']; }
-	public function setExpiration( $expiration ) {
-		if( !is_null( $expiration ) && 
-			( $expiration instanceof NeverExpiration ||
-			  $expiration instanceof FixedDateExpiration ||
-			  $expiration instanceof VariablePeriodExpiration ) )
-			$this->data['expiration'] = $expiration->getJsonArray();
-		else
-			$this->data['expiration'] = $expiration;
+	public function setExpiration( $expiration ) { $this->data['expiration'] = $expiration; }
+	
+	
+	/**
+	 * Return the JSON string equivalent of this object
+	 */
+	public function getJsonString()
+	{
+		$json = $this->data;
+		
+		if( isset( $json['pointsToBuy'] ) && !is_null( $json['pointsToBuy'] ) ) {
+			$json['pointsToBuy'] = $json['pointsToBuy']->getJsonArray();
+		}
+		
+		if( isset( $json['expiration'] ) && !is_null( $json['expiration'] ) ) {
+			$json['expiration'] = $json['expiration']->getJsonArray();
+		}
+		
+		return json_encode( $json );
 	}
 }
 ?>

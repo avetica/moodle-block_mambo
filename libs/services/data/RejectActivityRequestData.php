@@ -15,20 +15,19 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the APIs in
- * order to delete multiple models simultaneously.
+ * This object captures the data required by the Activities API in
+ * order to reject the specified activity.
  */
-class DeleteRequestData
+class RejectActivityRequestData
 {
-	private $ids = array();
-
+	private $data = array();
 	
 	/**
-	 * The ID of the models that are to be deleted.
-	 * The ID corresponds to the $model->id property
+	 * The reason why the transaction was rejected. This is used to give the user
+	 * insight as to why the transaction was rejected.
 	 */
-	public function setIds( array $ids ) { $this->ids = $ids; }
-	public function addId( $id ) { array_push( $this->ids, (string) $id ); }
+	public function getReason() { return $this->data['reason']; }
+	public function setReason( $reason ) { $this->data['reason'] = $reason; }
 	
 	
 	/**
@@ -36,7 +35,7 @@ class DeleteRequestData
 	 */
 	public function getJsonString()
 	{
-		return json_encode( array( 'ids' => $this->ids ) );
+		return json_encode( $this->data );
 	}
 }
 ?>

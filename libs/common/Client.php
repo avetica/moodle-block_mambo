@@ -149,8 +149,7 @@ class MamboClient
 			trigger_error( "Before using the SDK you must set the server URL using MamboClient->setEndPointBaseUrl()", E_USER_ERROR );
 		
 		// Set the default encoding
-		if( function_exists( 'mb_internal_encoding' ) )
-		{
+		if( function_exists( 'mb_internal_encoding' ) ) {
 			mb_internal_encoding( self::DEFAULT_ENCODING );
 		}
 		
@@ -166,9 +165,17 @@ class MamboClient
 		}
 		
 		// Create the OAuth signature
-		$consumer = new OAuthConsumer( self::$publicKey, self::$privateKey );
-		$request = OAuthRequest::from_consumer_and_token( $consumer, null, $method, $url );
-		$request->sign_request( new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null );
+		$consumer = new MamboOAuthConsumer( self::$publicKey, self::$privateKey );
+		$request = MamboOAuthRequest::from_consumer_and_token( $consumer, null, $method, $url );
+		$request->sign_request( new MamboOAuthSignatureMethod_HMAC_SHA1(), $consumer, null );
+		
+		// Debugging
+		if( self::$debug ) {
+			echo "OAuth details\n";
+			echo "OAuth base_string: " . $request->get_signature_base_string() . "\n";
+			echo "OAuth parameters:\n";
+			var_dump( $request->get_parameters() );
+		}
 		
 		// Get the cURL options
 		$options = $this->getCurlOptions( $url, $method, $request->to_header(), $data, $image );

@@ -103,17 +103,22 @@ class behaviours extends mambo {
         // load mambo
         self::load_mambo_sdk();
 
-        $data = new \EventRequestData();
+        $data = new \ActivityRequestData();
         $data->setUuid($userid); // Required
         $data->setUrl($CFG->wwwroot); // Required
-        $data->setVerb($verb); // Required
-        $data->setMetadata($metadata);
+
+        // this needs to be in a ActivityBehaviourAttrsData
+        $attributes = new \ActivityBehaviourAttrs();
+        $attributes->setVerb($verb); // Required
+        $attributes->setMetadata($metadata);
+
+        $data->setAttrs($attributes);
 
         if(is_a($content, 'Content')) {
             $data->setContent($content);
         }
 
-        $response = \MamboEventsService::create(self::$config->site, $data);
+        $response = \MamboActivitiesService::create(self::$config->site, $data);
 
         // retry if user didn't exists first
         if (!empty($response->error->type) && $response->error->type == 'UserNotFoundException') {

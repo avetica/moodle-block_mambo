@@ -49,25 +49,12 @@ class BehaviourRequestData extends AbstractHasTagRequestData
 	 * @return
 	 */
 	public function getPoints() { return $this->data['points']; }
-	public function setPoints( array $points ) {
-		if( is_null( $points ) ) {
-			$this->data['points'] = $points;
-			return;
-		}
-		
-		$this->data['points'] = array();
-		foreach( $points as $point ) {
-			array_push( $this->data['points'], $point->getJsonArray() );
-		}
-	}
+	public function setPoints( array $points ) { $this->data['points'] = $points; }
 	public function addPoints( ExpiringPoint $point ) {
-		if( !isset( $this->data['points'] ) )
+		if( !isset( $this->data['points'] ) ) {
 			$this->data['points'] = array();
-		
-		if( !is_null( $point ) )
-			array_push( $this->data['points'], $point->getJsonArray() );
-		else
-			array_push( $this->data['points'], $point );
+		}
+		array_push( $this->data['points'], $point );
 	}
 	
 	
@@ -89,11 +76,11 @@ class BehaviourRequestData extends AbstractHasTagRequestData
 	public function setHint( $hint ) { $this->data['hint'] = $hint; }
 
 	/**
-	 * Whether the Behaviour's hint should be shown or not.
+	 * Whether the Behaviour should be shown or not.
 	 * @return
 	 */
-	public function getHideHint() { return $this->data['hideHint']; }
-	public function setHideHint( $hideHint ) { $this->data['hideHint'] = $hideHint; }
+	public function getHideInWidgets() { return $this->data['hideInWidgets']; }
+	public function setHideInWidgets( $hideInWidgets ) { $this->data['hideInWidgets'] = $hideInWidgets; }
 
 	/**
 	 * Whether the Behaviour can be tracked directly through the Events JavaScript API
@@ -119,12 +106,7 @@ class BehaviourRequestData extends AbstractHasTagRequestData
 	 * @return
 	 */
 	public function getAttrs() { return $this->data['attrs']; }
-	public function setAttrs( $attrs ) {
-		if( !is_null( $attrs ) )
-			$this->data['attrs'] = $attrs->getJsonArray();
-		else
-			$this->data['attrs'] = $attrs;
-	}
+	public function setAttrs( $attrs ) { $this->data['attrs'] = $attrs; }
 
 	/**
 	 * The activity object is used to define the text to be used
@@ -132,11 +114,33 @@ class BehaviourRequestData extends AbstractHasTagRequestData
 	 * @return
 	 */
 	public function getActivity() { return $this->data['activity']; }
-	public function setActivity( Activity $activity ) {
-		if( !is_null( $activity ) )
-			$this->data['activity'] = $activity->getJsonArray();
-		else
-			$this->data['activity'] = $activity;
+	public function setActivity( ActivityStream $activity ) { $this->data['activity'] = $activity; }
+	
+	
+	/**
+	 * Return the JSON string equivalent of this object
+	 */
+	public function getJsonString()
+	{
+		$json = $this->data;
+		
+		if( isset( $json['points'] ) && !is_null( $json['points'] ) ) {
+			$pointsArr = array();
+			foreach( $json['points'] as $point ) {
+				array_push( $pointsArr, $point->getJsonArray() );
+			}
+			$json['points'] = $pointsArr;
+		}
+		
+		if( isset( $json['activity'] ) && !is_null( $json['activity'] ) ) {
+			$json['activity'] = $json['activity']->getJsonArray();
+		}
+		
+		if( isset( $json['attrs'] ) && !is_null( $json['attrs'] ) ) {
+			$json['attrs'] = $json['attrs']->getJsonArray();
+		}
+		
+		return json_encode( $json );
 	}
 }
 ?>

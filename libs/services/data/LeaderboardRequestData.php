@@ -36,14 +36,11 @@ class LeaderboardRequestData extends AbstractHasTagRequestData
 	 */
 	public function getPointIds() { return $this->data['pointIds']; }
 	public function setPointIds( array $pointIds ) { $this->data['pointIds'] = $pointIds; }
-	public function addPoints( SimplePoint $point ) {
-		if( !isset( $this->data['pointIds'] ) )
+	public function addPointIds( $pointId ) {
+		if( !isset( $this->data['pointIds'] ) ) {
 			$this->data['pointIds'] = array();
-		
-		if( !is_null( $point ) )
-			array_push( $this->data['pointIds'], $point->getJsonArray()['pointId'] );
-		else
-			array_push( $this->data['pointIds'], $point );
+		}
+		array_push( $this->data['pointIds'], (string) $pointId );
 	}
 
 	/**
@@ -52,11 +49,21 @@ class LeaderboardRequestData extends AbstractHasTagRequestData
 	 * @return
 	 */
 	public function getAttrs() { return $this->data['attrs']; }
-	public function setAttrs( $attrs ) {
-		if( !is_null( $attrs ) )
-			$this->data['attrs'] = $attrs->getJsonArray();
-		else
-			$this->data['attrs'] = $attrs;
+	public function setAttrs( $attrs ) { $this->data['attrs'] = $attrs; }
+	
+	
+	/**
+	 * Return the JSON string equivalent of this object
+	 */
+	public function getJsonString()
+	{
+		$json = $this->data;
+		
+		if( isset( $json['attrs'] ) && !is_null( $json['attrs'] ) ) {
+			$json['attrs'] = $json['attrs']->getJsonArray();
+		}
+		
+		return json_encode( $json );
 	}
 }
 ?>

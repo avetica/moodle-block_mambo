@@ -25,9 +25,9 @@ require_once(dirname(__FILE__) . '/common/BaseAbstract.php');
 require_once(dirname(__FILE__) . '/common/APIUrlBuilder.php');
 
 // Require all API related classes
+require_once(dirname(__FILE__) . '/services/ActivitiesService.php');
 require_once(dirname(__FILE__) . '/services/BehavioursService.php');
 require_once(dirname(__FILE__) . '/services/CouponsService.php');
-require_once(dirname(__FILE__) . '/services/EventsService.php');
 require_once(dirname(__FILE__) . '/services/LeaderboardsService.php');
 require_once(dirname(__FILE__) . '/services/NotificationsService.php');
 require_once(dirname(__FILE__) . '/services/PointsService.php');
@@ -35,28 +35,29 @@ require_once(dirname(__FILE__) . '/services/PurchasesService.php');
 require_once(dirname(__FILE__) . '/services/RewardsService.php');
 require_once(dirname(__FILE__) . '/services/SitesService.php');
 require_once(dirname(__FILE__) . '/services/TagsService.php');
-require_once(dirname(__FILE__) . '/services/TransactionsService.php');
 require_once(dirname(__FILE__) . '/services/UsersService.php');
 
 // Services data
 require_once(dirname(__FILE__) . '/services/data/AbstractHasTagRequestData.php');
+require_once(dirname(__FILE__) . '/services/data/ActivityRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/BehaviourRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/ClearNotificationsRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/CouponRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/CouponUserRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/DeleteRequestData.php');
-require_once(dirname(__FILE__) . '/services/data/EventRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/LeaderboardRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/PointRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/PurchaseRequestData.php');
-require_once(dirname(__FILE__) . '/services/data/RejectTransactionRequestData.php');
+require_once(dirname(__FILE__) . '/services/data/RejectActivityRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/RewardRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/SiteRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/TagRequestData.php');
-require_once(dirname(__FILE__) . '/services/data/TransactionRequestData.php');
 require_once(dirname(__FILE__) . '/services/data/UserRequestData.php');
 
-require_once(dirname(__FILE__) . '/services/data/nested/Activity.php');
+require_once(dirname(__FILE__) . '/services/data/nested/security/ActivitiesJavaScriptSecurity.php');
+require_once(dirname(__FILE__) . '/services/data/nested/security/UsersJavaScriptSecurity.php');
+require_once(dirname(__FILE__) . '/services/data/nested/security/Security.php');
+require_once(dirname(__FILE__) . '/services/data/nested/ActivityStream.php');
 require_once(dirname(__FILE__) . '/services/data/nested/Content.php');
 require_once(dirname(__FILE__) . '/services/data/nested/SimplePoint.php');
 require_once(dirname(__FILE__) . '/services/data/nested/ExpiringPoint.php');
@@ -78,14 +79,16 @@ require_once(dirname(__FILE__) . '/services/data/expiration/period/FixedPeriodWe
 require_once(dirname(__FILE__) . '/services/data/expiration/period/FixedPeriodMonthly.php');
 require_once(dirname(__FILE__) . '/services/data/expiration/period/FixedPeriodYearly.php');
 
+require_once(dirname(__FILE__) . '/services/data/attributes/ActivityBehaviourAttrs.php');
+require_once(dirname(__FILE__) . '/services/data/attributes/ActivityBountyAttrs.php');
+require_once(dirname(__FILE__) . '/services/data/attributes/ActivityCouponAttrs.php');
+require_once(dirname(__FILE__) . '/services/data/attributes/ActivityGiftedAttrs.php');
+require_once(dirname(__FILE__) . '/services/data/attributes/ActivityPointAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/SimpleAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/FlexibleAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/AchievementAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/LevelAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/MissionAttrs.php');
-require_once(dirname(__FILE__) . '/services/data/attributes/BountyTransactionAttrs.php');
-require_once(dirname(__FILE__) . '/services/data/attributes/GiftedTransactionAttrs.php');
-require_once(dirname(__FILE__) . '/services/data/attributes/ManualTransactionAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/LeaderboardBehaviourAttrs.php');
 require_once(dirname(__FILE__) . '/services/data/attributes/LeaderboardPointAttrs.php');
 ?>

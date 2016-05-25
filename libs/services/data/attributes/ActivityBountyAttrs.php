@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the Reward API in
- * order to create / update levels
+ * Defines activity attributes specific to bounty.
  */
-class LevelAttrs
+class ActivityBountyAttrs
 {
 	private $data = array();
 	
@@ -26,14 +25,19 @@ class LevelAttrs
 	 * The type of attribute
 	 * @return
 	 */
-	public function getType() { return 'level'; }
+	public function getType() { return 'bounty'; }
 
 	/**
-	 * The total number of points a user must have to unlock the level.
-	 * Note: points attached to a level will never be filtered by tags
-	 * only by the internalOnlyPoints.
-	 * See the level page in administration panel for more information.
+	 * The reason associated to the bounty activity. This can be used for the
+	 * source of the bounty to provide a message / reason as to why the bounty is
+	 * being started.
 	 * @return
+	 */
+	public function getReason() { return $this->data['reason']; }
+	public function setReason( $reason ) { $this->data['reason'] = (string) $reason; }
+
+	/**
+	 * The points associated with this bounty activity.
 	 */
 	public function getPoints() { return $this->data['points']; }
 	public function setPoints( array $points ) { $this->data['points'] = $points; }

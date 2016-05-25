@@ -55,8 +55,9 @@ class MissionAttrs
 	 */
 	public function getJsonArray()
 	{
-		$this->data['type'] = 'mission';
-		return $this->data;
+		$json = $this->data;
+		$json['type'] = $this->getType();
+		return $json;
 	}
 }
 ?>

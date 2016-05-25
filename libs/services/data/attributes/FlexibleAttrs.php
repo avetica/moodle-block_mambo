@@ -67,8 +67,9 @@ class FlexibleAttrs
 	 */
 	public function getJsonArray()
 	{
-		$this->data['type'] = 'flexible';
-		return $this->data;
+		$json = $this->data;
+		$json['type'] = $this->getType();
+		return $json;
 	}
 }
 ?>

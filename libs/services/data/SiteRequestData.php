@@ -44,11 +44,25 @@ class SiteRequestData
 	
 	
 	/**
+	 * The Security object is used to define the security settings for the site.
+	 * @return Security security
+	 */
+	public function getSecurity() { return $this->data['security']; }
+	public function setSecurity( $security ) { $this->data['security'] = $security; }
+	
+	
+	/**
 	 * Return the JSON string equivalent of this object
 	 */
 	public function getJsonString()
 	{
-		return json_encode( $this->data );
+		$json = $this->data;
+		
+		if( isset( $json['security'] ) && !is_null( $json['security'] ) ) {
+			$json['security'] = $json['security']->getJsonArray();
+		}
+		
+		return json_encode( $json );
 	}
 }
 ?>

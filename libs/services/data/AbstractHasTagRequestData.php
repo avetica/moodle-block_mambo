@@ -30,14 +30,14 @@ abstract class AbstractHasTagRequestData
 	 */
 	public function getTagIds() { return $this->data['tagIds']; }
 	public function setTagIds( array $tagIds ) { $this->data['tagIds'] = $tagIds; }
-	
-	
+
+
 	/**
-	 * Return the JSON string equivalent of this object
+	 * This should contain the list of the tags which must be added to the object.
+	 * This method accepts the actual tag value, for example: hr_dept, finance_dept, etc.
+	 * @return
 	 */
-	public function getJsonString()
-	{
-		return json_encode( $this->data );
-	}
+	public function getTagTags() { return $this->data['tagTags']; }
+	public function setTagTags( array $tagTags ) { $this->data['tagTags'] = $tagTags; }
 }
 ?>

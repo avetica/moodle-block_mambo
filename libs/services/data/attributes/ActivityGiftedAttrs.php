@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 /**
- * This object captures the data required by the Reward API in
- * order to create / update levels
+ * Defines activity attributes specific to gifted.
  */
-class LevelAttrs
+class ActivityGiftedAttrs
 {
 	private $data = array();
 	
@@ -26,14 +25,26 @@ class LevelAttrs
 	 * The type of attribute
 	 * @return
 	 */
-	public function getType() { return 'level'; }
+	public function getType() { return 'gifted'; }
 
 	/**
-	 * The total number of points a user must have to unlock the level.
-	 * Note: points attached to a level will never be filtered by tags
-	 * only by the internalOnlyPoints.
-	 * See the level page in administration panel for more information.
+	 * The Unique User ID of the user to whom the points are being gifted.
 	 * @return
+	 */
+	public function getTargetUuid() { return $this->data['targetUuid']; }
+	public function setTargetUuid( $targetUuid ) { $this->data['targetUuid'] = (string) $targetUuid; }
+
+	/**
+	 * The reason associated to the gifted activity. This can be used for the
+	 * source of the gift to provide a message / reason to the target of the gift
+	 * as to why they are being gifted with points.
+	 * @return
+	 */
+	public function getReason() { return $this->data['reason']; }
+	public function setReason( $reason ) { $this->data['reason'] = (string) $reason; }
+
+	/**
+	 * The points associated with this gifted activity.
 	 */
 	public function getPoints() { return $this->data['points']; }
 	public function setPoints( array $points ) { $this->data['points'] = $points; }

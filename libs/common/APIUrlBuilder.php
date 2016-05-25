@@ -116,6 +116,17 @@ class APIUrlBuilder
 	}
 
 
+	public function withActivities( $withActivities )
+	{
+		if( is_null( $withActivities ) )
+			return $this;
+
+		$this->queryString .= "&withActivities=";
+		$this->queryString .= $withActivities;
+		return $this;
+	}
+
+
 	public function withRewardsOnly( $withRewardsOnly )
 	{
 		if( is_null( $withRewardsOnly ) )
@@ -123,6 +134,39 @@ class APIUrlBuilder
 
 		$this->queryString .= "&withRewardsOnly=";
 		$this->queryString .= $withRewardsOnly;
+		return $this;
+	}
+
+
+	public function withTargetUser( $withTargetUser )
+	{
+		if( is_null( $withTargetUser ) )
+			return $this;
+
+		$this->queryString .= "&withTargetUser=";
+		$this->queryString .= $withTargetUser;
+		return $this;
+	}
+
+
+	public function withInternalPoints( $withInternalPoints )
+	{
+		if( is_null( $withInternalPoints ) )
+			return $this;
+
+		$this->queryString .= "&withInternalPoints=";
+		$this->queryString .= $withInternalPoints;
+		return $this;
+	}
+
+
+	public function withExceptions( $withExceptions )
+	{
+		if( is_null( $withExceptions ) )
+			return $this;
+
+		$this->queryString .= "&withExceptions=";
+		$this->queryString .= $withExceptions;
 		return $this;
 	}
 
@@ -179,6 +223,32 @@ class APIUrlBuilder
 
 		$this->queryString .= "&query=";
 		$this->queryString .= $query;
+		return $this;
+	}
+
+
+	public function rewardIds( $rewardIds )
+	{
+		if( is_null( $rewardIds ) || !is_array( $rewardIds ) || empty( $rewardIds ) )
+			return $this;
+
+		foreach( $rewardIds as $rewardId ) {
+			$this->queryString .= "&rewardIds=";
+			$this->queryString .= $rewardId;
+		}
+		return $this;
+	}
+
+
+	public function behaviourIds( $behaviourIds )
+	{
+		if( is_null( $behaviourIds ) || !is_array( $behaviourIds ) || empty( $behaviourIds ) )
+			return $this;
+
+		foreach( $behaviourIds as $behaviourId ) {
+			$this->queryString .= "&behaviourIds=";
+			$this->queryString .= $behaviourId;
+		}
 		return $this;
 	}
 

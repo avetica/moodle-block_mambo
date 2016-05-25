@@ -43,12 +43,7 @@ class VariablePeriodExpiration
 	 * @return
 	 */
 	public function getPeriod() { return $this->data['period']; }
-	public function setPeriod( $period ) {
-		if( !is_null( $period ) && ( $period instanceof VariablePeriod ) )
-			$this->data['period'] = $period->getJsonArray();
-		else
-			$this->data['period'] = $period;
-	}
+	public function setPeriod( $period ) { $this->data['period'] = $period; }
 	
 	
 	/**
@@ -57,8 +52,14 @@ class VariablePeriodExpiration
 	 */
 	public function getJsonArray()
 	{
-		$this->data['type'] = $this->getType();
-		return $this->data;
+		$json = $this->data;
+		$json['type'] = $this->getType();
+		
+		if( isset( $json['period'] ) && !is_null( $json['period'] ) ) {
+			$json['period'] = $json['period']->getJsonArray();
+		}
+		
+		return $json;
 	}
 }
 ?>

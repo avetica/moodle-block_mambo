@@ -15,37 +15,38 @@
  * limitations under the License.
  */
 /**
- * Represents an object which expires on a fixed date.
- * For example: 24/01/2015
+ * Defines activity attributes specific to coupon.
  */
-class FixedDateExpiration
+class ActivityCouponAttrs
 {
 	private $data = array();
-
-
+	
 	/**
-	 * The type of expiration: fixed_date
-	 * This field cannot be null.
+	 * The type of attribute
 	 * @return
 	 */
-	public function getType() { return 'fixed_date'; }
-
+	public function getType() { return 'coupon'; }
 
 	/**
-	 * This field contains the exact expiration date of the object.
-	 * This will be a UTC timestamp in ISO 8601 format with
-	 * millisecond precision: YYYY-MM-DDTHH:MM:SS.MMMZ<br>
-	 * For example: 2013-01-20T20:43:24.094Z.MMMZ<br>
-	 * This field cannot be null.
+	 * The coupon code to be used for this activity
 	 * @return
 	 */
-	public function getDate() { return $this->data['date']; }
-	public function setDate( $date ) { $this->data['date'] = $date; }
+	public function getCode() { return $this->data['code']; }
+	public function setCode( $code ) { $this->data['code'] = (string) $code; }
+
+	/**
+	 * The action associated to the coupon activity. The actions currently
+	 * available are:<br>
+	 * Redeem: redeems the user's coupon<br>
+	 * Refund: refunds the user's coupon
+	 * @return
+	 */
+	public function getAction() { return $this->data['action']; }
+	public function setAction( $action ) { $this->data['action'] = (string) $action; }
 	
 	
 	/**
-	 * Returns the current model as an array ready to
-	 * be json_encoded
+	 * Return the JSON string equivalent of this object
 	 */
 	public function getJsonArray()
 	{
