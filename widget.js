@@ -53,7 +53,7 @@ M.block_mambo_widget = {
             bottom: 0,
             limit: 10,
             autoCloseTimeout: 5000,
-            withEvents: true
+            withActivities: true
         };
 
         try
@@ -76,7 +76,7 @@ M.block_mambo_widget = {
                 debug   : M.block_mambo_widget.config.debug,
                 levelGroups : M.block_mambo_widget.config.levelGroups,
                 notifications : {
-                    withEvents: true
+                    withActivities: true
                 }
             };
 
