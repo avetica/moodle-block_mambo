@@ -39,7 +39,7 @@ class sites extends mambo {
      */
     static public function get_all() {
 
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
         $response = \MamboSitesService::getSites();
         if (empty($response->error)) {

@@ -27,8 +27,8 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__) . '/locallib.php');
 require_login();
 
-$courseid = required_param('courseid', PARAM_INT); // if no courseid is given
-$blockid = required_param('blockid', PARAM_INT); // if no courseid is given
+$courseid = required_param('courseid', PARAM_INT); // If no courseid is given.
+$blockid = required_param('blockid', PARAM_INT); // If no courseid is given.
 $parentcourse = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
 $context = context_course::instance($courseid);
@@ -43,37 +43,34 @@ $PAGE->set_title(get_string('activitiespage', 'block_mambo'));
 $PAGE->navbar->add(get_string('activitiespage', 'block_mambo'));
 $PAGE->requires->css('/blocks/mambo/styles.css');
 
-// load drag-and-drop js module
+// Load drag-and-drop js module.
 block_mambo_add_javascript_module();
 
 $config = get_config('block_mambo');
 
-// sending moodle header
+// Sending moodle header.
 echo $OUTPUT->header();
 
-if(empty($config->site))
-{
+if (empty($config->site)) {
     print_error("site_missing", 'block_mambo');
 }
 
-// load activities class
+// Load activities class.
 $activities = new \block_mambo\activities();
 
-// load html render
+// Load html render.
 $renderer = $PAGE->get_renderer('block_mambo');
 
-//get all behaviours available in mambo
+// Get all behaviours available in mambo.
 $behaviours = \block_mambo\behaviours::get_all();
 
-if(!$activities->has_completion($COURSE))
-{
+if (!$activities->has_completion($COURSE)) {
     print_error("disablecompletion", 'block_mambo');
 }
-else if(!has_capability('block/mambo:view', $blockcontext))
-{
+else if (!has_capability('block/mambo:view', $blockcontext)) {
     print_error("failed:capability_view", 'block_mambo');
 }
 echo $renderer->activities_overview($activities , $behaviours, $COURSE);
 
-// sending moodle footer
+// Sending moodle footer.
 echo $OUTPUT->footer();

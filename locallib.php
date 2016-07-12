@@ -77,7 +77,7 @@ function block_mambo_add_widget_init() {
         array()
     ), false, $jsmodule);
 
-    //set to true this will prevent from loading multipull times when there are more blocks on the same page
+    // Set to true this will prevent from loading multipull times when there are more blocks on the same page.
     $mambowidgetinit = true;
 }
 
@@ -102,6 +102,6 @@ function block_mambo_load_widget($content = '', $blockid = 0) {
         return $return;
     }
 
-    //else no widget found
+    // Else no widget found.
     return '';
 }

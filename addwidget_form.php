@@ -23,32 +23,30 @@
  * @copyright 2015 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
-if (!defined('MOODLE_INTERNAL'))
-{
+if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden!');
 }
 global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
-class Addwidget_form extends moodleform
-{
+class Addwidget_form extends moodleform {
     protected function definition() {
         global $DB;
         $mform = &$this->_form;
         $widget = !empty($this->_customdata['widget']) ? $this->_customdata['widget'] : false;
 
-        if($widget){
+        if ($widget) {
             $mform->addElement('header', 'header1', get_string('widget:edit' , 'block_mambo'));
-        }else{
+        } else {
             $mform->addElement('header', 'header1', get_string('widget:new' , 'block_mambo'));
         }
 
-        $mform->addElement('text', 'name', get_string('widget:name' , 'block_mambo'), array('size' => '48',));
+        $mform->addElement('text', 'name', get_string('widget:name', 'block_mambo'), array('size' => '48'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
 
-        $mform->addElement('textarea', 'widget', get_string('widget_content', 'block_mambo'), array('style' => 'width:100%;height:400px'));
-
+        $mform->addElement('textarea', 'widget', get_string('widget_content', 'block_mambo'),
+                           array('style' => 'width:100%;height:400px'));
 
         $this->add_action_buttons(false, get_string('save' , 'block_mambo'));
     }
@@ -62,7 +60,7 @@ class Addwidget_form extends moodleform
      * @return array
      * @throws coding_exception
      */
-    function validation($data, $files) {
+    protected function validation($data, $files) {
 
         $errors = parent::validation($data, $files);
         if (!empty($data['config_widget']) && !stristr($data['config_widget'] , 'mambo_widget_' . $this->block->instance->id)) {

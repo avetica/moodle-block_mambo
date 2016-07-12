@@ -39,7 +39,7 @@ class block_mambo_renderer extends plugin_renderer_base {
         $items = $activities->get_mapping_activities($course, $behaviours);
 
 
-        // build activity list
+        // Build activity list.
         if (!empty($items['activities'])) {
             $html .= '<div id="mambo_activities">
                         <h3>' . get_string('heading:mambo_activities', 'block_mambo') . '</h3>
@@ -54,7 +54,7 @@ class block_mambo_renderer extends plugin_renderer_base {
                    </div>';
         }
 
-        // build points list get by mambo
+        // Build points list get by mambo.
         if (!empty($items['behaviours'])) {
             $html .= '<div id="mambo_behaviours">
                             <h3>' . get_string('heading:mambo_behaviours', 'block_mambo') . '</h3>
@@ -70,7 +70,7 @@ class block_mambo_renderer extends plugin_renderer_base {
             $html .= '</ul>
                    </div>';
         }
-        $html .= '</div>'; // end main wrapper
+        $html .= '</div>'; // End main wrapper.
         return $html;
     }
 

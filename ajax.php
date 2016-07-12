@@ -46,13 +46,13 @@ $array = array('error' => '', 'status' => false);
 
 if (!has_capability('block/mambo:view', $blockcontext)) {
     $array['error'] = get_string('failed:capability_view', 'block_mambo');
-} elseif (!confirm_sesskey($sesskey)) {
+} else if (!confirm_sesskey($sesskey)) {
     $array['error'] = get_string('failed:sesskey', 'block_mambo');
 }
 
 if (empty($array['error'])) {
 
-    // load the activities class
+    // Load the activities class.
     $activities = new \block_mambo\activities();
 
     switch ($action) {

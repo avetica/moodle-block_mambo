@@ -33,13 +33,13 @@ class coupons {
      * @return object|bool
      */
     static public function get_all() {
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
         $response = \MamboCouponsService::getCoupons(self::$config->site);
 
         if (empty($response->error)) {
-            // provide array
+            // Provide array.
             return $response;
         }
 
@@ -51,13 +51,13 @@ class coupons {
      * @return object|bool
      */
     static public function get_all_buyable() {
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
         $response = \MamboCouponsService::getBuyableCoupons(self::$config->site);
 
         if (empty($response->error)) {
-            // provide array
+            // Provide array.
             return $response;
         }
 
@@ -69,32 +69,32 @@ class coupons {
      * @return object|bool
      */
     static public function get_coupon($coupon) {
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
         $response = \MamboCouponsService::get($coupon);
 
         if (empty($response->error)) {
-            // provide array
+            // Provide array.
             return $response;
         }
 
         return false;
     }
 
-    // POST /v1/{site}/coupons/redeem
+    // POST /v1/{site}/coupons/redeem.
     /**
      * getting all coupons
      * @return object|bool
      */
     static public function redeem($userid, $coupon) {
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
         $response = \MamboCouponsService::redeem(self::$config->site, $userid, $coupon);
 
         if (empty($response->error)) {
-            // provide array
+            // Provide array.
             return $response;
         }
 

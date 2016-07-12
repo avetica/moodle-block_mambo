@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
  * @author    Virgil Ashruf
  **/
 class transactions extends mambo {
-    
     /**
      * function post_transaction
      *
@@ -39,29 +38,27 @@ class transactions extends mambo {
      * @return boolean
      **/
     static public function post_transaction($userid = 0, $pointId = '', $points = 0, $reason = '') {
-        
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
-        // Prepare the request data used to register the transaction
+        // Prepare the request data used to register the transaction.
         $data = new \ActivityRequestData();
-        $data->setUuid( $userid ); // Required
+        $data->setUuid( $userid ); // Required.
 
-        // Prepare the point
+        // Prepare the point.
         $point = new \SimplePoint();
-        $point->setPointId( $pointId ); // Required
-        $point->setPoints( $points ); // Required
-        
-        
-        // Create a new Manual transaction
-        $attrs = new \ActivityPointAttrs();
-        $attrs->setAction( "increment" ); // Required
-        $attrs->setReason( $reason );
-        $attrs->addPoints( $point ); // Required
+        $point->setPointId( $pointId ); // Required.
+        $point->setPoints( $points ); // Required.
 
-        $data->setAttrs( $attrs ); // Required
-        
-        // Register a new transaction
+        // Create a new Manual transaction.
+        $attrs = new \ActivityPointAttrs();
+        $attrs->setAction( "increment" ); // Required.
+        $attrs->setReason( $reason );
+        $attrs->addPoints( $point ); // Required.
+
+        $data->setAttrs( $attrs ); // Required.
+
+        // Register a new transaction.
         $transaction = \MamboActivitiesService::create( self::$config->site, $data );
 
         return true;

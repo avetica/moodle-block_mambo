@@ -29,9 +29,9 @@ require_once(dirname(__FILE__) . '/locallib.php');
 require_once(dirname(__FILE__) . '/addwidget_form.php');
 require_login();
 
-$courseid = required_param('courseid', PARAM_INT); // if no courseid is given
-$blockid = required_param('blockid', PARAM_INT); // if no courseid is given
-$widgetid = optional_param('widgetid', false, PARAM_INT); // if no courseid is given
+$courseid = required_param('courseid', PARAM_INT); // If no courseid is given.
+$blockid = required_param('blockid', PARAM_INT); // If no courseid is given.
+$widgetid = optional_param('widgetid', false, PARAM_INT); // If no courseid is given.
 $action = optional_param('action', false, PARAM_ALPHA);
 $parentcourse = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
@@ -40,26 +40,24 @@ $blockcontext = context_block::instance($blockid, MUST_EXIST);
 
 $PAGE->set_course($parentcourse);
 
-$PAGE->set_url('/blocks/mambo/addwidget.php' , array('blockid' => $blockid,  'widgetid'=> $widgetid, 'courseid' => $courseid));
+$PAGE->set_url('/blocks/mambo/addwidget.php' , array('blockid' => $blockid,  'widgetid' => $widgetid, 'courseid' => $courseid));
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagelayout('incourse');
 $PAGE->set_title(get_string('addwidget', 'block_mambo'));
 $PAGE->navbar->add(get_string('addwidget', 'block_mambo'));
 $PAGE->requires->css('/blocks/mambo/styles.css');
 
-// render
+// Render.
 $renderer = $PAGE->get_renderer('block_mambo');
 
-// get a widget
+// Get a widget.
 $widget = $DB->get_record('mambo_widget' , array('id' => $widgetid));
 
-// check if need for any special actions
+// Check if need for any special actions.
 
-switch($action)
-{
+switch($action) {
     case 'delete':
-        if($widget)
-        {
+        if ($widget) {
             $DB->delete_records('mambo_widget' , array('id' => $widget->id));
             redirect($PAGE->url);
         }
@@ -68,7 +66,7 @@ switch($action)
 
 $form = new Addwidget_form($PAGE->url, array('widget' => $widget));
 
-if($widget){
+if ($widget) {
     $form->set_data((array) $widget);
 }
 
@@ -76,28 +74,14 @@ if (($data = $form->get_data()) != false) {
 
     $obj = new stdClass();
     $obj->name  = $data->name;
-    $obj->widget  = preg_replace('/\Mambo.+?\)/', '', $data->widget); // remove junk . for us should look like this
-    /**
-     * .activities({
-            height: 425,
-            width: 250,
-            iconClass: "k-act-ico",
-            picClass: "k-sprite k-sil-m",
-            widgetOpts: {
-            hasEarnPoints: true,
-            earnPointsUrl: null,
-            height: 500,
-            width: 250
-            }
-        });
-     */
+    $obj->widget  = preg_replace('/\Mambo.+?\)/', '', $data->widget); // A. @TODO: remove junk. for us should look like this.
 
-    if($widget){
-        // update widget
+    if ($widget) {
+        // Update widget.
         $obj->id = $widget->id;
         $DB->update_record('mambo_widget' , $obj);
-    }else{
-        // new widget
+    } else {
+        // New widget.
         $DB->insert_record('mambo_widget' , $obj);
     }
 
@@ -111,8 +95,8 @@ echo '<hr/>';
 
 $newbtn = clone $PAGE->url;
 $newbtn->remove_params(array('widgetid'));
-echo html_writer::link($newbtn , get_string('new' , 'block_mambo') , array('class'=> 'btn'));
+echo html_writer::link($newbtn , get_string('new' , 'block_mambo') , array('class' => 'btn'));
 
 echo $form->render();
-// sending moodle footer
+// Sending moodle footer.
 echo $OUTPUT->footer();

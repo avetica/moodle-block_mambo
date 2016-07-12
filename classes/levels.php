@@ -27,19 +27,19 @@ defined('MOODLE_INTERNAL') || die();
  * @author    Luuk Verhoeven
  **/
 class levels extends mambo {
-    
+
     /**
      * get levels from mambo
      * @return object|bool
      */
     static public function get() {
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
-        
-        // Get the list of levels for the site specified
+
+        // Get the list of levels for the site specified.
         $response = \MamboRewardsService::getLevels( self::$config->site );
-        
-         if(empty($response->error)) {
+
+         if (empty($response->error)) {
              return $response;
          }
 
@@ -51,12 +51,12 @@ class levels extends mambo {
      * @return object|bool
      */
      static public function get_user_levels($userid) {
-         // load mambo
+         // Load mambo.
          self::load_mambo_sdk();
-         
+
          $response = \MamboUsersService::getLevels(self::$config->site, $userid);
-         
-         if(empty($response->error)) {
+
+         if (empty($response->error)) {
              return $response;
          }
 

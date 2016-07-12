@@ -49,22 +49,22 @@ class mambo {
             return;
         }
 
-        // Import the library files
+        // Import the library files.
         require_once(dirname(__FILE__) . '/../libs/Mambo.php');
 
         self::$config = get_config('block_mambo');
 
-        // check if set else triggers warnings on fresh environment
+        // Check if set else triggers warnings on fresh environment.
         $settingsNeeded = array('apikey_public', 'apikey_private', 'api_url');
         foreach ($settingsNeeded as $setting) {
             if (empty(self::$config->$setting)) {
-                // reset
+                // Reset.
                 self::$config = array();
                 throw new \Exception('Mambo missing setting:' . $setting);
             }
         }
 
-        // Initialise the clients credentials and end point URL, this only needs to be done once
+        // Initialise the clients credentials and end point URL, this only needs to be done once.
         \MamboClient::setCredentials(self::$config->apikey_public, self::$config->apikey_private);
         \MamboClient::setEndPointBaseUrl(self::$config->api_url);
 

@@ -27,43 +27,43 @@ defined('MOODLE_INTERNAL') || die();
  * @author    Luuk Verhoeven
  **/
 class points extends mambo {
-    
+
     /**
      * get all points from mambo (optionally by tag)
      * @param array $tags
      * @return object|bool
      */
      static public function get_all($tags = false) {
-        
-        // load mambo
+
+        // Load mambo.
         self::load_mambo_sdk();
-        
+
         $response = \MamboPointsService::getPoints(self::$config->site);
-        
-        if(empty($response->error)) {
+
+        if (empty($response->error)) {
             $array = array();
             foreach($response as $result) {
-                // if we need to filter by tag, 
-                if($tags) {
-                    // and the points have a tag
-                    if(count($result->tags) > 0) {
-                        // then see if any of the returned tags match our filter
+                // If we need to filter by tag,.
+                if ($tags) {
+                    // And the points have a tag.
+                    if (count($result->tags) > 0) {
+                        // Then see if any of the returned tags match our filter.
                         foreach($result->tags as $tag) {
-                            if(in_array($tag->tag, $tags)) {
-                                // and stock our array with the object
+                            if (in_array($tag->tag, $tags)) {
+                                // And stock our array with the object.
                                 $array[$result->id] = $result;
                             }
                         }
                     }
                 } else {
-                    // we dont have $tags, so we just stock our array :-)
+                    // We dont have $tags, so we just stock our array :-).
                     $array[$result->id] = $result;
                 }
             }
             return $array;
         }
-        
+
         return false;
-        
+
      }
 }

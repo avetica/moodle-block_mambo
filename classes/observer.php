@@ -31,7 +31,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class observer {
 
-
     /**
      * Triggered from user_created event
      *
@@ -44,7 +43,7 @@ class observer {
         $record = $event->get_record_snapshot('user', $event->objectid);
 
         if (!empty($record)) {
-            // we have a new user record, forwarding it to mambo.io
+            // We have a new user record, forwarding it to mambo.io.
             \block_mambo\user::set($record);
         }
     }
@@ -62,8 +61,8 @@ class observer {
 
         if (!empty($record)) {
 
-            // load sdk with credentials
-            // we need to remove this user from mambo
+            // Load sdk with credentials.
+            // We need to remove this user from mambo.
             \block_mambo\user::delete($record);
         }
     }
@@ -81,8 +80,8 @@ class observer {
 
         if (!empty($record)) {
 
-            // load sdk with credentials
-            // we have a update for a user record, forwarding it to mambo.io
+            // Load sdk with credentials.
+            // We have a update for a user record, forwarding it to mambo.io.
             \block_mambo\user::set($record);
         }
     }
@@ -101,10 +100,10 @@ class observer {
         $states = array(COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS, COMPLETION_COMPLETE_FAIL);
 
         if (in_array($eventdata->completionstate, $states)) {
-            // we need to check if need to take a action
+            // We need to check if need to take a action.
             $activities = new \block_mambo\activities();
             if (($links = $activities->get_activity_maps($eventdata->coursemoduleid)) != false) {
-                // get metadata for activity
+                // Get metadata for activity.
                 $metadata = array();
                 $metadata = $activities->get_activity_metadata($eventdata->coursemoduleid, $userid, $eventdata->completionstate);
                 \block_mambo\mambo::load_mambo_sdk();
@@ -127,7 +126,7 @@ class observer {
      */
     public static function course_module_deleted(\core\event\course_module_deleted $event) {
         global $DB;
-        // remove linked items
+        // Remove linked items.
         $DB->delete_records('mambo_behaviour', array('coursemoduleid' => $event->objectid));
         $DB->delete_records('mambo_behaviour_user', array('coursemoduleid' => $event->objectid));
     }

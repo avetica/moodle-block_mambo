@@ -200,11 +200,11 @@ class user extends mambo {
      *
      * @return array
      */
-    static public function get_all_users() {
+    static public function get_all_users($tags = null) {
         //load mambo
         self::load_mambo_sdk();
 
-        $response = \MamboUsersService::getUsers(self::$config->site);
+        $response = \MamboUsersService::getUsers(self::$config->site, $tags);
 
         if(empty($response->error)) {
             return $response;

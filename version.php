@@ -27,6 +27,6 @@
 defined('MOODLE_INTERNAL') || die();
 $plugin->release   = '1.3.0';
 $plugin->maturity = MATURITY_BETA;
-$plugin->version   = 2016061700;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2013101800;        // Requires this Moodle version
-$plugin->component = 'block_mambo'; // Full name of the plugin (used for diagnostics)
+$plugin->version   = 2016061700;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2013101800;        // Requires this Moodle version.
+$plugin->component = 'block_mambo'; // Full name of the plugin (used for diagnostics).

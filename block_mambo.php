@@ -32,7 +32,7 @@ class block_mambo extends block_base {
      *
      * @return void
      */
-    function init() {
+    public function init() {
         $this->title = get_string('pluginname', 'block_mambo');
     }
 
@@ -41,7 +41,7 @@ class block_mambo extends block_base {
      * If yes, then it is assumed that the block WILL USE per-instance configuration
      * @return boolean
      */
-    function instance_allow_multiple() {
+    public function instance_allow_multiple() {
         return false;
     }
 
@@ -51,7 +51,7 @@ class block_mambo extends block_base {
      *
      * @return boolean
      */
-    function has_config() {
+    public function has_config() {
         return true;
     }
 
@@ -64,7 +64,7 @@ class block_mambo extends block_base {
         return array('all' => true, 'mod' => false, 'tag' => false);
     }
 
-    function instance_allow_config() {
+    public function instance_allow_config() {
         return false;
     }
 
@@ -75,7 +75,7 @@ class block_mambo extends block_base {
      *
      * @return void
      */
-    function specialization() {
+    public function specialization() {
 
         if (empty($this->config->title)) {
             $this->title = get_string('pluginname', 'block_mambo');
@@ -84,11 +84,11 @@ class block_mambo extends block_base {
         }
     }
 
-    function get_content() {
+    public function get_content() {
         global $CFG, $COURSE;
 
-        require_once $CFG->libdir . '/formslib.php';
-        require_once  'locallib.php';
+        require_once($CFG->libdir . '/formslib.php');
+        require_once('locallib.php');
 
         if ($this->content !== null) {
             return $this->content;
@@ -107,20 +107,25 @@ class block_mambo extends block_base {
         $this->content->text = '';
         $this->content->footer = '';
 
-
-        // show mapping button for manager usage
-        if( has_capability('block/mambo:view', $blockcontext)){
-            $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/view.php' , array('blockid'=> $this->instance->id , 'courseid' =>  $COURSE->id)), get_string('btn:setup', 'block_mambo'));
+        // Show mapping button for manager usage.
+        if ( has_capability('block/mambo:view', $blockcontext)) {
+            $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/view.php',
+                                                        array('blockid' => $this->instance->id,
+                                                        'courseid' => $COURSE->id)),
+                                                        get_string('btn:setup', 'block_mambo'));
             $this->content->footer .= '<hr/>';
         }
 
-        // adding widgets
-        if( has_capability('block/mambo:addwidget', $blockcontext)){
-            $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/addwidget.php' , array('blockid'=> $this->instance->id , 'courseid' =>  $COURSE->id)), get_string('btn:addwidget', 'block_mambo'));
+        // Adding widgets.
+        if ( has_capability('block/mambo:addwidget', $blockcontext)) {
+            $this->content->footer .= html_writer::link(new moodle_url('/blocks/mambo/addwidget.php',
+                                                        array('blockid' => $this->instance->id,
+                                                        'courseid' => $COURSE->id)),
+                                                        get_string('btn:addwidget', 'block_mambo'));
         }
-        // check if this block has a widget
-        if(!empty($this->config->widget) && ($widget = block_mambo_load_widget($this->config->widget , $this->instance->id)) !== '')
-        {
+        // Check if this block has a widget.
+        if (!empty($this->config->widget) &&
+            ($widget = block_mambo_load_widget($this->config->widget, $this->instance->id)) !== '') {
             block_mambo_add_widget_init();
             $this->content->text .= $widget;
         }

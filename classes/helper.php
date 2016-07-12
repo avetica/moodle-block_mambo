@@ -47,7 +47,7 @@ class helper {
             $curl_ok = (function_exists('curl_exec') && in_array('https', $curl_version['protocols'], true));
         }
 
-        // Let the user know the results of the compatibility check
+        // Let the user know the results of the compatibility check.
         $string .= '<hr/>Mambo PHP Environment Compatibility Test' . PHP_EOL;
         $string .= PHP_EOL;
         $string .= 'PHP 5.3 or newer............ ' . ($php_ok ? ('Pass ' . phpversion()) : 'Fail') . PHP_EOL;
@@ -55,7 +55,7 @@ class helper {
         $string .= 'JSON........................ ' . ($json_ok ? 'Pass' : 'Fail') . PHP_EOL;
         $string .= PHP_EOL;
 
-        // Overall success or failure message
+        // Overall success or failure message.
         if ($php_ok && $curl_ok && $json_ok) {
             $string .= 'Your environment meets the minimum requirements for using the Mambo SDK for PHP' . PHP_EOL;
         } else {

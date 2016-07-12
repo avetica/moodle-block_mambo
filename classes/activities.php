@@ -29,7 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class activities {
 
-
     /**
      * check if completion is turned on
      *
@@ -55,7 +54,7 @@ class activities {
     public function get_mapping_activities($course, $behaviours) {
         global $DB;
 
-        // get already linked items
+        // Get already linked items.
         $rs = $DB->get_recordset('mambo_behaviour', array('courseid' => $course->id));
         foreach ($rs as $record) {
 
@@ -113,7 +112,7 @@ class activities {
         $obj->verb = $verb;
         $obj->courseid = $courseid;
 
-        // make sure not already exists
+        // Make sure not already exists.
         $row = $DB->get_record('mambo_behaviour', (array)$obj);
         if (!$row) {
             $obj->addedon = time();
@@ -136,14 +135,14 @@ class activities {
         global $DB;
         $DB->delete_records('mambo_behaviour', array('coursemoduleid' => $coursemoduleid));
     }
-    
+
     /**
      * get activity metadata
-     * 
+     *
      * @param int $coursemoduleid
      * @param int $userid
      * @param int $completionstate
-     * 
+     *
      * @global moodle_database $DB
      * @return array $metadata
      */
@@ -155,7 +154,7 @@ class activities {
          $metadata['sign'] = 'positive';
 
          return $metadata;
-     }
+    }
 
     public function get_activity_title($coursemoduleid) {
         global $DB;
@@ -179,24 +178,24 @@ class activities {
 
     /**
      * get activity grade for metadata
-     * 
+     *
      * @param int $coursemoduleid
      * @param int $userid
-     * 
+     *
      * @global $DB
      * @return int $grade
      */
     public function get_activity_grade($coursemoduleid = 0, $userid = 0) {
         global $DB;
-        
+
         $coursemodule = $DB->get_record('course_modules', array('id' => $coursemoduleid));
         $module = $DB->get_record('modules', array('id' => $coursemodule->module));
         $gradeitem = $DB->get_record('grade_items', array('itemmodule' => $module->name,
                                                           'iteminstance' => $coursemodule->instance));
-        if($gradeitem) {
+        if ($gradeitem) {
             $grade = $DB->get_record('grade_grades', array('itemid' => $gradeitem->id,
                                                            'userid' => $userid));
-            if($grade) {
+            if ($grade) {
                 $finalgrade = round($grade->finalgrade);
                 return (string)$finalgrade;
             } else {
@@ -205,7 +204,7 @@ class activities {
         } else {
             return 'ungradable';
         }
-     }
+    }
 
     /**
      * send a event to mambo
@@ -217,15 +216,15 @@ class activities {
      * @return bool false if something goes wrong or already action executed
      * @global moodle_database $DB
      */
-    public function send_event($userid = 0, $completionstate = COMPLETION_UNKNOWN, $record = false, $metadata = array(), $content = '') {
-
+    public function send_event($userid = 0, $completionstate = COMPLETION_UNKNOWN,
+                               $record = false, $metadata = array(), $content = '') {
         global $DB;
 
         if (!$record) {
             return false;
         }
 
-        // check if we already have a record
+        // Check if we already have a record.
         $behaviouruser = $DB->get_record('mambo_behaviour_user', array(
             'userid' => $userid,
             'coursemoduleid' => $record->coursemoduleid
@@ -233,22 +232,21 @@ class activities {
         if ($behaviouruser) {
             if ($behaviouruser->send == 1) {
                 if ($behaviouruser->completionstate != $completionstate) {
-                    // the completionstate is different from before 
-                    // so we need to call with the same verb and old metadata
-                    // but put the negative sign in the metadata
-                    // therefore the flexible behaviour will be able to remove points
+                    // The completionstate is different from before.
+                    // So we need to call with the same verb and old metadata.
+                    // But put the negative sign in the metadata.
+                    // Therefore the flexible behaviour will be able to remove points.
                     $oldmetadata = json_decode($behaviouruser->metadata, true);
                     $oldmetadata['sign'] = 'negative';
                     $response = \block_mambo\behaviours::add_event($userid, $record->verb, $oldmetadata, $content);
                 } else {
-                    // the event was sent, and the completionstate is the same
+                    // The event was sent, and the completionstate is the same.
                     return false;
                 }
             }
         }
 
-        // sending this to mambo
-        // virgil: we need to add metadata to this
+        // Sending this to mambo.
         $response = \block_mambo\behaviours::add_event($userid, $record->verb, $metadata, $content);
 
         $obj = new \stdClass();

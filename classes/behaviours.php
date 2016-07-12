@@ -34,7 +34,7 @@ class behaviours extends mambo {
      */
     static public function get_all() {
 
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
         $response = \MamboBehavioursService::getBehaviours(self::$config->site);
@@ -43,7 +43,7 @@ class behaviours extends mambo {
 
             $array = array();
             foreach ($response as $item) {
-                if($item->attrs->type == 'simple') {
+                if ($item->attrs->type == 'simple') {
                     $array[$item->verb] = $item;
                 }
             }
@@ -55,15 +55,15 @@ class behaviours extends mambo {
     }
 
     static public function get($tag = null) {
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
-        if($tag === null) {
+        if ($tag === null) {
             $response = $this->get_all();
         } else {
             $response = \MamboBehavioursService::getBehaviours(self::$config->site, $tag);
         }
-        if(empty($response->error)) {
+        if (empty($response->error)) {
             return $response;
         }
 
@@ -71,16 +71,16 @@ class behaviours extends mambo {
     }
 
     static public function get_by_id($id = null) {
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
-        if($id === null) {
+        if ($id === null) {
             $response = $this->get_all();
         } else {
             $response = \MamboBehavioursService::get($id);
         }
 
-        if(empty($response->error)) {
+        if (empty($response->error)) {
             return $response;
         }
 
@@ -100,27 +100,27 @@ class behaviours extends mambo {
 
         global $DB, $CFG;
 
-        // load mambo
+        // Load mambo.
         self::load_mambo_sdk();
 
         $data = new \ActivityRequestData();
-        $data->setUuid($userid); // Required
-        $data->setUrl($CFG->wwwroot); // Required
+        $data->setUuid($userid); // Required.
+        $data->setUrl($CFG->wwwroot); // Required.
 
-        // this needs to be in a ActivityBehaviourAttrsData
+        // This needs to be in a ActivityBehaviourAttrsData.
         $attributes = new \ActivityBehaviourAttrs();
-        $attributes->setVerb($verb); // Required
+        $attributes->setVerb($verb); // Required.
         $attributes->setMetadata($metadata);
 
         $data->setAttrs($attributes);
 
-        if(is_a($content, 'Content')) {
+        if (is_a($content, 'Content')) {
             $data->setContent($content);
         }
 
         $response = \MamboActivitiesService::create(self::$config->site, $data);
 
-        // retry if user didn't exists first
+        // Retry if user didn't exists first.
         if (!empty($response->error->type) && $response->error->type == 'UserNotFoundException') {
             $user = $DB->get_record('user', array('id' => $userid));
             $response = \block_mambo\user::set($user);
