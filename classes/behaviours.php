@@ -69,6 +69,22 @@ class behaviours extends mambo {
 
         return false;
     }
+    
+    static public function get_simple($tag = null) {
+        // Load mambo.
+        self::load_mambo_sdk();
+
+        if ($tag === null) {
+            $response = $this->get_all();
+        } else {
+            $response = \MamboBehavioursService::getSimpleBehaviours(self::$config->site, $tag);
+        }
+        if (empty($response->error)) {
+            return $response;
+        }
+
+        return false;
+    }
 
     static public function get_by_id($id = null) {
         // Load mambo.
@@ -116,6 +132,7 @@ class behaviours extends mambo {
 
         if (is_a($content, 'Content')) {
             $data->setContent($content);
+            $data->setUrl($content->getUrl());
         }
 
         $response = \MamboActivitiesService::create(self::$config->site, $data);
@@ -125,10 +142,51 @@ class behaviours extends mambo {
             $user = $DB->get_record('user', array('id' => $userid));
             $response = \block_mambo\user::set($user);
             if ($response) {
-                return self::add_event($userid, $verb, $metadata);
+                return self::add_event($userid, $verb, $metadata, $content);
             }
         }
 
         return $response;
+    }
+
+    static public function create_flexible($name, $verb, $behaviourid, $metadata, $points = false) {
+        // Load mambo.
+        self::load_mambo_sdk();
+
+        // Initiate the BehaviourRequestData
+        $data = new \BehaviourRequestData();
+        $data->setName($name); // Required
+        $data->setVerb($verb); // Required
+        $data->setCoolOff( 60 ); // Required
+        $data->setJsTrackable( false ); // Required
+        $data->setTagFilter( false ); // Required
+        $data->setHideInWidgets( false );
+
+        // Create a new Flexible behaviour
+        $attrs = new \FlexibleAttrs();
+        $attrs->setBehaviourId($behaviourid); // Required
+        if($metadata) {
+            $attrs->setMetadata($metadata);
+        }
+        $data->setAttrs( $attrs ); // Required
+
+        if($points) {
+            foreach($points as $point) {
+                $newpoint = new \ExpiringPoint();
+                $newpoint->setPointId($point->id); // Required
+                $newpoint->setPoints($point->count); // Required
+                $data->addPoints( $newpoint ); // Required
+            }
+        }
+        
+		// Register a new behaviour
+		$behaviour = \MamboBehavioursService::create(self::$config->site, $data);
+
+		// Check if there are any errors
+		if( !is_null( $behaviour->error ) ) {
+			// Oops, handle stuff that goes wrong
+		}
+
+		return $behaviour;
     }
 }

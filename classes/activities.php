@@ -156,6 +156,11 @@ class activities {
          return $metadata;
     }
 
+    /**
+     * get_activity_title
+     *
+     * @param mixed $coursemoduleid
+     */
     public function get_activity_title($coursemoduleid) {
         global $DB;
 
@@ -166,6 +171,11 @@ class activities {
         return $title->name;
     }
 
+    /**
+     * get_activity_url
+     *
+     * @param mixed $coursemoduleid
+     */
     public function get_activity_url($coursemoduleid) {
         global $CFG, $DB;
 
@@ -192,10 +202,17 @@ class activities {
         $module = $DB->get_record('modules', array('id' => $coursemodule->module));
         $gradeitem = $DB->get_record('grade_items', array('itemmodule' => $module->name,
                                                           'iteminstance' => $coursemodule->instance));
+
         if ($gradeitem) {
+            // Return ungradeable immediadetely if the type is wrong.
+            if($gradeitem->gradetype == 0 or $gradeitem->gradetype == 3) {
+                return 'ungradable';
+            }
+
+            // Get the numerical grade value.
             $grade = $DB->get_record('grade_grades', array('itemid' => $gradeitem->id,
                                                            'userid' => $userid));
-            if ($grade) {
+            if ($grade and $grade->finalgrade > 0) {
                 $finalgrade = round($grade->finalgrade);
                 return (string)$finalgrade;
             } else {
@@ -230,7 +247,10 @@ class activities {
             'coursemoduleid' => $record->coursemoduleid
         ));
         if ($behaviouruser) {
+            // @TODO: we need to fix this
             if ($behaviouruser->send == 1) {
+                // We need to use this metadata.
+                $oldmetadata = json_decode($behaviouruser->metadata, true);
                 if ($behaviouruser->completionstate != $completionstate) {
                     // The completionstate is different from before.
                     // So we need to call with the same verb and old metadata.
@@ -239,8 +259,11 @@ class activities {
                     $oldmetadata = json_decode($behaviouruser->metadata, true);
                     $oldmetadata['sign'] = 'negative';
                     $response = \block_mambo\behaviours::add_event($userid, $record->verb, $oldmetadata, $content);
+                } else if ($oldmetadata != json_encode($metadata)) {
+                   // Maybe we need to do something here. 
                 } else {
                     // The event was sent, and the completionstate is the same.
+                    // Also, the metadata is the same.
                     return false;
                 }
             }

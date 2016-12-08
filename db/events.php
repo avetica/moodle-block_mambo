@@ -44,4 +44,12 @@ $observers = array(
         'eventname' => '\core\event\course_module_deleted',
         'callback' => '\block_mambo\observer::course_module_deleted',
     ),
+    array(
+        'eventname' => '\core\event\user_graded',
+        'callback' => '\block_mambo\observer::event_user_graded',
+    ),
+    array(
+        'eventname' => '\core\event\badge_awarded',
+        'callback' => '\block_mambo\observer::badge_awarded',
+    ),
 );

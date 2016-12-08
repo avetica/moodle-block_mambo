@@ -62,4 +62,22 @@ class levels extends mambo {
 
          return FALSE;
      }
+
+    /**
+     * get user levels from mambo
+     * @param int $userid
+     * @return object|bool
+     */
+     static public function get_all_user_levels($userid) {
+         // Load mambo.
+         self::load_mambo_sdk();
+
+         $response = \MamboUsersService::getAllLevels(self::$config->site, $userid);
+
+         if (empty($response->error)) {
+             return $response;
+         }
+
+         return FALSE;
+     }
 }

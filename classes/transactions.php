@@ -37,7 +37,8 @@ class transactions extends mambo {
      *
      * @return boolean
      **/
-    static public function post_transaction($userid = 0, $pointId = '', $points = 0, $reason = '') {
+    static public function post_transaction($userid = 0, $pointId = '', $points = 0, $reason = '', $description = false, $imageUrl = false) {
+        global $CFG;
         // Load mambo.
         self::load_mambo_sdk();
 
@@ -45,22 +46,48 @@ class transactions extends mambo {
         $data = new \ActivityRequestData();
         $data->setUuid( $userid ); // Required.
 
-        // Prepare the point.
-        $point = new \SimplePoint();
-        $point->setPointId( $pointId ); // Required.
-        $point->setPoints( $points ); // Required.
-
-        // Create a new Manual transaction.
+        // Prepare the attributes
         $attrs = new \ActivityPointAttrs();
         $attrs->setAction( "increment" ); // Required.
         $attrs->setReason( $reason );
-        $attrs->addPoints( $point ); // Required.
 
+        // Prepare the point.
+        if(is_array($pointId)) {
+            foreach($pointId as $id => $points) {
+                $point = new \SimplePoint();
+                $point->setPointId( $id ); // Required.
+                $point->setPoints( $points ); // Required.
+                $attrs->addPoints( $point ); // Required.
+            }
+        } else {
+            $point = new \SimplePoint();
+            $point->setPointId( $pointId ); // Required.
+            $point->setPoints( $points ); // Required.
+            $attrs->addPoints( $point ); // Required.
+        }
+
+        // Create a new Manual transaction.
         $data->setAttrs( $attrs ); // Required.
+
+        $content = new \Content();
+        $content->setTitle($reason); // Required
+        if($description) {
+            $content->setDescription($description);
+        }
+        if($imageUrl) {
+            $content->setImageUrl($imageUrl);
+        }
+        $content->setUrl($CFG->wwwroot);
+
+        $data->setContent( $content );
 
         // Register a new transaction.
         $transaction = \MamboActivitiesService::create( self::$config->site, $data );
+        
+        if (!isset($transaction->error)) {
+            return true;
+        }
 
-        return true;
+        return false;
     }
 }

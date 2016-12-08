@@ -20,7 +20,8 @@ M.block_mambo_widget = {
         'wwwroot'            : '',
         'overide_init_object': '',
         'debug'              : false,
-        'levelGroups'        : ''
+        'levelGroups'        : '',
+        'notifications'      : ''
     },
     log   : function (val)
     {
@@ -52,8 +53,10 @@ M.block_mambo_widget = {
         this.config.toasters = {
             bottom: 0,
             limit: 10,
-            autoCloseTimeout: 5000,
-            withActivities: true
+            autoCloseTimeout: 30,
+        };
+        this.config.notifications = {
+            withActivities: true,
         };
 
         try
@@ -75,21 +78,8 @@ M.block_mambo_widget = {
                 lang    : 'en',// Localisation settings. Currently supported: pt (Portuguese) and en (English)
                 debug   : M.block_mambo_widget.config.debug,
                 levelGroups : M.block_mambo_widget.config.levelGroups,
-                notifications : {
-                    withActivities: true
-                }
+                notifications :M.block_mambo_widget.config.notifications 
             };
-
-            // merge override
-            if (typeof M.block_mambo_widget.config.overide_init_object === "object")
-            {
-                console.log(M.block_mambo_widget.config.overide_init_object);
-                M.block_mambo_widget.log('Mambo: merge init');
-                for (var attrname in  M.block_mambo_widget.config.overide_init_object)
-                {
-                    obj[attrname] = M.block_mambo_widget.config.overide_init_object[attrname];
-                }
-            }
 
             M.block_mambo_widget.log('Mambo: Initialise the Mambo JavaScript SDK');
             M.block_mambo_widget.log(obj);

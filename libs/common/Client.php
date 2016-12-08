@@ -77,13 +77,6 @@ class MamboClient
 	 * @var string
 	 */
 	public static $acceptLanguage = "en";
-	
-	/**
-	 * Determines whether the JSON should be decoded as an associative PHP array. 
-	 * The default value is false and the JSON is returned as a PHP object.
-	 * @var boolean
-	 */
-	public static $jsonDecodeAsArray = false;
 
 
 	/**
@@ -215,7 +208,7 @@ class MamboClient
 		}
 		
 		// Decode the json response
-		return json_decode( $json, self::$jsonDecodeAsArray );
+		return json_decode( $json, false );
 	}
 	
 	
@@ -249,7 +242,7 @@ class MamboClient
 						CURLOPT_URL => $url,
 						CURLOPT_RETURNTRANSFER => true,
 						CURLOPT_SSL_VERIFYPEER => false,
-						CURLOPT_SSL_VERIFYHOST => false,
+						CURLOPT_SSL_VERIFYHOST => 2,
 						CURLOPT_FOLLOWLOCATION => false,
 						CURLOPT_FAILONERROR => false,
 						CURLOPT_MAXREDIRS => 1, 
@@ -261,13 +254,8 @@ class MamboClient
 		if( $method == self::POST )
 		{
 			$postfields = $data;
-			if( !is_null( $image ) ) {
-				if( version_compare(phpversion(), '5.5.0', '>=') ) {
-					$postfields = array( 'image' => new CURLFile( $image ) );
-				} else {
-					$postfields = array( 'image' => '@' . $image );
-				}
-			}
+			if( !is_null( $image ) )
+				$postfields = array( 'image' => '@' . $image );
 			
 			$options[ CURLOPT_POST ] = true;
 			$options[ CURLOPT_POSTFIELDS ] = $postfields;

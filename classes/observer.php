@@ -106,6 +106,7 @@ class observer {
                 // Get metadata for activity.
                 $metadata = array();
                 $metadata = $activities->get_activity_metadata($eventdata->coursemoduleid, $userid, $eventdata->completionstate);
+                $metadata['event'] = 'course_module_completion_updated';
                 \block_mambo\mambo::load_mambo_sdk();
                 $content = new \Content();
                 $content->setTitle($activities->get_activity_title($eventdata->coursemoduleid));
@@ -131,5 +132,53 @@ class observer {
         $DB->delete_records('mambo_behaviour_user', array('coursemoduleid' => $event->objectid));
     }
 
+    /**
+     * Triggered from user_graded event
+     * event_user_graded
+     *
+     * @param \core\event\user_graded $event
+     *
+     * @return void
+     */
+    public static function event_user_graded(\core\event\user_graded $event) {
+        global $DB;
+        $userid = $event->relateduserid;
+        // Get the course module using the grade item.
+        $giid = $event->other['itemid'];
+        if (!$gitem = \grade_item::fetch(array('id' => $giid))) {
+            // There is no grade item.
+            return;
+        }
+        if($gitem->itemmodule == NULL) {
+            // The grade item is not a module.
+            return;
+        }
+        $module = $DB->get_record('modules', array('name' => $gitem->itemmodule));
+        $coursemodule = $DB->get_record('course_modules', array('instance' => $gitem->iteminstance,
+                                                                'course' => $gitem->courseid,
+                                                                'module' => $module->id));
+        // We need to check if need to take a action.
+        $activities = new \block_mambo\activities();
+        if (($links = $activities->get_activity_maps($coursemodule->id)) != false) {
+            // Get the completion state
+            $completion = $DB->get_record('course_modules_completion', array('coursemoduleid' => $coursemodule->id));
+
+            // Get metadata for activity.
+            $metadata = array();
+            $metadata = $activities->get_activity_metadata($coursemodule->id, $userid, $completion->completionstate);
+            $metadata['event'] = 'user_graded';
+            \block_mambo\mambo::load_mambo_sdk();
+            $content = new \Content();
+            $content->setTitle($activities->get_activity_title($coursemodule->id));
+            $content->setUrl($activities->get_activity_url($coursemodule->id));
+            foreach ($links as $link) {
+                $activities->send_event($userid, $completion->completionstate, $link, $metadata, $content);
+            }
+        }
+    }
+    
+    public static function badge_awarded(\core\event\badge_awarded $event) {
+        // TODO: add code to process the awarded badge and notify the user
+    }
 }
 

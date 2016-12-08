@@ -39,31 +39,44 @@ class points extends mambo {
         self::load_mambo_sdk();
 
         $response = \MamboPointsService::getPoints(self::$config->site);
-
+       
         if (empty($response->error)) {
             $array = array();
-            foreach($response as $result) {
-                // If we need to filter by tag,.
-                if ($tags) {
-                    // And the points have a tag.
-                    if (count($result->tags) > 0) {
-                        // Then see if any of the returned tags match our filter.
-                        foreach($result->tags as $tag) {
-                            if (in_array($tag->tag, $tags)) {
-                                // And stock our array with the object.
-                                $array[$result->id] = $result;
+            if($tags){
+                foreach($tags as $tag){                
+                    foreach($response as $result) {
+                        // If the points have a tag.
+                        if (count($result->tags) > 0) {
+                            // Then see if any of the returned tags match our filter.
+                            foreach($result->tags as $mambotag) {                            
+                                if ($mambotag->tag == $tag) {
+                                    // And stock our array with the object.
+                                    $array[$result->id] = $result;
+                                }
                             }
                         }
                     }
-                } else {
-                    // We dont have $tags, so we just stock our array :-).
-                    $array[$result->id] = $result;
                 }
+            } else {
+                // We dont have $tags, so we just stock our array :-).
+                $array[$result->id] = $result;
             }
             return $array;
         }
+        return false;
+     }
+
+     static public function get($pointid) {
+
+        // Load mambo.
+        self::load_mambo_sdk();
+
+        $response = \MamboPointsService::get($pointid);
+
+        if (empty($response->error)) {
+            return $response;
+        }
 
         return false;
-
      }
 }

@@ -30,7 +30,7 @@ global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
 class Addwidget_form extends moodleform {
-    protected function definition() {
+    public function definition() {
         global $DB;
         $mform = &$this->_form;
         $widget = !empty($this->_customdata['widget']) ? $this->_customdata['widget'] : false;
@@ -60,7 +60,7 @@ class Addwidget_form extends moodleform {
      * @return array
      * @throws coding_exception
      */
-    protected function validation($data, $files) {
+    public function validation($data, $files) {
 
         $errors = parent::validation($data, $files);
         if (!empty($data['config_widget']) && !stristr($data['config_widget'] , 'mambo_widget_' . $this->block->instance->id)) {

@@ -62,3 +62,4 @@ $string['widget:actions'] = 'Actions';
 $string['edit'] = 'Edit';
 $string['new'] = 'New widget';
 $string['delete'] = 'Delete';
+$string['manual'] = 'Verdeel handmatig punten';

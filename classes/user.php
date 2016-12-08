@@ -191,6 +191,12 @@ class user extends mambo {
             }
             return $response;
         }
+        if (!empty($response->error->type) && $response->error->type == 'UserNotFoundException') {
+            $response = \block_mambo\user::set($user);
+            if ($response) {
+                return self::get($user);
+            }
+        }
         
         return false;
         
@@ -204,7 +210,7 @@ class user extends mambo {
         //load mambo
         self::load_mambo_sdk();
 
-        $response = \MamboUsersService::getUsers(self::$config->site, $tags);
+        $response = \MamboUsersService::getUsers(self::$config->site, $tags, $page = null, $count = null, $orderBy = null, $order = null, $withInternalPoints = true);
 
         if(empty($response->error)) {
             return $response;

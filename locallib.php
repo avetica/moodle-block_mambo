@@ -58,26 +58,25 @@ function block_mambo_add_widget_init() {
         return;
     }
 
+    // Load the config.
     $config = get_config('block_mambo');
-    $jsmodule = array(
-        'name' => 'block_mambo_widget',
-        'fullpath' => '/blocks/mambo/widget.js',
-        'requires' => array()
-    );
 
-    $PAGE->requires->js_init_call('M.block_mambo_widget.init', array(
-        'apikey_javascript' => $config->apikey_javascript,
-        'api_url' => str_replace(array('http://', 'https://'), '', $config->api_url),
-        'site' => $config->site,
-        'userid' => (int)$USER->id,
-        'apiRoot' => $config->api_url,
-        'initoverride' => $config->initoverride,
-        'debug' => (int)$config->debug_javascript,
-        'levelGroups' => '[{label: "Overall Experience",tags: ["primary_level"],isPrimary: true,noLabels: false}]',
-        array()
-    ), false, $jsmodule);
+    // Create the AMD parameters.
+    $params = array('api_url'           => str_replace(array('http://', 'https://'), '', $config->api_url),
+                    'apikey_javascript' => $config->apikey_javascript,
+                    'site'              => $config->site,
+                    'uuid'              => (int)$USER->id);
 
-    // Set to true this will prevent from loading multipull times when there are more blocks on the same page.
+    // Call the AMD modules to setup mamboCallbacks.
+    $PAGE->requires->js_call_amd('block_mambo/mamboinit', 'setupmambocallbacks', $params);
+
+    // Require Mambo.
+	$PAGE->requires->js_amd_inline("
+		require(['block_mambo/mambo'], function(Mambo) {
+		});
+	");
+
+    // Set to true this will prevent from loading multiple times when there are more blocks on the same page.
     $mambowidgetinit = true;
 }
 
