@@ -38,3 +38,8 @@
     background:#8DD5E7 url(pix/remove.gif) no-repeat scroll right center;
     cursor:pointer;
 }
+
+#mambo_activities .ui-draggable-dragging{
+    width: 300px;
+    display: block;
+}

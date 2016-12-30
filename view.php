@@ -44,7 +44,7 @@ $PAGE->navbar->add(get_string('activitiespage', 'block_mambo'));
 $PAGE->requires->css('/blocks/mambo/styles.css');
 
 // Load drag-and-drop js module.
-block_mambo_add_javascript_module();
+block_mambo_add_javascript_amd_module();
 
 $config = get_config('block_mambo');
 

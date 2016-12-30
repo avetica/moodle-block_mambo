@@ -38,7 +38,6 @@ class behaviours extends mambo {
         self::load_mambo_sdk();
 
         $response = \MamboBehavioursService::getBehaviours(self::$config->site);
-
         if (empty($response->error)) {
 
             $array = array();
@@ -59,7 +58,7 @@ class behaviours extends mambo {
         self::load_mambo_sdk();
 
         if ($tag === null) {
-            $response = $this->get_all();
+            $response = self::get_all();
         } else {
             $response = \MamboBehavioursService::getBehaviours(self::$config->site, $tag);
         }
@@ -75,7 +74,7 @@ class behaviours extends mambo {
         self::load_mambo_sdk();
 
         if ($tag === null) {
-            $response = $this->get_all();
+            $response = self::get_all();
         } else {
             $response = \MamboBehavioursService::getSimpleBehaviours(self::$config->site, $tag);
         }
@@ -91,7 +90,7 @@ class behaviours extends mambo {
         self::load_mambo_sdk();
 
         if ($id === null) {
-            $response = $this->get_all();
+            $response = self::get_all();
         } else {
             $response = \MamboBehavioursService::get($id);
         }

@@ -29,22 +29,17 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * load the module needed to make snapshots
  */
-function block_mambo_add_javascript_module() {
+function block_mambo_add_javascript_amd_module() {
     global $PAGE, $COURSE, $CFG;
     $blockid = required_param('blockid', PARAM_INT);
-    $jsmodule = array(
-        'name' => 'block_mambo',
-        'fullpath' => '/blocks/mambo/module.js',
-        'requires' => array('dd-delegate', 'dd-drop-plugin', 'io-base', 'dd-scroll')
-    );
-
-    $PAGE->requires->js_init_call('M.block_mambo.init', array(
-        'courseid' => $COURSE->id,
-        'ajaxurl' => $CFG->wwwroot . '/blocks/mambo/ajax.php',
-        'sesskey' => sesskey(),
-        'blockid' => $blockid,
-        array()
-    ), false, $jsmodule);
+    $PAGE->requires->js_call_amd('block_mambo/draganddrop', 'initialise', [
+        [
+            'courseid' => $COURSE->id,
+            'ajaxurl' => $CFG->wwwroot . '/blocks/mambo/ajax.php',
+            'sesskey' => sesskey(),
+            'blockid' => $blockid,
+        ]
+    ]);
 }
 
 /**
@@ -62,16 +57,18 @@ function block_mambo_add_widget_init() {
     $config = get_config('block_mambo');
 
     // Create the AMD parameters.
-    $params = array('api_url'           => str_replace(array('http://', 'https://'), '', $config->api_url),
-                    'apikey_javascript' => $config->apikey_javascript,
-                    'site'              => $config->site,
-                    'uuid'              => (int)$USER->id);
+    $params = array(
+        'api_url' => str_replace(array('http://', 'https://'), '', $config->api_url),
+        'apikey_javascript' => $config->apikey_javascript,
+        'site' => $config->site,
+        'uuid' => (int)$USER->id
+    );
 
     // Call the AMD modules to setup mamboCallbacks.
     $PAGE->requires->js_call_amd('block_mambo/mamboinit', 'setupmambocallbacks', $params);
 
     // Require Mambo.
-	$PAGE->requires->js_amd_inline("
+    $PAGE->requires->js_amd_inline("
 		require(['block_mambo/mambo'], function(Mambo) {
 		});
 	");
@@ -91,12 +88,12 @@ function block_mambo_add_widget_init() {
 function block_mambo_load_widget($content = '', $blockid = 0) {
 
     if (!empty($content)) {
-        $return = '<script>var mamboCallbacks = window.mamboCallbacks || []; '. PHP_EOL;
-        $return .= 'mamboCallbacks.push(function() {'. PHP_EOL;
-        $return .= $content. PHP_EOL;
-        $return .= '});//close push'. PHP_EOL;
+        $return = '<script>var mamboCallbacks = window.mamboCallbacks || []; ' . PHP_EOL;
+        $return .= 'mamboCallbacks.push(function() {' . PHP_EOL;
+        $return .= $content . PHP_EOL;
+        $return .= '});//close push' . PHP_EOL;
         $return .= '</script>' . PHP_EOL;
-        $return .= '<div id="mambo_widget_' . $blockid . '" style="min-height:50px"></div>'. PHP_EOL;
+        $return .= '<div id="mambo_widget_' . $blockid . '" style="min-height:50px"></div>' . PHP_EOL;
 
         return $return;
     }
