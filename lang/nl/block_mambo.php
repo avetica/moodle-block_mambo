@@ -60,3 +60,27 @@ $string['widget:actions'] = 'Actions';
 $string['edit'] = 'Edit';
 $string['new'] = 'New widget';
 $string['delete'] = 'Delete';
+
+//Privacy
+
+$string['privacy:metadata:mambo'] = 'Deze tabel slaat alle acties gemaakt voor mambo op';
+$string['privacy:metadata:mambo:id'] = 'This table stores actions taken in Mambo';
+$string['privacy:metadata:mambo:userid'] = 'Het ID van de gebruiker die de actie heeft ondernomen';
+$string['privacy:metadata:mambo:coursemoduleid'] = 'Het cursus module ID van de actie';
+$string['privacy:metadata:mambo:verb'] = 'Het soort genomen actie';
+$string['privacy:metadata:mambo:completionstate'] = 'De voltooingstatus van de module';
+$string['privacy:metadata:mambo:send'] = 'Indicator voor de staat van verzenden van de informatie';
+$string['privacy:metadata:mambo:sendon'] = 'De datum dat de informatie is verzonden';
+$string['privacy:metadata:mambo:metadata'] = 'De metadata verzonden';
+
+
+$string['privacy:metadata:mambo:external'] = 'De gegevens die gaan naar de Mambo Service';
+$string['privacy:metadata:mambo:ProfileUrl'] = 'De link naar je profiel';
+$string['privacy:metadata:mambo:PictureUrl'] = 'De link naar je profielfoto';
+$string['privacy:metadata:mambo:Ismember'] = 'Indicator die aangeeft of je lid bent';
+$string['privacy:metadata:mambo:Email'] = 'Geregistreerde emailadres';
+$string['privacy:metadata:mambo:FirstName'] = 'Geregistreerde voornaam';
+$string['privacy:metadata:mambo:LastName'] = 'Geregistreerde achternaam';
+$string['privacy:metadata:mambo:DisplayName'] = 'Geregistreerde gebruikersnaam';
+$string['privacy:metadata:mambo:Birthday'] = 'Een standaardwaarde als geboortedatum';
+$string['privacy:metadata:mambo:Gender'] = 'Een standaardwaarde voor geslacht (onbekend)';
